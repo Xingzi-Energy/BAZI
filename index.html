@@ -229,14 +229,35 @@
                 const day = parseInt(document.getElementById('day').value);
                 const hour = parseInt(document.getElementById('hour').value);
                 const minute = parseInt(document.getElementById('minute').value || 0);
+                const selectedTzOffset = parseFloat(document.getElementById('timezone').value); // 比如 -5
 
                 if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour)) {
                     alert("Please fill in valid date fields.");
                     return;
                 }
 
-                // 直接使用用户输入的本地年月日时分进行排盘（完美契合海外用户的直觉输入）
-                const solar = Solar.fromYmdHms(year, month, day, hour, minute, 0);
+                // 核心修复逻辑：
+                // 1. 将用户在当前时区输入的本地时间，转换为绝对的 UTC 时间戳
+                // 原理：本地时间减去所选时区偏移量 = UTC 时间
+                const localMillis = Date.UTC(year, month - 1, day, hour, minute);
+                const utcMillis = localMillis - (selectedTzOffset * 3600 * 1000);
+                const utcDate = new Date(utcMillis);
+
+                // 2. 将此绝对时刻转换到中国标准时间（UTC+8）进行八字排盘
+                // 中国标准时间偏移量为 +8 小时
+                const cstMillis = utcMillis + (8 * 3600 * 1000);
+                const cstDate = new Date(cstMillis);
+
+                // 3. 调用权威历法引擎，传入对齐后的中国标准时间（CST）
+                const solar = Solar.fromYmdHms(
+                    cstDate.getUTCFullYear(),
+                    cstDate.getUTCMonth() + 1,
+                    cstDate.getUTCDate(),
+                    cstDate.getUTCHours(),
+                    cstDate.getUTCMinutes(),
+                    0
+                );
+                
                 const lunar = solar.getLunar();
                 const eightChar = lunar.getEightChar();
 
