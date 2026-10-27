@@ -229,31 +229,14 @@
                 const day = parseInt(document.getElementById('day').value);
                 const hour = parseInt(document.getElementById('hour').value);
                 const minute = parseInt(document.getElementById('minute').value || 0);
-                const tzOffset = parseFloat(document.getElementById('timezone').value);
 
                 if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour)) {
                     alert("Please fill in valid date fields.");
                     return;
                 }
 
-                // 1. 构造用户输入的本地时间对象
-                const localDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
-
-                // 2. 根据用户选择的时区偏移量，精确换算为标准的 UTC 时间戳
-                // 例如用户选 EST (UTC-5)，其 UTC 时间 = 本地时间 - (-5小时)
-                const utcTimestamp = localDate.getTime() - (tzOffset * 3600 * 1000);
-                const utcDate = new Date(utcTimestamp);
-
-                // 3. 将绝对的 UTC 时间传给专业历法引擎进行排盘，确保全球时区计算绝对一致
-                const solar = Solar.fromYmdHms(
-                    utcDate.getUTCFullYear(),
-                    utcDate.getUTCMonth() + 1,
-                    utcDate.getUTCDate(),
-                    utcDate.getUTCHours(),
-                    utcDate.getUTCMinutes(),
-                    0
-                );
-                
+                // 直接使用用户输入的本地年月日时分进行排盘（完美契合海外用户的直觉输入）
+                const solar = Solar.fromYmdHms(year, month, day, hour, minute, 0);
                 const lunar = solar.getLunar();
                 const eightChar = lunar.getEightChar();
 
