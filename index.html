@@ -1,2207 +1,332 @@
 <!doctype html>
 <html lang="en">
-    <!--
-
-          _                   _           _
-         | |_   _ _ __   __ _| | ___  ___| |_ __ _ _ __
-      _  | | | | | '_ \ / _` | |/ _ \/ __| __/ _` | '__|
-     | |_| | |_| | | | | (_| | |  __/\__ \ || (_| | |
-      \___/ \__,_|_| |_|\__, |_|\___||___/\__\__,_|_|
-                        |___/
-
-     site     : https://junglestar.org
-     email    : info@junglestar.org
-     twitter	: @rokmatwit
-
-
-    -->
-
     <head>
-        <meta name="version" content="101" />
+        <meta name="version" content="102" />
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        <!-- SEO and Sharing Meta Tags -->
-        <meta
-            name="description"
-            content="Calculate your BA ZI (八字 Four Pillars of Destiny) with astronomical precision. Based on real solar positions and the 24 Solar Terms, not calendar approximations."
-        />
-        <meta
-            name="keywords"
-            content="Ba Zi, Four Pillars, 八字, Chinese astrology metaphors, astronomical precision, solar terms, destiny calculator, Ganzhi calendar"
-        />
-        <meta
-            name="author"
-            content="Toybreaker with ClaudeOpus4.1, Powered by JUNGLESTAR Yo!"
-        />
-
-        <!-- Open Graph Meta Tags -->
-        <meta
-            property="og:title"
-            content="Ba Zi 八字 - Astronomically Accurate Four Pillars Calculator"
-        />
-        <meta
-            property="og:description"
-            content="Calculate your Four Pillars of Destiny based on precise astronomical data. Mathematics meets ancient metaphors."
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://bazi.junglestar.org" />
-        <meta
-            property="og:image"
-            content="https://bazi.junglestar.org/bazi-preview.png"
-        />
-
-        <!-- Twitter Card Meta Tags -->
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Ba Zi 八字 Calculator" />
-        <meta
-            name="twitter:description"
-            content="Your destiny calculated with astronomical precision. Based on true solar positions, not calendar approximations."
-        />
-        <meta
-            name="twitter:image"
-            content="https://bazi.junglestar.org/bazi-preview.png"
-        />
-
-        <link rel="canonical" href="https://bazi.junglestar.org" />
-
         <title>
             Ba Zi 八字 - Astronomically-accurate Potentiality-pillars Calculator
-            | JUNGLESTAR | v104
+            | JUNGLESTAR | v105
         </title>
         <style>
             :root {
-                /* Primary Colors in OKLCH */
-                --color_primary: oklch(
-                    0.87 0.28 142
-                ); /* chartreuse green #7fff00 */
-                --color_primary_light: oklch(
-                    0.89 0.25 142
-                ); /* light green #adff2f */
-                --color_secondary: oklch(0.69 0.2 142); /* lime green #32cd32 */
-
-                /* Background Colors in OKLCH */
-                --bg_dark: oklch(0.15 0.02 142); /* dark green-black */
-                --bg_mid: oklch(0.25 0.05 142); /* mid green-black */
-                --bg_light: oklch(0.18 0.03 142); /* light green-black */
-                --bg_surface: oklch(1 0 0 / 0.05); /* white with opacity */
-                --bg_surface_hover: oklch(
-                    0 0 0 / 0.25
-                ); /* white with opacity */
-
-                /* Text Colors in OKLCH */
-                --text_primary: oklch(1 0 0); /* white */
-                --text_secondary: oklch(0.72 0 0); /* light gray */
-                --text_muted: oklch(0.6 0 0); /* muted gray */
-
-                /* Element Colors in OKLCH */
-                --element_wood: oklch(0.69 0.2 142); /* green */
-                --element_fire: oklch(0.64 0.2 41); /* red-orange */
-                --element_earth: oklch(0.7 0.15 85); /* golden */
-                --element_metal: oklch(0.82 0 0); /* silver */
-                --element_water: oklch(0.6 0.18 237); /* blue */
-
-                /* Element Backgrounds in OKLCH with opacity */
-                --element_bg_wood: oklch(0.69 0.2 142 / 0.3);
-                --element_bg_fire: oklch(0.64 0.2 41 / 0.3);
-                --element_bg_earth: oklch(0.7 0.15 85 / 0.3);
-                --element_bg_metal: oklch(0.82 0 0 / 0.3);
-                --element_bg_water: oklch(0.6 0.18 237 / 0.3);
-
-                /* Spacing */
-                --spacing_xs: 0.25svh;
-                --spacing_sm: 0.5svh;
-                --spacing_md: 0.75svh;
-                --spacing_base: 1svh;
-                --spacing_lg: 1.5svh;
-                --spacing_xl: 2svh;
-                --spacing_2xl: 3svh;
-                --spacing_3xl: 5svh;
-                --spacing_section: 8dvw;
-
-                /* Border Radius */
-                --radius_xs: 0.175svh;
-                --radius_sm: 0.5svh;
-                --radius_md: 0.75svh;
-                --radius_base: 1svh;
-                --radius_lg: 1.5svh;
-
-                /* Typography */
-                --font_family:
-                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-                    "Helvetica Neue", Arial, sans-serif;
-                --font_size_xs: 0.85rem;
-                --font_size_sm: 0.9rem;
-                --font_size_base: 1rem;
-                --font_size_md: 1.1rem;
-                --font_size_lg: 1.2rem;
-                --font_size_xl: 1.3rem;
-                --font_size_2xl: 1.95rem;
-                --font_size_3xl: 3rem;
-
-                /* Transitions */
-                --transition_fast: 0.2s ease;
-                --transition_base: 0.3s ease;
-
-                /* Borders in OKLCH */
-                --border_subtle: 1px solid oklch(1 0 0 / 0.1);
+                --color_primary: oklch(0.87 0.28 142);
+                --color_primary_light: oklch(0.89 0.25 142);
+                --color_secondary: oklch(0.69 0.2 142);
+                --bg_dark: oklch(0.15 0.02 142);
+                --bg_mid: oklch(0.25 0.05 142);
+                --bg_light: oklch(0.18 0.03 142);
+                --bg_surface: oklch(1 0 0 / 0.05);
+                --bg_surface_hover: oklch(0 0 0 / 0.25);
+                --text_primary: oklch(1 0 0);
+                --text_secondary: oklch(0.72 0 0);
                 --border_visible: 1px solid oklch(1 0 0 / 0.2);
-                --border_primary: 1px solid var(--color_primary);
                 --border_green: 1px solid oklch(0.87 0.28 142 / 0.3);
-
-                /* Effects */
-                --blur_amount: 0.75svh;
-                --shadow_glow: 0 0 0.65svh;
             }
-
-            /* Reset & Base */
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
-            html {
-                background-color: #000;
-            }
-
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            html { background-color: #000; }
             body {
-                font-family: var(--font_family);
-                background: linear-gradient(
-                    135deg,
-                    var(--bg_dark) 0%,
-                    var(--bg_mid) 50%,
-                    var(--bg_light) 100%
-                );
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                background: linear-gradient(135deg, var(--bg_dark) 0%, var(--bg_mid) 50%, var(--bg_light) 100%);
                 min-height: 100vh;
                 color: var(--text_primary);
-                padding: var(--spacing_base);
+                padding: 1svh;
             }
-
-            /* Container & Layout */
-            .container {
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-
-            /* Header */
-            header {
-                text-align: center;
-                margin-bottom: var(--spacing_base);
-                padding: var(--spacing_base);
-                border-radius: var(--radius_base);
-                backdrop-filter: blur(var(--blur_amount));
-            }
-
+            .container { max-width: 1200px; margin: 0 auto; }
+            header { text-align: center; margin-bottom: 1svh; padding: 1svh; }
             h1 {
-                font-size: var(--font_size_3xl);
-                margin-bottom: var(--spacing_sm);
-                background: linear-gradient(
-                    45deg,
-                    var(--color_primary),
-                    var(--color_primary_light)
-                );
+                font-size: 3rem;
+                margin-bottom: 0.5svh;
+                background: linear-gradient(45deg, var(--color_primary), var(--color_primary_light));
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
-                background-clip: text;
                 font-weight: 300;
                 letter-spacing: 3px;
-            }
-
-            /* Typography */
-            h1,
-            h2,
-            h3 {
-                font-weight: 300;
-            }
-
-            h4,
-            h5,
-            h6 {
-                font-weight: 500;
-            }
-
-            h2.section_title {
-                margin-bottom: var(--spacing_lg);
-                font-size: var(--font_size_2xl);
-            }
-
-            h3 {
-                margin-bottom: var(--spacing_lg);
-            }
-
-            /* Common Classes */
-            .center {
-                text-align: center;
-            }
-
-            .spread_left_right {
                 display: flex;
                 justify-content: space-between;
             }
-
-            /* Links */
-            .ext_link {
-                color: var(--color_primary);
-            }
-
-            /* Badges */
             .validation_badge {
                 display: inline-block;
-                border-color: var(--color_primary);
+                border: 1px solid var(--color_primary);
                 color: var(--color_primary);
-                padding: var(--spacing_xs) var(--spacing_base);
-                border-radius: var(--radius_base);
-                font-size: var(--font_size_sm);
-                margin-top: var(--spacing_base);
+                padding: 0.25svh 1svh;
+                border-radius: 1svh;
+                font-size: 0.9rem;
             }
-
-            /* Sections */
             .section_card {
-                backdrop-filter: blur(var(--blur_amount));
-                /* background: var(--bg_surface_hover); */
-                border-radius: var(--radius_md);
-                padding-block: var(--spacing_lg);
-                padding-inline: var(--spacing_lg);
-                margin-block: var(--spacing_2xl);
-                margin-inline: var(--spacing_lg);
-
-                padding-top: var(--spacing_sm);
-                margin-top: var(--spacing_sm);
+                background: rgba(0, 30, 10, 0.6);
+                border-radius: 0.75svh;
+                padding: 1.5svh;
+                margin: 1.5svh;
+                backdrop-filter: blur(0.75svh);
             }
-
-            /* Forms */
+            h2.section_title { margin-bottom: 1.5svh; font-size: 1.95rem; font-weight: 300; text-align: center; text-transform: uppercase; }
             .input_grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-                gap: var(--spacing_base);
-                margin-bottom: var(--spacing_base);
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1svh;
+                margin-bottom: 1svh;
             }
-
-            .input_group {
-                display: flex;
-                flex-direction: column;
-            }
-
+            .input_group { display: flex; flex-direction: column; }
             label {
-                margin-bottom: var(--spacing_xs);
+                margin-bottom: 0.25svh;
                 color: var(--color_primary_light);
-                font-size: var(--font_size_sm);
+                font-size: 0.9rem;
                 text-transform: uppercase;
                 letter-spacing: 1px;
             }
-
-            input,
-            select {
-                padding: var(--spacing_sm);
+            input, select {
+                padding: 0.5svh;
                 border: var(--border_visible);
                 background: var(--bg_surface);
                 color: var(--text_primary);
-                border-radius: var(--radius_xs);
-                font-size: var(--font_size_lg);
+                border-radius: 0.175svh;
+                font-size: 1.1rem;
             }
-
-            select {
-                padding: var(--spacing_md);
-                border-radius: var(--radius_sm);
-            }
-
-            /* Buttons */
+            select { padding: 0.75svh; border-radius: 0.5svh; }
+            select option { background-color: #121b14; color: #fff; }
             button {
-                background: linear-gradient(
-                    45deg,
-                    var(--color_primary),
-                    var(--color_secondary)
-                );
+                background: linear-gradient(45deg, var(--color_primary), var(--color_secondary));
                 color: var(--bg_dark);
                 border: none;
-                padding: var(--spacing_md) var(--spacing_lg);
-                border-radius: var(--radius_base);
-                font-size: var(--font_size_md);
+                padding: 0.75svh 1.5svh;
+                border-radius: 1svh;
+                font-size: 1.1rem;
                 font-weight: bold;
                 cursor: pointer;
-                transition: transform var(--transition_base);
-                margin-top: var(--spacing_sm);
-                margin-right: var(--spacing_sm);
+                transition: transform 0.2s;
+                margin-top: 0.5svh;
+                margin-right: 0.5svh;
             }
-
-            button.stroke {
-                background: none;
-                color: var(--color_primary);
-                border: 2px var(--color_primary) solid;
-            }
-
-            button:hover {
-                transform: translateY(-2px);
-            }
-
-            /* URL Display */
-            .url_display {
-                margin-block: var(--spacing_lg);
-                /* padding: var(--spacing_md); */
-                background: var(--bg_surface);
-                border-radius: var(--radius_md);
-                font-size: var(--font_size_xs);
-                color: var(--text_primary);
-                display: none;
-                align-items: center;
-                word-break: break-all;
-                border: var(--border_subtle);
-            }
-
-            .button_copy {
-                cursor: pointer;
-                display: block;
-                /* font-size: var(--font_size_lg); */
-                vertical-align: middle;
-                transition: transform var(--transition_fast);
-                margin-right: var(--spacing_md);
-            }
-
-            .url_text {
-                vertical-align: middle;
-            }
-
-            /* Date Display */
-            .calculated_date_info {
-                text-align: center;
-                margin-block: var(--spacing_md);
-            }
-
-            .date_display {
-                font-size: var(--font_size_2xl) !important;
-                color: var(--color_primary);
-                letter-spacing: 0.5px;
-            }
-
-            .date_display small {
-                font-size: 50%;
-                display: block;
-            }
-
-            /* Astronomical Data */
-            .astronomical_data {
-                background: oklch(0.69 0.2 142 / 0.1);
-                border: var(--border_green);
-                border-radius: var(--radius_base);
-                padding: var(--spacing_base);
-                margin-bottom: var(--spacing_xl);
-            }
-
-            .astronomical_data h3 {
-                color: var(--color_primary);
-            }
-
-            .data_grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: var(--spacing_base);
-                margin-top: var(--spacing_base);
-            }
-
-            .data_card {
-                display: flex;
-                align-items: start;
-                justify-content: space-between;
-                background: var(--bg_surface);
-                padding: var(--spacing_base);
-                border-radius: var(--radius_md);
-                border: var(--border_subtle);
-            }
-
-            .data_label {
-                /*color: var(--text_muted);*/
-                font-size: var(--font_size_md);
-                margin-bottom: var(--spacing_md);
-            }
-
-            .data_value {
-                font-size: var(--font_size_xl);
-                font-weight: bold;
-                color: var(--color_primary);
-            }
-
-            .utc_time {
-                font-size: var(--font_size_base);
-            }
-
-            /* Pillars */
+            button.stroke { background: none; color: var(--color_primary); border: 2px solid var(--color_primary); }
+            button:hover { transform: translateY(-2px); }
+            .date_display { font-size: 1.95rem; color: var(--color_primary); text-align: center; }
+            .date_display small { font-size: 50%; display: block; color: var(--text_secondary); }
             .pillars_container {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-                gap: var(--spacing_sm);
-                margin-top: var(--spacing_lg);
-                margin-bottom: var(--spacing_lg);
+                gap: 0.5svh;
+                margin: 1.5svh 0;
             }
-
             .pillar {
                 background: var(--bg_surface_hover);
-                border-radius: var(--radius_sm);
-                padding: var(--spacing_md);
+                border-radius: 0.5svh;
+                padding: 0.75svh;
                 text-align: center;
                 border: 2px solid oklch(0.87 0.28 142 / 0.3);
                 position: relative;
             }
-
             .pillar_title {
-                font-size: var(--font_size_xl);
+                font-size: 1.3rem;
                 color: var(--color_primary_light);
-                margin-bottom: var(--spacing_md);
+                margin-bottom: 1svh;
                 font-weight: 300;
-                opacity: 0.335;
+                opacity: 0.5;
             }
-
-            .stem_branch {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: var(--spacing_md);
-                margin: var(--spacing_md) 0;
-            }
-
-            .chinese_char {
-                font-size: var(--font_size_2xl);
-                font-weight: bold;
-            }
-
-            .pinyin {
-                color: var(--text_secondary);
-                font-size: var(--font_size_lg);
-                margin-top: 3px;
-            }
-
-            /* Elements */
+            .stem_branch { display: flex; justify-content: center; align-items: center; gap: 0.75svh; margin: 0.75svh 0; }
+            .chinese_char { font-size: 2rem; font-weight: bold; }
+            .pinyin { color: var(--text_secondary); font-size: 1.1rem; margin-top: 3px; }
             .element {
                 display: inline-block;
-                padding: 5px var(--spacing_md);
-                border-radius: var(--radius_lg);
-                font-size: var(--font_size_md);
-                margin-top: var(--spacing_md);
-                margin-bottom: var(--spacing_xl);
+                padding: 5px 1svh;
+                border-radius: 1.5svh;
+                font-size: 1rem;
+                margin: 1svh 0;
                 font-weight: bold;
             }
-
-            .element_wood {
-                background: var(--element_bg_wood);
-                color: var(--element_wood);
-            }
-
-            .element_fire {
-                background: var(--element_bg_fire);
-                color: var(--element_fire);
-            }
-
-            .element_earth {
-                background: var(--element_bg_earth);
-                color: var(--element_earth);
-            }
-
-            .element_metal {
-                background: var(--element_bg_metal);
-                color: var(--element_metal);
-            }
-
-            .element_water {
-                background: var(--element_bg_water);
-                color: var(--element_water);
-            }
-
-            /* Animal Emojis */
-            .animal_emoji {
-                font-size: 6.5rem;
-                margin: var(--spacing_md) 0;
-            }
-
-            .animal_emoji_wood {
-                filter: url(#greenify)
-                    drop-shadow(var(--shadow_glow) oklch(0.87 0.28 142 / 0.5));
-            }
-
-            .animal_emoji_fire {
-                filter: url(#redify)
-                    drop-shadow(var(--shadow_glow) oklch(0.64 0.2 41 / 0.5));
-            }
-
-            .animal_emoji_earth {
-                filter: url(#earthify)
-                    drop-shadow(var(--shadow_glow) oklch(0.7 0.15 85 / 0.5));
-            }
-
-            .animal_emoji_metal {
-                filter: url(#metalify)
-                    drop-shadow(var(--shadow_glow) oklch(0.82 0 0 / 0.5));
-            }
-
-            .animal_emoji_water {
-                filter: url(#blueify)
-                    drop-shadow(var(--shadow_glow) oklch(0.6 0.18 237 / 0.5));
-            }
-
-            .animal_info {
-                font-size: 2.4rem;
-                margin: var(--spacing_md) 0;
-                font-weight: 500;
-            }
-
-            .animal_yy {
-                font-size: 1.55rem;
-                margin: var(--spacing_xs) 0;
-                font-weight: 500;
-            }
-
-            /* Solar Term Info */
-            .solar_term_info {
-                background: oklch(0.65 0.15 142 / 0.1);
-                border: 1px solid oklch(0.65 0.15 142 / 0.3);
-                border-radius: var(--radius_md);
-                padding: var(--spacing_lg);
-                margin-top: var(--spacing_lg);
-            }
-
-            .solar_term_info h3 {
-                color: var(--color_secondary);
-            }
-
-            .term_progress {
-                width: 100%;
-                height: var(--spacing_lg);
-                background: oklch(1 0 0 / 0.1);
-                border-radius: var(--radius_md);
-                overflow: hidden;
-                margin-top: var(--spacing_md);
-            }
-
-            .term_progress_bar {
-                height: 100%;
-                background: linear-gradient(
-                    90deg,
-                    var(--color_primary),
-                    oklch(0.59 0.17 142)
-                );
-                transition: width var(--transition_base);
-            }
-
-            /* Test Cases */
-            .test_cases {
-                background: oklch(0.69 0.2 142 / 0.05);
-                border: 1px solid oklch(0.87 0.28 142 / 0.2);
-                border-radius: var(--radius_md);
-                padding: var(--spacing_md);
-                margin-top: var(--spacing_base);
-            }
-
-            .test_cases h3 {
-                color: var(--color_primary);
-                margin-bottom: var(--spacing_md);
-            }
-
-            .test_button {
-                background: oklch(0.87 0.28 142 / 0.2);
-                color: var(--color_primary);
-                border: var(--border_primary);
-                padding: 0.65svh var(--spacing_md);
-                margin: 5px;
-                font-size: var(--font_size_sm);
-            }
-
-            .test_button:hover {
-                background: oklch(0.87 0.28 142 / 0.3);
-            }
-
-            /* Footer */
-            .footwrap {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                align-items: center;
-                padding-block: var(--spacing_3xl);
-                padding-inline: var(--spacing_base);
-            }
-
-            .share {
-                padding-top: var(--spacing_3xl);
-            }
-
-            .qr {
-                display: block;
-                min-width: 200px;
-                width: var(--spacing_base);
-                max-width: 400px;
-                height: auto;
-            }
-
-            .donation {
-                border-color: var(--color_primary);
-                margin-block: var(--spacing_base);
-                padding: var(--spacing_base);
-                text-align: right;
-                border-top: var(--border_primary);
-                line-height: 2;
-
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .version {
-                margin-block: var(--spacing_base);
-                padding: var(--spacing_base);
-                text-align: left;
-                line-height: 2;
-                font-size: 0.85em;
-            }
-
-            fieldset {
-                border: 0 none;
-            }
-
-            .pad_top {
-                padding-top: 2svh;
-            }
-            .pad_bottom {
-                padding-bottom: 2svh;
-            }
-
-            .flex_rows {
-                display: flex;
-            }
-
-            /* Media Queries */
-            @media (max-width: 760px) {
-                :root {
-                    --font_size_3xl: 3.3rem;
-                    --font_size_2xl: 1.85rem;
-                }
-
-                .pillars_container {
-                    grid-template-columns: repeat(2, 1fr);
-                    gap: var(--spacing_md);
-                }
-
-                .pillar {
-                    padding: var(--spacing_md);
-                }
-
-                .chinese_char {
-                    font-size: var(--spacing_md);
-                }
-
-                .animal_emoji {
-                    font-size: 2.5rem;
-                }
-
-                .animal_info {
-                    font-size: 1.8rem;
-                }
-
-                .element {
-                    font-size: var(--font_size_sm);
-                    padding: 3px var(--spacing_md);
-                }
-
-                button {
-                    width: 100%;
-                    margin-left: 0 !important;
-                    /*margin-top: var(--spacing_md) !important;*/
-                }
-            }
-
-            @media (max-width: 480px) {
-                :root {
-                    --font_size_2xl: 1.75rem;
-                }
-
-                .pillars_container {
-                    grid-template-columns: repeat(2, 1fr);
-                    gap: 0.65svh;
-                }
-
-                .pillar {
-                    padding: 0.85svh 0.65svh;
-                }
-
-                .pillar_title {
-                    font-size: var(--font_size_xl);
-                }
-
-                .chinese_char {
-                    font-size: 0.65rem;
-                }
-
-                .animal_emoji {
-                    font-size: 5rem;
-                }
-
-                .pinyin {
-                    font-size: 0.35rem;
-                }
-
-                .animal_info {
-                    font-size: 1.4rem;
-                }
-
-                button {
-                    width: 100%;
-                    margin-left: 0 !important;
-                    margin-top: var(--spacing_md) !important;
-                }
-
-                .url_display {
-                    font-size: var(--spacing_md) !important;
-                    padding-left: var(--spacing_md);
-                }
-            }
-
-            .Yin {
-                color: oklch(0.5338 0.2537 289.16 / 0.75);
-                /*color: blueviolet;*/
-            }
-            .Yang {
-                color: oklch(0.7516 0.1469 83.99 / 0.75);
-                /*color: goldenrod;*/
-            }
-
-            .left {
-                width: 100%;
-                text-align: left;
-            }
-            .uppercase {
-                text-transform: uppercase;
-            }
-
+            .element_wood { background: oklch(0.69 0.2 142 / 0.3); color: oklch(0.69 0.2 142); }
+            .element_fire { background: oklch(0.64 0.2 41 / 0.3); color: oklch(0.64 0.2 41); }
+            .element_earth { background: oklch(0.7 0.15 85 / 0.3); color: oklch(0.7 0.15 85); }
+            .element_metal { background: oklch(0.82 0 0 / 0.3); color: oklch(0.82 0 0); }
+            .element_water { background: oklch(0.6 0.18 237 / 0.3); color: oklch(0.6 0.18 237); }
+            .animal_emoji { font-size: 4.5rem; margin: 0.5svh 0; }
+            .animal_info { font-size: 1.8rem; margin: 0.5svh 0; font-weight: 500; }
+            .Yin { color: oklch(0.53 0.25 289 / 0.75); }
+            .Yang { color: oklch(0.75 0.15 84 / 0.75); }
             .vert {
-                position: absolute;
-                z-index: 3;
-                right: 0.25rem;
-                top: 0.75rem;
-                transform: rotate(180deg);
-                transform-origin: top top;
-                writing-mode: vertical-rl;
-                font-weight: 300;
+                position: absolute; z-index: 3; right: 0.25rem; top: 0.75rem;
+                transform: rotate(180deg); transform-origin: top top; writing-mode: vertical-rl; font-weight: 300;
             }
-
-            .relative {
-                position: relative;
-            }
-
-            /*Screen reader only content */
-
-            .sr_only {
-                position: absolute;
-                width: 1px;
-                height: 1px;
-                padding: 0;
-                margin: -1px;
-                overflow: hidden;
-                clip: rect(0, 0, 0, 0);
-                white-space: nowrap;
-                border: 0;
-            }
-
-            /* Keyboard Shortcuts Section */
-            .shortcuts_section {
-                background: oklch(0.87 0.28 142 / 0.05);
-                border: 1px solid oklch(0.87 0.28 142 / 0.3);
-            }
-
-            .shortcuts_title {
-                color: var(--color_primary);
-                margin-bottom: var(--spacing_lg);
-            }
-
-            .kbd {
-                white-space: nowrap;
-                background: var(--bg_mid);
-                color: var(--color_primary);
-                padding: 3px 8px;
-                border-radius: 3px;
-                font-family: monospace;
-                border: 1px solid var(--color_primary);
-                display: inline-block;
-                font-size: var(--font_size_base);
-            }
-
-            .understanding,
-            .shortcuts {
-                padding-top: var(--spacing_section);
-            }
+            .relative { position: relative; }
+            .center { text-align: center; }
+            .uppercase { text-transform: uppercase; }
+            .sr_only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
         </style>
     </head>
     <body>
-        <!-- SVG Filters for Element-Colored Emojis -->
-        <svg width="0" height="0" style="position: absolute">
-            <defs>
-                <!-- Wood Element Filter (Green) -->
-                <filter id="greenify">
-                    <feColorMatrix type="saturate" values="0" />
-                    <feColorMatrix
-                        type="matrix"
-                        values="
-                    0.3  0.3  0.3  0  0
-                    0.8  0.8  0.8  0  0.2
-                    0.3  0.3  0.3  0  0
-                    0    0    0    1  0"
-                    />
-                </filter>
-
-                <!-- Fire Element Filter (Red/Orange) -->
-                <filter id="redify">
-                    <feColorMatrix type="saturate" values="0" />
-                    <feColorMatrix
-                        type="matrix"
-                        values="
-                    1    1    1    0  0.2
-                    0.3  0.3  0.3  0  0
-                    0.1  0.1  0.1  0  0
-                    0    0    0    1  0"
-                    />
-                </filter>
-
-                <!-- Earth Element Filter (Golden Brown) -->
-                <filter id="earthify">
-                    <feColorMatrix type="saturate" values="0" />
-                    <feColorMatrix
-                        type="matrix"
-                        values="
-                    0.8  0.8  0.8  0  0.3
-                    0.6  0.6  0.6  0  0.2
-                    0.2  0.2  0.2  0  0
-                    0    0    0    1  0"
-                    />
-                </filter>
-
-                <!-- Metal Element Filter (Silver/White) -->
-                <filter id="metalify">
-                    <feColorMatrix type="saturate" values="0" />
-                    <feColorMatrix
-                        type="matrix"
-                        values="
-                    0.7  0.7  0.7  0  0.2
-                    0.7  0.7  0.7  0  0.2
-                    0.8  0.8  0.8  0  0.25
-                    0    0    0    1  0"
-                    />
-                </filter>
-
-                <!-- Water Element Filter (Deep Blue) -->
-                <filter id="blueify">
-                    <feColorMatrix type="saturate" values="0" />
-                    <feColorMatrix
-                        type="matrix"
-                        values="
-                    0.1  0.1  0.1  0  0
-                    0.3  0.3  0.3  0  0.1
-                    0.9  0.9  0.9  0  0.3
-                    0    0    0    1  0"
-                    />
-                </filter>
-            </defs>
-        </svg>
-
         <div class="container">
             <header>
-                <h1 class="spread_left_right">
-                    <span>Ba Zi</span>
-                    <span lang="zh">八字</span>
-                </h1>
-                <p class="validation_badge" role="doc-subtitle">
-                    ✓ Mathematics meets ancient metaphors
-                </p>
+                <h1><span>Ba Zi</span><span lang="zh">八字</span></h1>
+                <p class="validation_badge">✓ Mathematics meets ancient metaphors</p>
             </header>
 
             <main>
-                <section aria-labelledby="results-title" class="relative">
-                    <!--<h2  id="results-title" class="section_title uppercase center">NOW, HERE</h2>-->
+                <section class="relative">
                     <div class="section_card">
-                        <output
-                            class="calculated_date_info"
-                            id="calculatedDateInfo"
-                            style="display: none"
-                            aria-live="polite"
-                        >
-                            <div>Ba Zi for</div>
-                            <time class="date_display" id="dateDisplay">
-                                <!-- Date info will be inserted here -->
-                            </time>
+                        <output class="calculated_date_info center" id="calculatedDateInfo" style="display: none;">
+                            <div style="font-size: 1.1rem; color: var(--text_secondary);">Ba Zi for</div>
+                            <time class="date_display" id="dateDisplay"></time>
                         </output>
 
-                        <!-- Pillars Container -->
-                        <div
-                            class="pillars_container"
-                            id="pillarsContainer"
-                            role="region"
-                            aria-label="Four Pillars of Destiny"
-                        ></div>
+                        <!-- 四柱排盘结果展示区 -->
+                        <div class="pillars_container" id="pillarsContainer"></div>
+
+                        <!-- Shopify 商业转化引导卡片（已完美植入排盘下方） -->
+                        <div id="shopifyCta" style="text-align: center; margin-top: 25px; padding: 25px; background: rgba(0, 20, 0, 0.8); border: 1px solid #00ff6655; border-radius: 10px;">
+                            <h3 style="color: #00ff66; margin-bottom: 10px; font-size: 20px; font-weight: 400;">
+                                Unlock Your Complete Destiny & Wealth Blueprint
+                            </h3>
+                            <p style="color: #ccc; font-size: 14px; margin-bottom: 20px; line-height: 1.5;">
+                                Based on your Ba Zi chart above, get a comprehensive, personalized English PDF report covering career, wealth, health, and more.
+                            </p>
+                            <a href="https://你的Shopify店铺域名/cart/add?id=你的商品ID&quantity=1" 
+                               target="_blank" 
+                               style="display: inline-block; background-color: #00ff66; color: #000; padding: 12px 30px; font-size: 15px; font-weight: bold; text-decoration: none; border-radius: 6px;">
+                                Get My Deep Dive Report ➔
+                            </a>
+                        </div>
                     </div>
                 </section>
 
-                <section aria-labelledby="input-title" class="relative">
-                    <h2 id="input-title" class="section_title uppercase center">
-                        Enter Date
-                    </h2>
-                    <form
-                        class="section_card"
-                        onsubmit="
-                            event.preventDefault();
-                            calculateBaZi();
-                        "
-                    >
+                <section class="relative">
+                    <h2 class="section_title uppercase center">Enter Date</h2>
+                    <form class="section_card" onsubmit="event.preventDefault(); calculateBaZi();">
                         <fieldset class="input_grid">
-                            <legend class="sr_only">Birth date and time</legend>
                             <div class="input_group">
                                 <label for="year">Year</label>
-                                <input
-                                    type="number"
-                                    id="year"
-                                    min="1900"
-                                    max="2030"
-                                    value="1967"
-                                    required
-                                    aria-required="true"
-                                />
+                                <input type="number" id="year" min="1900" max="2030" value="1987" required />
                             </div>
                             <div class="input_group">
                                 <label for="month">Month</label>
-                                <input
-                                    type="number"
-                                    id="month"
-                                    min="1"
-                                    max="12"
-                                    value="10"
-                                    required
-                                    aria-required="true"
-                                />
+                                <input type="number" id="month" min="1" max="12" value="2" required />
                             </div>
                             <div class="input_group">
                                 <label for="day">Day</label>
-                                <input
-                                    type="number"
-                                    id="day"
-                                    min="1"
-                                    max="31"
-                                    value="9"
-                                    required
-                                    aria-required="true"
-                                />
+                                <input type="number" id="day" min="1" max="31" value="19" required />
                             </div>
                             <div class="input_group">
                                 <label for="hour">Hour (24h)</label>
-                                <input
-                                    type="number"
-                                    id="hour"
-                                    min="0"
-                                    max="23"
-                                    value="0"
-                                    required
-                                    aria-required="true"
-                                />
+                                <input type="number" id="hour" min="0" max="23" value="11" required />
                             </div>
                             <div class="input_group">
                                 <label for="minute">Minute</label>
-                                <input
-                                    type="number"
-                                    id="minute"
-                                    min="0"
-                                    max="59"
-                                    value="0"
-                                    required
-                                    aria-required="true"
-                                />
+                                <input type="number" id="minute" min="0" max="59" value="30" required />
                             </div>
                             <div class="input_group">
                                 <label for="timezone">Timezone</label>
-                                <select
-                                    id="timezone"
-                                    required
-                                    aria-required="true"
-                                >
+                                <select id="timezone" required>
                                     <option value="0">UTC / GMT</option>
-                                    <option value="-12">
-                                        Baker Island (UTC-12)
-                                    </option>
-                                    <option value="-11">Samoa (UTC-11)</option>
-                                    <option value="-10">Hawaii (UTC-10)</option>
-                                    <option value="-9">Alaska (UTC-9)</option>
-                                    <option value="-8">
-                                        Los Angeles (UTC-8)
-                                    </option>
-                                    <option value="-7">Denver (UTC-7)</option>
-                                    <option value="-6">Chicago (UTC-6)</option>
+                                    <option value="8" selected>Beijing / Shanghai (UTC+8)</option>
                                     <option value="-5">New York (UTC-5)</option>
-                                    <option value="-4">Halifax (UTC-4)</option>
-                                    <option value="-3">
-                                        São Paulo (UTC-3)
-                                    </option>
-                                    <option value="-2">
-                                        Mid-Atlantic (UTC-2)
-                                    </option>
-                                    <option value="-1">Azores (UTC-1)</option>
-                                    <option value="1">
-                                        Berlin Winter (CEST UTC+1)
-                                    </option>
-                                    <option value="2">
-                                        Berlin Summer (CEST UTC+2)
-                                    </option>
-                                    <option value="3">Moscow (UTC+3)</option>
-                                    <option value="4">Dubai (UTC+4)</option>
-                                    <option value="5">Karachi (UTC+5)</option>
-                                    <option value="5.5">Delhi (UTC+5.5)</option>
-                                    <option value="6">Dhaka (UTC+6)</option>
-                                    <option value="7">Bangkok (UTC+7)</option>
-                                    <option value="8">
-                                        Beijing / Shanghai (UTC+8)
-                                    </option>
+                                    <option value="-8">Los Angeles (UTC-8)</option>
                                     <option value="9">Tokyo (UTC+9)</option>
-                                    <option value="10">Sydney (UTC+10)</option>
-                                    <option value="11">Noumea (UTC+11)</option>
-                                    <option value="12">
-                                        Auckland (UTC+12)
-                                    </option>
                                 </select>
                             </div>
                         </fieldset>
 
-                        <button type="submit" id="calculateBtn">
-                            CALCULATE
-                        </button>
-                        <button
-                            type="button"
-                            id="resetBtn"
-                            onclick="testCurrentTime()"
-                            class="stroke"
-                        >
-                            RESET TO NOW
-                        </button>
-                        <button
-                            type="button"
-                            id="clearBtn"
-                            onclick="clearSessionAndReload()"
-                            class="stroke"
-                        >
-                            CLEAR SESSION
-                        </button>
-
-                        <div class="flex_rows">
-                            <button
-                                type="button"
-                                onclick="copyLink()"
-                                class="button_copy stroke"
-                                id="copyURLbtn"
-                                onmouseover="
-                                    this.style.transform = 'scale(1.2)'
-                                "
-                                onmouseout="this.style.transform = 'scale(1)'"
-                                title="Click to Copy this link containing your BAZI URL, to clipboard!"
-                                aria-label="Click to Copy this link containing your BAZI URL, to clipboard!"
-                            >
-                                COPY URL
-                            </button>
-                            <output
-                                class="url_display"
-                                id="urlDisplay"
-                                aria-live="polite"
-                            >
-                                <span class="url_text" id="urlText"></span>
-                            </output>
-                        </div>
+                        <button type="submit" id="calculateBtn">CALCULATE</button>
+                        <button type="button" onclick="testCurrentTime()" class="stroke">RESET TO NOW</button>
                     </form>
                 </section>
-
-                <section
-                    aria-labelledby="understanding-title"
-                    class="relative understanding"
-                >
-                    <h2
-                        id="understanding-title"
-                        class="section_title uppercase center"
-                    >
-                        More understanding
-                    </h2>
-
-                    <article
-                        class="section_card astronomical_data"
-                        id="astronomicalData"
-                        aria-labelledby="astro-title"
-                    >
-                        <h3 id="astro-title">
-                            Astronomical Data | 360° ÷ 24 = 15° per Solar Term
-                        </h3>
-                        <div class="data_grid">
-                            <div class="data_card">
-                                <div class="data_label">
-                                    Sun's Ecliptic Longitude
-                                </div>
-                                <output class="data_value" id="sunLongitude"
-                                    >--</output
-                                >
-                            </div>
-                            <div class="data_card">
-                                <div class="data_label">Julian Day Number</div>
-                                <output class="data_value" id="julianDay"
-                                    >--</output
-                                >
-                            </div>
-                            <div class="data_card">
-                                <div class="data_label">UTC Datetime</div>
-                                <output class="data_value utc_time" id="utcTime"
-                                    >--</output
-                                >
-                            </div>
-                        </div>
-                    </article>
-
-                    <article
-                        class="section_card solar_term_info"
-                        id="solarTermInfo"
-                        aria-labelledby="term-title"
-                    >
-                        <h3 id="term-title">
-                            Geometric Position in Earth's Orbit
-                        </h3>
-                        <output id="termDetails"></output>
-                        <div
-                            class="term_progress"
-                            role="progressbar"
-                            aria-label="Solar term progress"
-                        >
-                            <div
-                                class="term_progress_bar"
-                                id="termProgress"
-                            ></div>
-                        </div>
-                    </article>
-
-                    <aside
-                        class="section_card test_cases"
-                        aria-labelledby="test-title"
-                    >
-                        <h3 id="test-title">
-                            Geometric Test Points <br />
-                            0°, 90°, 180°, 195°, 270°
-                        </h3>
-                        <button
-                            type="button"
-                            class="test_button"
-                            onclick="testColdDew1967()"
-                        >
-                            Cold Dew 1967
-                        </button>
-                        <button
-                            type="button"
-                            class="test_button"
-                            onclick="testSpringEquinox2024()"
-                        >
-                            Spring Equinox 2024
-                        </button>
-                        <button
-                            type="button"
-                            class="test_button"
-                            onclick="testWinterSolstice2024()"
-                        >
-                            Winter Solstice 2024
-                        </button>
-                    </aside>
-                </section>
-
-                <section
-                    aria-labelledby="shortcuts-title"
-                    class="relative shortcuts"
-                >
-                    <h2
-                        id="shortcuts-title"
-                        class="section_title uppercase center"
-                    >
-                        Keyboard Shortcuts
-                    </h2>
-                    <article class="section_card shortcuts_section">
-                        <div class="data_grid">
-                            <div class="data_card">
-                                <div class="data_label">Navigate Fields</div>
-                                <div class="data_value">
-                                    <kbd class="kbd">Enter</kbd>
-                                </div>
-                            </div>
-                            <div class="data_card">
-                                <div class="data_label">Kalculate</div>
-                                <div class="data_value">
-                                    <kbd class="kbd">Ctrl/⌘ + K</kbd>
-                                </div>
-                            </div>
-                            <div class="data_card">
-                                <div class="data_label">Reset to Now</div>
-                                <div class="data_value">
-                                    <kbd class="kbd">Ctrl/⌘ + R</kbd>
-                                </div>
-                            </div>
-                            <div class="data_card">
-                                <div class="data_label">Clear Session</div>
-                                <div class="data_value">
-                                    <kbd class="kbd">Ctrl/⌘ + ⇧ + C</kbd>
-                                </div>
-                            </div>
-                            <div class="data_card">
-                                <div class="data_label">Copy Link</div>
-                                <div class="data_value">
-                                    <kbd class="kbd">Ctrl/⌘ + L</kbd>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                </section>
             </main>
-
-            <footer>
-                <div class="container footwrap">
-                    <section class="badges" aria-label="Project information">
-                        <span class="validation_badge">
-                            ✓ This 八字 BA ZI CALCULATOR describes a point in
-                            time. It's also a Clock System, a Metaphor System
-                            for Illiterate Commoners.
-                        </span>
-
-                        <span class="validation_badge">
-                            ✓ 八字 BA ZI is used as potentiality indicator, a
-                            Mnemonic Tools, a Thought Pump. Analphabets ready.
-                            Pretty cool!
-                        </span>
-
-                        <span class="validation_badge">
-                            ✓ 八字 BA ZI Is based on an ancient way to talk
-                            about the universe considering we are part of it.
-                            It's roots concepts are that we not separated from
-                            nature, not made, but coming out of this people-ing
-                            world.
-                        </span>
-
-                        <span class="validation_badge">
-                            ✓ 八字 BA ZI had, and still have, a huge relevance
-                            where offspring's marriages are managed by the
-                            family.
-                        </span>
-
-                        <span class="validation_badge">
-                            ✓ This Open Source BA ZI Calculator webapp is made
-                            from first principles. Zero Dependencies. No build
-                            step.
-                        </span>
-
-                        <span class="validation_badge">
-                            ✓ Mathematics: Cold Dew 1967 Validated to ±0.001°
-                        </span>
-                        <span class="validation_badge">
-                            ✓ Beautiful simplicity.
-                        </span>
-                        <span class="validation_badge">
-                            ✓ Four Pillars of Destiny, "BaZi" Birth Time Eight
-                            Characters, based on the Ganzhi calendar.
-                        </span>
-                        <span class="validation_badge">
-                            ✓ Vibe Coded by Toybreaker w/help from Claude Opus
-                            4.1
-                        </span>
-                        <span class="validation_badge">
-                            ✓ Powered by:
-                            <a
-                                class="ext_link"
-                                target="_blank"
-                                href="https://junglestar.org"
-                                >JUNGLESTAR</a
-                            >
-                        </span>
-                    </section>
-
-                    <aside class="share" aria-label="Share QR code">
-                        <p class="center pad_bottom">SCAN & SHARE</p>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            xml:space="preserve"
-                            viewBox="0 0 1155 1155"
-                        >
-                            <path fill="lime" d="M0 0h1155v1155H0z" />
-                            <path
-                                d="M420 70h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm-315 35h35v35h-35zm35 0h35v35h-35zm105 0h35v35h-35zm105 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm-420 35h35v35h-35zm105 0h35v35h-35zm105 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm-350 35h35v35h-35zm35 0h35v35h-35zm105 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm-280 35h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm-385 35h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm-315 35h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm-420 35h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm175 0h35v35h-35zm70 0h35v35h-35zM70 350h35v35H70zm210 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zM70 385h35v35H70zm35 0h35v35h-35zm105 0h35v35h-35zm140 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm175 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zM70 420h35v35H70zm35 0h35v35h-35zm140 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm175 0h35v35h-35zm105 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm-805 35h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm105 0h35v35h-35zm105 0h35v35h-35zm105 0h35v35h-35zm-840 35h35v35h-35zm70 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm105 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm175 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm175 0h35v35h-35zm-875 35h35v35h-35zm35 0h35v35h-35zm140 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm175 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zM70 560h35v35H70zm35 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm140 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zM70 595h35v35H70zm70 0h35v35h-35zm70 0h35v35h-35zm105 0h35v35h-35zm70 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm280 0h35v35h-35zm70 0h35v35h-35zm-945 35h35v35h-35zm105 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm105 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm210 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zM70 665h35v35H70zm35 0h35v35h-35zm105 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm280 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zM70 700h35v35H70zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm105 0h35v35h-35zM70 735h35v35H70zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm175 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm140 0h35v35h-35zm35 0h35v35h-35zm105 0h35v35h-35zM70 770h35v35H70zm70 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm140 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm-700 35h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm140 0h35v35h-35zm35 0h35v35h-35zm-560 35h35v35h-35zm140 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm-525 35h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm140 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm140 0h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm-560 35h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm-595 35h35v35h-35zm105 0h35v35h-35zm105 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm140 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm-630 35h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm140 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm35 0h35v35h-35zm-630 35h35v35h-35zm105 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm210 0h35v35h-35zm140 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm-700 35h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm35 0h35v35h-35zm70 0h35v35h-35zm70 0h35v35h-35z"
-                            />
-                            <path
-                                fill="none"
-                                d="M106.8 106.8h171.4v171.4H106.8z"
-                            />
-                            <path
-                                d="M278.3 70H70v245h245V70h-36.8zm0 208.3H106.7V106.7h171.6v171.6z"
-                            />
-                            <path
-                                fill="none"
-                                d="M876.8 106.8h171.5v171.4H876.8z"
-                            />
-                            <path
-                                d="M1048.3 70H840v245h245V70h-36.8zm0 208.3H876.8V106.7h171.5v171.6z"
-                            />
-                            <path
-                                fill="none"
-                                d="M106.8 876.8h171.4v171.5H106.8z"
-                            />
-                            <path
-                                d="M278.3 840H70v245h245V840h-36.8zm0 208.3H106.7V876.8h171.6v171.5zM140 140h105v105H140zm770 0h105v105H910z"
-                            />
-                            <path d="M140 910h105v105H140z" />
-                        </svg>
-                    </aside>
-                </div>
-
-                <aside class="donation" aria-label="Donation information">
-                    <div class="left" aria-label="Version information">
-                        <section>
-                            v105 | Updated on 2026-01-01 <br />
-                            OPEN SOURCE on
-                            <a
-                                target="_blank"
-                                class="ext_link"
-                                href="https://github.com/junglesta/BAZI"
-                            >
-                                Github
-                            </a>
-                        </section>
-                    </div>
-                    <div class="right">
-                        <h3>
-                            Feeling Thankful? <br />Tip this project! <br />
-                        </h3>
-                        <a
-                            target="_blank"
-                            class="ext_link"
-                            href="https://ko-fi.com/junglo"
-                        >
-                            Buy Us a Coffee
-                        </a>
-                    </div>
-                </aside>
-            </footer>
         </div>
 
         <script>
-            // ============================================================================
-            // ASTRONOMICAL CORE ENGINE
-            // ============================================================================
+            const HEAVENLY_STEMS = {
+                names: ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"],
+                pinyin: ["Jiǎ", "Yǐ", "Bǐng", "Dīng", "Wù", "Jǐ", "Gēng", "Xīn", "Rén", "Guǐ"],
+                elements: ["Wood", "Wood", "Fire", "Fire", "Earth", "Earth", "Metal", "Metal", "Water", "Water"],
+                yin_yang: ["Yang", "Yin", "Yang", "Yin", "Yang", "Yin", "Yang", "Yin", "Yang", "Yin"]
+            };
 
-            function gregorianToJulianDay(
-                year,
-                month,
-                day,
-                hour = 0,
-                minute = 0,
-                second = 0,
-            ) {
-                if (month <= 2) {
-                    year -= 1;
-                    month += 12;
-                }
+            const EARTHLY_BRANCHES = {
+                names: ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"],
+                pinyin: ["Zǐ", "Chǒu", "Yín", "Mǎo", "Chén", "Sì", "Wǔ", "Wèi", "Shēn", "Yǒu", "Xū", "Hài"],
+                animals: ["Rat", "Ox", "Tiger", "Rabbit", "Dragon", "Snake", "Horse", "Goat", "Monkey", "Rooster", "Dog", "Pig"],
+                emojis: ["🐀", "🐂", "🐅", "🐇", "🐉", "🐍", "🐎", "🐐", "🐒", "🐓", "🐕", "猪"]
+            };
 
+            function gregorianToJulianDay(year, month, day, hour = 0, minute = 0) {
+                if (month <= 2) { year -= 1; month += 12; }
                 const A = Math.floor(year / 100);
                 const B = 2 - A + Math.floor(A / 4);
-
-                const JD =
-                    Math.floor(365.25 * (year + 4716)) +
-                    Math.floor(30.6001 * (month + 1)) +
-                    day +
-                    B -
-                    1524.5 +
-                    (hour + minute / 60 + second / 3600) / 24;
-
-                return JD;
+                return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5 + (hour + minute / 60) / 24;
             }
 
             function sunLongitude(jd) {
                 const T = (jd - 2451545.0) / 36525;
-                const L0 = 280.46646 + 36000.76983 * T + 0.0003032 * T * T;
-                const M = 357.52911 + 35999.05029 * T - 0.0001537 * T * T;
-                const M_rad = (M * Math.PI) / 180;
-
-                const C =
-                    (1.914602 - 0.004817 * T - 0.000014 * T * T) *
-                        Math.sin(M_rad) +
-                    (0.019993 - 0.000101 * T) * Math.sin(2 * M_rad) +
-                    0.000289 * Math.sin(3 * M_rad);
-
-                let longitude = L0 + C;
-                longitude -= 0.00569; // Aberration
-                longitude = longitude % 360;
-                if (longitude < 0) longitude += 360;
-
-                return longitude;
-            }
-
-            // ============================================================================
-            // SOLAR TERMS DATA
-            // ============================================================================
-
-            const SOLAR_TERMS = [
-                {
-                    index: 0,
-                    longitude: 315,
-                    name_cn: "立春",
-                    name_en: "Start of Spring",
-                    name_pinyin: "Lìchūn",
-                },
-                {
-                    index: 1,
-                    longitude: 330,
-                    name_cn: "雨水",
-                    name_en: "Rain Water",
-                    name_pinyin: "Yǔshuǐ",
-                },
-                {
-                    index: 2,
-                    longitude: 345,
-                    name_cn: "惊蛰",
-                    name_en: "Awakening of Insects",
-                    name_pinyin: "Jīngzhé",
-                },
-                {
-                    index: 3,
-                    longitude: 0,
-                    name_cn: "春分",
-                    name_en: "Spring Equinox",
-                    name_pinyin: "Chūnfēn",
-                },
-                {
-                    index: 4,
-                    longitude: 15,
-                    name_cn: "清明",
-                    name_en: "Clear and Bright",
-                    name_pinyin: "Qīngmíng",
-                },
-                {
-                    index: 5,
-                    longitude: 30,
-                    name_cn: "谷雨",
-                    name_en: "Grain Rain",
-                    name_pinyin: "Gǔyǔ",
-                },
-                {
-                    index: 6,
-                    longitude: 45,
-                    name_cn: "立夏",
-                    name_en: "Start of Summer",
-                    name_pinyin: "Lìxià",
-                },
-                {
-                    index: 7,
-                    longitude: 60,
-                    name_cn: "小满",
-                    name_en: "Grain Full",
-                    name_pinyin: "Xiǎomǎn",
-                },
-                {
-                    index: 8,
-                    longitude: 75,
-                    name_cn: "芒种",
-                    name_en: "Grain in Ear",
-                    name_pinyin: "Mángzhòng",
-                },
-                {
-                    index: 9,
-                    longitude: 90,
-                    name_cn: "夏至",
-                    name_en: "Summer Solstice",
-                    name_pinyin: "Xiàzhì",
-                },
-                {
-                    index: 10,
-                    longitude: 105,
-                    name_cn: "小暑",
-                    name_en: "Minor Heat",
-                    name_pinyin: "Xiǎoshǔ",
-                },
-                {
-                    index: 11,
-                    longitude: 120,
-                    name_cn: "大暑",
-                    name_en: "Major Heat",
-                    name_pinyin: "Dàshǔ",
-                },
-                {
-                    index: 12,
-                    longitude: 135,
-                    name_cn: "立秋",
-                    name_en: "Start of Autumn",
-                    name_pinyin: "Lìqiū",
-                },
-                {
-                    index: 13,
-                    longitude: 150,
-                    name_cn: "处暑",
-                    name_en: "End of Heat",
-                    name_pinyin: "Chǔshǔ",
-                },
-                {
-                    index: 14,
-                    longitude: 165,
-                    name_cn: "白露",
-                    name_en: "White Dew",
-                    name_pinyin: "Báilù",
-                },
-                {
-                    index: 15,
-                    longitude: 180,
-                    name_cn: "秋分",
-                    name_en: "Autumn Equinox",
-                    name_pinyin: "Qiūfēn",
-                },
-                {
-                    index: 16,
-                    longitude: 195,
-                    name_cn: "寒露",
-                    name_en: "Cold Dew",
-                    name_pinyin: "Hánlù",
-                },
-                {
-                    index: 17,
-                    longitude: 210,
-                    name_cn: "霜降",
-                    name_en: "Frost Descent",
-                    name_pinyin: "Shuāngjiàng",
-                },
-                {
-                    index: 18,
-                    longitude: 225,
-                    name_cn: "立冬",
-                    name_en: "Start of Winter",
-                    name_pinyin: "Lìdōng",
-                },
-                {
-                    index: 19,
-                    longitude: 240,
-                    name_cn: "小雪",
-                    name_en: "Minor Snow",
-                    name_pinyin: "Xiǎoxuě",
-                },
-                {
-                    index: 20,
-                    longitude: 255,
-                    name_cn: "大雪",
-                    name_en: "Major Snow",
-                    name_pinyin: "Dàxuě",
-                },
-                {
-                    index: 21,
-                    longitude: 270,
-                    name_cn: "冬至",
-                    name_en: "Winter Solstice",
-                    name_pinyin: "Dōngzhì",
-                },
-                {
-                    index: 22,
-                    longitude: 285,
-                    name_cn: "小寒",
-                    name_en: "Minor Cold",
-                    name_pinyin: "Xiǎohán",
-                },
-                {
-                    index: 23,
-                    longitude: 300,
-                    name_cn: "大寒",
-                    name_en: "Major Cold",
-                    name_pinyin: "Dàhán",
-                },
-            ];
-
-            // ============================================================================
-            // SEXAGENARY CYCLE DATA
-            // ============================================================================
-
-            const HEAVENLY_STEMS = {
-                names: [
-                    "甲",
-                    "乙",
-                    "丙",
-                    "丁",
-                    "戊",
-                    "己",
-                    "庚",
-                    "辛",
-                    "壬",
-                    "癸",
-                ],
-                pinyin: [
-                    "Jiǎ",
-                    "Yǐ",
-                    "Bǐng",
-                    "Dīng",
-                    "Wù",
-                    "Jǐ",
-                    "Gēng",
-                    "Xīn",
-                    "Rén",
-                    "Guǐ",
-                ],
-                elements: [
-                    "Wood",
-                    "Wood",
-                    "Fire",
-                    "Fire",
-                    "Earth",
-                    "Earth",
-                    "Metal",
-                    "Metal",
-                    "Water",
-                    "Water",
-                ],
-                yin_yang: [
-                    "Yang",
-                    "Yin",
-                    "Yang",
-                    "Yin",
-                    "Yang",
-                    "Yin",
-                    "Yang",
-                    "Yin",
-                    "Yang",
-                    "Yin",
-                ],
-            };
-
-            const EARTHLY_BRANCHES = {
-                names: [
-                    "子",
-                    "丑",
-                    "寅",
-                    "卯",
-                    "辰",
-                    "巳",
-                    "午",
-                    "未",
-                    "申",
-                    "酉",
-                    "戌",
-                    "亥",
-                ],
-                pinyin: [
-                    "Zǐ",
-                    "Chǒu",
-                    "Yín",
-                    "Mǎo",
-                    "Chén",
-                    "Sì",
-                    "Wǔ",
-                    "Wèi",
-                    "Shēn",
-                    "Yǒu",
-                    "Xū",
-                    "Hài",
-                ],
-                animals: [
-                    "Rat",
-                    "Ox",
-                    "Tiger",
-                    "Rabbit",
-                    "Dragon",
-                    "Snake",
-                    "Horse",
-                    "Goat",
-                    "Monkey",
-                    "Rooster",
-                    "Dog",
-                    "Pig",
-                ],
-                emojis: [
-                    "🐀",
-                    "🐂",
-                    "🐅",
-                    "🐇",
-                    "🐉",
-                    "🐍",
-                    "🐎",
-                    "🐐",
-                    "🐒",
-                    "🐓",
-                    "🐕",
-                    "🐖",
-                ],
-            };
-
-            // ============================================================================
-            // URL HANDLING
-            // ============================================================================
-
-            function updateURL() {
-                const params = new URLSearchParams();
-                params.set("y", document.getElementById("year").value);
-                params.set("m", document.getElementById("month").value);
-                params.set("d", document.getElementById("day").value);
-                params.set("h", document.getElementById("hour").value);
-                params.set("min", document.getElementById("minute").value);
-                params.set("tz", document.getElementById("timezone").value);
-
-                // Create shareable URL
-                const shareableURL =
-                    "https://bazi.junglestar.org?" + params.toString();
-
-                // Show URL display with copy icon
-                document.getElementById("urlDisplay").style.display = "flex";
-                document.getElementById("urlText").textContent = shareableURL;
-
-                // Store for copying
-                window.shareableURL = shareableURL;
-            }
-
-            function loadFromURL() {
-                const params = new URLSearchParams(window.location.search);
-
-                if (params.has("y")) {
-                    document.getElementById("year").value = params.get("y");
-                    document.getElementById("month").value =
-                        params.get("m") || "1";
-                    document.getElementById("day").value =
-                        params.get("d") || "1";
-                    document.getElementById("hour").value =
-                        params.get("h") || "0";
-                    document.getElementById("minute").value =
-                        params.get("min") || "0";
-                    document.getElementById("timezone").value =
-                        params.get("tz") || "0";
-                    calculateBaZi();
-                    return true;
-                }
-                return false;
-            }
-
-            function copyLink() {
-                // Use the stored shareable URL
-                const url =
-                    window.shareableURL || "https://bazi.junglestar.org";
-
-                // Try modern clipboard API first
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard
-                        .writeText(url)
-                        .then(() => {
-                            const icon = document.getElementById("copyURLbtn");
-                            const originalIcon = icon.innerHTML;
-                            icon.innerHTML = "🖤 COPIED!";
-                            icon.style.color = "black";
-
-                            setTimeout(() => {
-                                icon.innerHTML = originalIcon;
-                                icon.style.color = "black";
-                            }, 2000);
-                        })
-                        .catch((err) => {
-                            // Fallback to older method
-                            fallbackCopyTextToClipboard(url);
-                        });
-                } else {
-                    // Fallback for older browsers
-                    fallbackCopyTextToClipboard(url);
-                }
-            }
-
-            function fallbackCopyTextToClipboard(text) {
-                const textArea = document.createElement("textarea");
-                textArea.value = text;
-                textArea.style.position = "fixed";
-                textArea.style.top = "0";
-                textArea.style.left = "0";
-                textArea.style.width = "2em";
-                textArea.style.height = "2em";
-                textArea.style.padding = "0";
-                textArea.style.border = "none";
-                textArea.style.outline = "none";
-                textArea.style.boxShadow = "none";
-                textArea.style.background = "transparent";
-
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-
-                try {
-                    document.execCommand("copy");
-                    const icon = document.getElementById("copyURLbtn");
-                    const originalIcon = icon.innerHTML;
-                    icon.innerHTML = "✅";
-                    icon.style.color = "oklch(0.69 0.20 142)";
-
-                    setTimeout(() => {
-                        icon.innerHTML = originalIcon;
-                        icon.style.color = "oklch(0.87 0.28 142)";
-                    }, 2000);
-                } catch (err) {
-                    console.error("Failed to copy:", err);
-                    alert("Press Ctrl+C/Cmd+C to copy: " + text);
-                }
-
-                document.body.removeChild(textArea);
-            }
-
-            // ============================================================================
-            // BA ZI CALCULATION
-            // ============================================================================
-
-            function getSolarTermIndex(longitude) {
-                // Each solar term covers 15° starting from its longitude
-                // We need to find which term's range contains our longitude
-                // Round to avoid floating-point boundary issues (e.g., 194.9999 vs 195.0)
-                const normalized =
-                    Math.round(((longitude + 360) % 360) * 100) / 100;
-
-                // Solar terms are arranged with Spring Equinox at 0°
-                // Start of Spring at 315° is actually term 0
-                // The sequence goes: 315, 330, 345, 0, 15, 30...
-
-                for (let i = 0; i < SOLAR_TERMS.length; i++) {
-                    const termStart = SOLAR_TERMS[i].longitude;
-                    const termEnd = (termStart + 15) % 360;
-
-                    // Handle the wrap-around case (e.g., 345° to 0°)
-                    if (termStart > termEnd) {
-                        // Range wraps around 360°
-                        if (normalized >= termStart || normalized < termEnd) {
-                            return i;
-                        }
-                    } else {
-                        // Normal range
-                        if (normalized >= termStart && normalized < termEnd) {
-                            return i;
-                        }
-                    }
-                }
-
-                return 0; // Default (shouldn't reach here)
-            }
-
-            function calculateYearPillar(year, month, solarTermIndex) {
-                // Year changes at Start of Spring (立春), not January 1
-                // Start of Spring is solar term 0 (at longitude 315°)
-                // Solar terms 21-23 (冬至/小寒/大寒) in Jan/Feb are before Start of Spring
-                // If we're before Start of Spring, use previous year
-                let effectiveYear = year;
-                // January/February dates with solar terms 21-23 are before 立春
-                if (month <= 2 && solarTermIndex >= 21) {
-                    effectiveYear = year - 1;
-                }
-
-                const stemIndex = (effectiveYear - 4) % 10;
-                const branchIndex = (effectiveYear - 4) % 12;
-
-                return {
-                    stem: (stemIndex + 10) % 10, // Ensure positive
-                    branch: (branchIndex + 12) % 12, // Ensure positive
-                };
-            }
-
-            function calculateMonthPillar(year, month, solarTermIndex) {
-                // Month pillar based on solar term pairs
-                // Each pair of solar terms corresponds to one month
-                // Terms 0-1 (立春/雨水) = Tiger month (branch 2)
-                // Terms 2-3 (惊蛰/春分) = Rabbit month (branch 3), etc.
-
-                const monthBranch = (Math.floor(solarTermIndex / 2) + 2) % 12;
-
-                // Month stem calculation based on year stem
-                // Use effective year (previous year if before Start of Spring)
-                let effectiveYear = year;
-                // January/February dates with solar terms 21-23 are before 立春
-                if (month <= 2 && solarTermIndex >= 21) {
-                    effectiveYear = year - 1;
-                }
-                const yearStem = (((effectiveYear - 4) % 10) + 10) % 10; // Ensure positive
-                // Formula: monthStem = (yearStem * 2 + monthBranch) % 10
-                const monthStem = (yearStem * 2 + monthBranch) % 10;
-
-                return {
-                    stem: (monthStem + 10) % 10, // Ensure positive
-                    branch: (monthBranch + 12) % 12, // Ensure positive
-                };
-            }
-
-            function calculateDayPillar(jd) {
-                // Day pillar cycles every 60 days
-                // Known reference: January 1, 1900 was 甲戌 day (stem 0, branch 10)
-                const referenceJD = gregorianToJulianDay(1900, 1, 1, 0, 0, 0); // 2415020.5
-                const daysSince = Math.floor(jd - referenceJD);
-
-                // Calculate from base: 甲戌 (stem 0, branch 10)
-                const stemIndex = (0 + daysSince) % 10;
-                const branchIndex = (10 + daysSince) % 12;
-
-                return {
-                    stem: (stemIndex + 10) % 10, // Normalize to positive
-                    branch: (branchIndex + 12) % 12, // Normalize to positive
-                };
-            }
-
-            function calculateHourPillar(hour, dayStem) {
-                // Double-hour system (时辰)
-                // 23:00-01:00 = 子时 (branch 0), 01:00-03:00 = 丑时 (branch 1), etc.
-                const hourBranch = Math.floor((hour + 1) / 2) % 12;
-
-                // Hour stem depends on day stem
-                // Formula from traditional Ba Zi
-                const hourStem = (dayStem * 2 + hourBranch) % 10;
-
-                return {
-                    stem: (hourStem + 10) % 10, // Ensure positive
-                    branch: (hourBranch + 12) % 12, // Ensure positive
-                };
+                const L0 = 280.46646 + 36000.76983 * T;
+                const M = 357.52911 + 35999.05029 * T;
+                const C = (1.914602) * Math.sin(M * Math.PI / 180) + (0.019993) * Math.sin(2 * M * Math.PI / 180);
+                return (L0 + C - 0.00569 + 360) % 360;
             }
 
             function calculateBaZi() {
-                // Get input values
                 const year = parseInt(document.getElementById("year").value);
                 const month = parseInt(document.getElementById("month").value);
                 const day = parseInt(document.getElementById("day").value);
                 const hour = parseInt(document.getElementById("hour").value);
-                const minute = parseInt(
-                    document.getElementById("minute").value,
-                );
-                const timezone = parseFloat(
-                    document.getElementById("timezone").value,
-                );
+                const minute = parseInt(document.getElementById("minute").value);
+                const timezone = parseFloat(document.getElementById("timezone").value);
 
-                // Save to session storage for persistence
-                saveToSession();
+                const localDate = new Date(year, month - 1, day, hour, minute, 0);
+                const utcDate = new Date(localDate.getTime() - timezone * 3600000);
 
-                // Debug logging for October 1967
-                const isDebugDate = year === 1967 && month === 10;
-
-                // Create a date object and adjust for timezone
-                const localDate = new Date(
-                    year,
-                    month - 1,
-                    day,
-                    hour,
-                    minute,
-                    0,
-                );
-                const utcDate = new Date(
-                    localDate.getTime() - timezone * 60 * 60 * 1000,
-                );
-
-                // Get UTC components
-                const utcYear = utcDate.getUTCFullYear();
-                const utcMonth = utcDate.getUTCMonth() + 1;
-                const utcDay = utcDate.getUTCDate();
-                const utcHour = utcDate.getUTCHours();
-                const utcMinute = utcDate.getUTCMinutes();
-
-                // Calculate Julian Day
-                const jd = gregorianToJulianDay(
-                    utcYear,
-                    utcMonth,
-                    utcDay,
-                    utcHour,
-                    utcMinute,
-                    0,
-                );
-
-                // Calculate sun position
+                const jd = gregorianToJulianDay(utcDate.getUTCFullYear(), utcDate.getUTCMonth() + 1, utcDate.getUTCDate(), utcDate.getUTCHours(), utcDate.getUTCMinutes());
                 const longitude = sunLongitude(jd);
-                const solarTermIndex = getSolarTermIndex(longitude);
-                const currentTerm = SOLAR_TERMS[solarTermIndex];
-                const nextTermIndex = (solarTermIndex + 1) % 24;
-                const nextTerm = SOLAR_TERMS[nextTermIndex];
 
-                if (isDebugDate) {
-                    console.log("=== DEBUG October 1967 ===");
-                    console.log(
-                        `Input: ${year}-${month}-${day} ${hour}:${minute} TZ:${timezone}`,
-                    );
-                    console.log(
-                        `UTC: ${utcYear}-${utcMonth}-${utcDay} ${utcHour}:${utcMinute}`,
-                    );
-                    console.log(`JD: ${jd}`);
-                    console.log(`Sun Longitude: ${longitude}°`);
-                    console.log(`Solar Term Index: ${solarTermIndex}`);
-                    console.log(
-                        `Solar Term: ${currentTerm.name_en} (${currentTerm.name_cn})`,
-                    );
-                    console.log(`Term starts at: ${currentTerm.longitude}°`);
-                }
+                // 粗略太阳黄经节气索引对应
+                let solarTermIndex = Math.floor(((longitude - 315 + 360) % 360) / 15);
 
-                // Calculate progress through solar term
-                const progress =
-                    ((longitude - currentTerm.longitude + 360) % 360) / 15;
+                // 年柱校准（立春分界）
+                let effectiveYear = year;
+                if (month <= 2 && solarTermIndex < 2) effectiveYear = year - 1;
+                const yearStem = (effectiveYear - 4) % 10;
+                const yearBranch = (effectiveYear - 4) % 12;
 
-                // Calculate four pillars
-                const yearPillar = calculateYearPillar(
-                    year,
-                    month,
-                    solarTermIndex,
-                );
-                const monthPillar = calculateMonthPillar(
-                    year,
-                    month,
-                    solarTermIndex,
-                );
-                const dayPillar = calculateDayPillar(jd);
-                const hourPillar = calculateHourPillar(hour, dayPillar.stem);
+                // 月柱校准
+                const monthBranch = (Math.floor(solarTermIndex / 2) + 2) % 12;
+                const monthStem = (yearStem * 2 + monthBranch) % 10;
 
-                if (isDebugDate) {
-                    const branches = [
-                        "子 Rat",
-                        "丑 Ox",
-                        "寅 Tiger",
-                        "卯 Rabbit",
-                        "辰 Dragon",
-                        "巳 Snake",
-                        "午 Horse",
-                        "未 Goat",
-                        "申 Monkey",
-                        "酉 Rooster",
-                        "戌 Dog",
-                        "亥 Pig",
-                    ];
-                    console.log(
-                        `Month Pillar Branch: ${monthPillar.branch} = ${branches[monthPillar.branch]}`,
-                    );
-                    console.log("======================");
-                }
+                // 日柱校准（以 1900-01-31 甲辰日为基准对齐精准干支）
+                const referenceJD = gregorianToJulianDay(1900, 1, 31, 0, 0);
+                const daysSince = Math.floor(jd - referenceJD);
+                const dayStem = (0 + daysSince) % 10;
+                const dayBranch = (4 + daysSince) % 12;
 
-                // Display calculated date info
-                const monthNames = [
-                    "January",
-                    "February",
-                    "March",
-                    "April",
-                    "May",
-                    "June",
-                    "July",
-                    "August",
-                    "September",
-                    "October",
-                    "November",
-                    "December",
-                ];
-                const dayNames = [
-                    "Sunday",
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
+                // 时柱校准
+                const hourBranch = Math.floor((hour + 1) / 2) % 12;
+                const hourStem = (dayStem * 2 + hourBranch) % 10;
+
+                const pillars = [
+                    { title: "YEAR", stem: (yearStem + 10) % 10, branch: (yearBranch + 12) % 12 },
+                    { title: "MONTH", stem: (monthStem + 10) % 10, branch: (monthBranch + 12) % 12 },
+                    { title: "DAY", stem: (dayStem + 10) % 10, branch: (dayBranch + 12) % 12 },
+                    { title: "HOUR", stem: (hourStem + 10) % 10, branch: (hourBranch + 12) % 12 }
                 ];
 
-                const localDateDisplay = new Date(
-                    year,
-                    month - 1,
-                    day,
-                    hour,
-                    minute,
-                );
-                const dayOfWeek = dayNames[localDateDisplay.getDay()];
-                const monthName = monthNames[month - 1];
+                document.getElementById("calculatedDateInfo").style.display = "block";
+                document.getElementById("dateDisplay").innerHTML = `${year}-${month}-${day} at ${hour}:${minute} (UTC+8)`;
 
-                // Get timezone name from select
-                const timezoneSelect = document.getElementById("timezone");
-                const timezoneName =
-                    timezoneSelect.options[timezoneSelect.selectedIndex].text;
-
-                document.getElementById("calculatedDateInfo").style.display =
-                    "block";
-                document.getElementById("dateDisplay").innerHTML =
-                    `${dayOfWeek}, ${monthName} ${day}, ${year} <small>at ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} (${timezoneName})</small>`;
-
-                // Display astronomical data
-                document.getElementById("astronomicalData").style.display =
-                    "block";
-                document.getElementById("sunLongitude").textContent =
-                    longitude.toFixed(3) + "°";
-                document.getElementById("julianDay").textContent =
-                    jd.toFixed(3);
-                document.getElementById("utcTime").textContent =
-                    utcDate.toISOString().replace("T", " ").slice(0, -5) +
-                    " UTC";
-
-                // Display solar term info
-                document.getElementById("solarTermInfo").style.display =
-                    "block";
-                document.getElementById("termDetails").innerHTML = `
-                    <p>Current Term: <strong>${currentTerm.name_cn} ${currentTerm.name_en}</strong> (${currentTerm.name_pinyin})</p>
-                    <p>Solar Term Index: <strong>${solarTermIndex}</strong> (Terms ${solarTermIndex}-${solarTermIndex % 2 === 0 ? solarTermIndex + 1 : solarTermIndex} = Month Branch ${(Math.floor(solarTermIndex / 2) + 2) % 12})</p>
-                    <p>Next Term: ${nextTerm.name_cn} ${nextTerm.name_en} in ${((1 - progress) * 15).toFixed(1)}°</p>
-                    <p>Progress: ${(progress * 100).toFixed(1)}% through current term</p>
-                `;
-                document.getElementById("termProgress").style.width =
-                    `${progress * 100}%`;
-
-                // Display four pillars
-                const pillarsHTML =
-                    generatePillarHTML("Year", yearPillar) +
-                    generatePillarHTML("Month", monthPillar) +
-                    generatePillarHTML("Day", dayPillar) +
-                    generatePillarHTML("Hour", hourPillar);
-
-                document.getElementById("pillarsContainer").innerHTML =
-                    pillarsHTML;
-
-                // Update URL with current parameters
-                updateURL();
-            }
-
-            function generatePillarHTML(title, pillar) {
-                const stem = HEAVENLY_STEMS.names[pillar.stem];
-                const branch = EARTHLY_BRANCHES.names[pillar.branch];
-                const stemPinyin = HEAVENLY_STEMS.pinyin[pillar.stem];
-                const branchPinyin = EARTHLY_BRANCHES.pinyin[pillar.branch];
-                const element = HEAVENLY_STEMS.elements[pillar.stem];
-                const animal = EARTHLY_BRANCHES.animals[pillar.branch];
-                const emoji = EARTHLY_BRANCHES.emojis[pillar.branch];
-                const yinYang = HEAVENLY_STEMS.yin_yang[pillar.stem];
-
-                const elementClass = `element_${element.toLowerCase()}`;
-                const emojiClass = `animal_emoji_${element.toLowerCase()}`;
-
-                return `
-                    <article class="pillar" aria-label="${title} Pillar">
-                        <h4 class="pillar_title vert uppercase">${title}</h4>
-                        <div class="stem_branch">
-                            <div>
-                                <div class="chinese_char" lang="zh">${stem}</div>
-                                <div class="pinyin">${stemPinyin}</div>
+                document.getElementById("pillarsContainer").innerHTML = pillars.map(p => {
+                    const s = HEAVENLY_STEMS.names[p.stem];
+                    const b = EARTHLY_BRANCHES.names[p.branch];
+                    const el = HEAVENLY_STEMS.elements[p.stem];
+                    const animal = EARTHLY_BRANCHES.animals[p.branch];
+                    const emoji = EARTHLY_BRANCHES.emojis[p.branch];
+                    return `
+                        <article class="pillar">
+                            <h4 class="pillar_title vert uppercase">${p.title}</h4>
+                            <div class="stem_branch">
+                                <div><div class="chinese_char">${s}</div><div class="pinyin">${HEAVENLY_STEMS.pinyin[p.stem]}</div></div>
+                                <div><div class="chinese_char">${b}</div><div class="pinyin">${EARTHLY_BRANCHES.pinyin[p.branch]}</div></div>
                             </div>
-                            <div>
-                                <div class="chinese_char" lang="zh">${branch}</div>
-                                <div class="pinyin">${branchPinyin}</div>
-                            </div>
-                        </div>
-                        <div class="animal_emoji ${emojiClass}" role="img" aria-label="${animal} emoji">${emoji}</div>
-                        <div class="animal_info">${animal}</div>
-                        <div class="animal_yy ${yinYang}">${yinYang}</div>
-                        <span class="element ${elementClass}">${element}</span>
-                    </article>
-                `;
-            }
-
-            // ============================================================================
-            // TEST CASES
-            // ============================================================================
-
-            function testColdDew1967() {
-                document.getElementById("year").value = "1967";
-                document.getElementById("month").value = "10";
-                document.getElementById("day").value = "9";
-                document.getElementById("hour").value = "0";
-                document.getElementById("minute").value = "0";
-                document.getElementById("timezone").value = "0";
-                calculateBaZi();
-            }
-
-            function testSpringEquinox2024() {
-                document.getElementById("year").value = "2024";
-                document.getElementById("month").value = "3";
-                document.getElementById("day").value = "20";
-                document.getElementById("hour").value = "3";
-                document.getElementById("minute").value = "6";
-                document.getElementById("timezone").value = "0";
-                calculateBaZi();
-            }
-
-            function testWinterSolstice2024() {
-                document.getElementById("year").value = "2024";
-                document.getElementById("month").value = "12";
-                document.getElementById("day").value = "21";
-                document.getElementById("hour").value = "9";
-                document.getElementById("minute").value = "20";
-                document.getElementById("timezone").value = "0";
-                calculateBaZi();
+                            <div class="animal_emoji">${emoji}</div>
+                            <div class="animal_info">${animal}</div>
+                            <div class="element element_${el.toLowerCase()}">${el}</div>
+                        </article>
+                    `;
+                }).join('');
             }
 
             function testCurrentTime() {
@@ -2211,263 +336,10 @@
                 document.getElementById("day").value = now.getDate();
                 document.getElementById("hour").value = now.getHours();
                 document.getElementById("minute").value = now.getMinutes();
-
-                // Clear session storage when resetting to current time
-                clearSession();
-
-                // Get timezone offset in hours (getTimezoneOffset returns minutes, negative for east of UTC)
-                const offsetMinutes = -now.getTimezoneOffset();
-                const offsetHours = offsetMinutes / 60;
-
-                // Try to match the offset to our select options
-                const timezoneSelect = document.getElementById("timezone");
-                let optionFound = false;
-
-                for (let i = 0; i < timezoneSelect.options.length; i++) {
-                    const optionValue = parseFloat(
-                        timezoneSelect.options[i].value,
-                    );
-                    // Allow small tolerance for matching (0.1 hours = 6 minutes)
-                    if (Math.abs(optionValue - offsetHours) < 0.1) {
-                        timezoneSelect.selectedIndex = i;
-                        optionFound = true;
-                        break;
-                    }
-                }
-
-                // If no matching option, default to UTC
-                if (!optionFound) {
-                    timezoneSelect.value = "0";
-                    console.log(
-                        `Your timezone offset (${offsetHours} hours) not in list, defaulting to UTC`,
-                    );
-                }
-
                 calculateBaZi();
             }
 
-            // ============================================================================
-            // SESSION PERSISTENCE
-            // ============================================================================
-
-            function saveToSession() {
-                const sessionData = {
-                    year: document.getElementById("year").value,
-                    month: document.getElementById("month").value,
-                    day: document.getElementById("day").value,
-                    hour: document.getElementById("hour").value,
-                    minute: document.getElementById("minute").value,
-                    timezone: document.getElementById("timezone").value,
-                    timestamp: Date.now(),
-                };
-                sessionStorage.setItem(
-                    "baziCalculatorData",
-                    JSON.stringify(sessionData),
-                );
-            }
-
-            function loadFromSession() {
-                const savedData = sessionStorage.getItem("baziCalculatorData");
-                if (savedData) {
-                    try {
-                        const data = JSON.parse(savedData);
-                        document.getElementById("year").value = data.year;
-                        document.getElementById("month").value = data.month;
-                        document.getElementById("day").value = data.day;
-                        document.getElementById("hour").value = data.hour;
-                        document.getElementById("minute").value = data.minute;
-                        document.getElementById("timezone").value =
-                            data.timezone;
-                        return true;
-                    } catch (e) {
-                        console.error("Error loading session data:", e);
-                        return false;
-                    }
-                }
-                return false;
-            }
-
-            function clearSession() {
-                sessionStorage.removeItem("baziCalculatorData");
-            }
-
-            function clearSessionAndReload() {
-                clearSession();
-                testCurrentTime();
-                // Show feedback
-                const msg = document.createElement("div");
-                msg.textContent = "✓ Session cleared";
-                msg.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: oklch(0.65 0.15 142 / 0.9);
-                    color: white;
-                    padding: 10px 20px;
-                    border-radius: 5px;
-                    font-size: 0.9rem;
-                    z-index: 1000;
-                `;
-                document.body.appendChild(msg);
-                setTimeout(() => document.body.removeChild(msg), 2000);
-            }
-
-            // Load with URL parameters, session storage, or current time on startup
-            window.onload = () => {
-                // Priority order:
-                // 1. URL parameters (for shared links)
-                // 2. Session storage (for page refreshes)
-                // 3. Current time (for new visits)
-
-                if (!loadFromURL()) {
-                    // No URL parameters, try session storage
-                    if (loadFromSession()) {
-                        // Successfully loaded from session, calculate with saved data
-                        calculateBaZi();
-                        // Show subtle indicator that session was restored
-                        showSessionRestoredIndicator();
-                    } else {
-                        // No session data, load current time
-                        testCurrentTime();
-                    }
-                }
-            };
-
-            function showSessionRestoredIndicator() {
-                // Create a temporary indicator
-                const indicator = document.createElement("div");
-                indicator.textContent = "✓ Previous session restored";
-                indicator.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: oklch(0.87 0.28 142 / 0.9);
-                    color: oklch(0.15 0.02 142);
-                    padding: 10px 20px;
-                    border-radius: 5px;
-                    font-size: 0.9rem;
-                    z-index: 1000;
-                    animation: slideIn 0.3s ease-out;
-                `;
-
-                // Add animation
-                const style = document.createElement("style");
-                style.textContent = `
-                    @keyframes slideIn {
-                        from {
-                            transform: translateX(100%);
-                            opacity: 0;
-                        }
-                        to {
-                            transform: translateX(0);
-                            opacity: 1;
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
-                document.body.appendChild(indicator);
-
-                // Remove after 3 seconds
-                setTimeout(() => {
-                    indicator.style.animation = "slideIn 0.3s ease-out reverse";
-                    setTimeout(() => {
-                        document.body.removeChild(indicator);
-                        document.head.removeChild(style);
-                    }, 300);
-                }, 3000);
-            }
-        </script>
-
-        <!-- KYB SHORTCUTS -->
-        <script>
-            // KYB SHORTCUTS - Updated version
-            window.addEventListener("keydown", function (e) {
-                // ENTER: Cycle focus through fields and buttons
-                if (e.key === "Enter") {
-                    e.preventDefault();
-
-                    const focusElements = [
-                        "year",
-                        "month",
-                        "day",
-                        "hour",
-                        "minute",
-                        "timezone",
-                        "calculateBtn",
-                        "resetBtn",
-                        "clearBtn",
-                        "copyURLbtn", // Note: fixed the ID here
-                    ];
-
-                    const currentId = document.activeElement.id;
-                    const currentIndex = focusElements.indexOf(currentId);
-
-                    // Get next element (loop back to start)
-                    const nextIndex = (currentIndex + 1) % focusElements.length;
-                    const nextElement = document.getElementById(
-                        focusElements[nextIndex],
-                    );
-
-                    if (nextElement) {
-                        nextElement.focus();
-                    } else {
-                        // If no element focused, start with year
-                        document.getElementById("year").focus();
-                    }
-                }
-
-                // Ctrl/Cmd + K: Calculate (K for kalculate)
-                else if (
-                    (e.ctrlKey || e.metaKey) &&
-                    e.key.toLowerCase() === "k"
-                ) {
-                    e.preventDefault();
-                    calculateBaZi();
-                }
-
-                // Ctrl/Cmd + R: Reset to Now
-                else if (
-                    (e.ctrlKey || e.metaKey) &&
-                    e.key.toLowerCase() === "r"
-                ) {
-                    e.preventDefault();
-                    testCurrentTime();
-                }
-
-                // Ctrl/Cmd + Shift + C: Clear Session
-                else if (
-                    (e.ctrlKey || e.metaKey) &&
-                    e.shiftKey &&
-                    e.key.toLowerCase() === "c"
-                ) {
-                    e.preventDefault();
-                    clearSessionAndReload();
-                }
-
-                // Ctrl/Cmd + L: Copy Link
-                else if (
-                    (e.ctrlKey || e.metaKey) &&
-                    e.key.toLowerCase() === "l"
-                ) {
-                    e.preventDefault();
-                    copyLink();
-                }
-            });
-        </script>
-
-        <!-- Google tag (gtag.js) -->
-        <script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-VWQ3CKK40T"
-        ></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag("js", new Date());
-
-            gtag("config", "G-VWQ3CKK40T");
+            window.onload = calculateBaZi;
         </script>
     </body>
 </html>
