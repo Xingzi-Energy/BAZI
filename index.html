@@ -177,9 +177,13 @@
                             <div class="input_group">
                                 <label for="timezone">Timezone</label>
                                 <select id="timezone">
-                                    <option value="8" selected>Beijing / Shanghai (UTC+8)</option>
-                                    <option value="-5">Eastern Time (EST): UTC-5</option>
+                                    <option value="-5" selected>Eastern Time (EST): UTC-5</option>
+                                    <option value="-6">Central Time (CST): UTC-6</option>
+                                    <option value="-7">Mountain Time (MST): UTC-7</option>
                                     <option value="-8">Pacific Time (PST): UTC-8</option>
+                                    <option value="-9">Alaska Time (AKST): UTC-9</option>
+                                    <option value="-10">Hawaii Time (HST): UTC-10</option>
+                                    <option value="8">China Standard Time (CST): UTC+8</option>
                                 </select>
                             </div>
                         </fieldset>
@@ -201,7 +205,7 @@
                         <div class="pillars_container" id="pillarsContainer"></div>
                         
                         <!-- Shopify 引导转化区 -->
-                        <div id="shopifyCta" style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(0, 20, 0, 0.8); border: 1px solid #00ff6655; border-radius: 10px;">
+                        <div id="shopifyCta" style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(0, 20, 0, 0.8); border: 1px solid #00ff6555; border-radius: 10px;">
                             <h3 style="color: #00ff66; margin-bottom: 10px; font-size: 20px;">Unlock Your Complete Destiny & Wealth Blueprint</h3>
                             <p style="color: #ccc; font-size: 14px; margin-bottom: 20px;">Based on your Ba Zi chart above, get a comprehensive, personalized English PDF report.</p>
                             <a href="https://你的Shopify店铺域名/cart/add?id=你的商品ID&quantity=1" target="_blank" style="display: inline-block; background-color: #00ff66; color: #000; padding: 12px 30px; font-weight: bold; text-decoration: none; border-radius: 6px;">Get My Deep Dive Report ➔</a>
@@ -211,7 +215,6 @@
             </main>
         </div>
         <script>
-            // 五行属性对照表
             const ELEMENT_MAP = {
                 '甲': 'Wood', '乙': 'Wood',
                 '丙': 'Fire', '丁': 'Fire',
@@ -226,14 +229,31 @@
                 const day = parseInt(document.getElementById('day').value);
                 const hour = parseInt(document.getElementById('hour').value);
                 const minute = parseInt(document.getElementById('minute').value || 0);
+                const tzOffset = parseFloat(document.getElementById('timezone').value);
 
                 if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour)) {
                     alert("Please fill in valid date fields.");
                     return;
                 }
 
-                // 使用 lunar-javascript 权威引擎计算公历转农历及八字
-                const solar = Solar.fromYmdHms(year, month, day, hour, minute, 0);
+                // 1. 构造用户输入的本地时间对象
+                const localDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+
+                // 2. 根据用户选择的时区偏移量，精确换算为标准的 UTC 时间戳
+                // 例如用户选 EST (UTC-5)，其 UTC 时间 = 本地时间 - (-5小时)
+                const utcTimestamp = localDate.getTime() - (tzOffset * 3600 * 1000);
+                const utcDate = new Date(utcTimestamp);
+
+                // 3. 将绝对的 UTC 时间传给专业历法引擎进行排盘，确保全球时区计算绝对一致
+                const solar = Solar.fromYmdHms(
+                    utcDate.getUTCFullYear(),
+                    utcDate.getUTCMonth() + 1,
+                    utcDate.getUTCDate(),
+                    utcDate.getUTCHours(),
+                    utcDate.getUTCMinutes(),
+                    0
+                );
+                
                 const lunar = solar.getLunar();
                 const eightChar = lunar.getEightChar();
 
@@ -262,7 +282,8 @@
                     container.appendChild(div);
                 });
 
-                document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} at ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`;
+                const tzText = document.getElementById('timezone').options[document.getElementById('timezone').selectedIndex].text;
+                document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} at ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')} (${tzText})`;
                 document.getElementById('resultCard').style.display = 'block';
                 document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
             }
@@ -277,7 +298,6 @@
                 document.getElementById('resultCard').style.display = 'none';
             }
 
-            // 页面加载默认计算一次
             window.onload = function() {
                 calculateBaZi();
             };
