@@ -176,19 +176,19 @@
                             </div>
                             <div class="input_group">
                                 <label for="timezone">Timezone</label>
-                                <select id="timezone">
-                                    <option value="-5" selected>Eastern Time (EST): UTC-5</option>
-                                    <option value="-6">Central Time (CST): UTC-6</option>
-                                    <option value="-7">Mountain Time (MST): UTC-7</option>
-                                    <option value="-8">Pacific Time (PST): UTC-8</option>
-                                    <option value="-9">Alaska Time (AKST): UTC-9</option>
-                                    <option value="-10">Hawaii Time (HST): UTC-10</option>
-                                    <option value="8">China Standard Time (CST): UTC+8</option>
+                                <select id="timezone" onchange="calculateBaZi()">
+                                    <option value="est">Eastern Time (EST): UTC-5</option>
+                                    <option value="cst_us">Central Time (CST): UTC-6</option>
+                                    <option value="mst">Mountain Time (MST): UTC-7</option>
+                                    <option value="pst">Pacific Time (PST): UTC-8</option>
+                                    <option value="akst">Alaska Time (AKST): UTC-9</option>
+                                    <option value="hst">Hawaii Time (HST): UTC-10</option>
+                                    <option value="cst_cn">China Standard Time (CST): UTC+8</option>
                                 </select>
                             </div>
                         </fieldset>
                         <div style="font-size: 0.85rem; color: var(--text_secondary); margin-bottom: 15px; font-style: italic;">
-                            * Please fill in Year, Month, Day, Hour, and Timezone. Minute is optional.
+                            * Changing the timezone will automatically update the BaZi chart.
                         </div>
                         <div>
                             <button type="submit">Calculate</button>
@@ -229,26 +229,35 @@
                 const day = parseInt(document.getElementById('day').value);
                 const hour = parseInt(document.getElementById('hour').value);
                 const minute = parseInt(document.getElementById('minute').value || 0);
-                const selectedTzOffset = parseFloat(document.getElementById('timezone').value); // 比如 -5
+                const tzSelect = document.getElementById('timezone');
+                const tzValue = tzSelect.value;
 
                 if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour)) {
-                    alert("Please fill in valid date fields.");
                     return;
                 }
 
-                // 核心修复逻辑：
-                // 1. 将用户在当前时区输入的本地时间，转换为绝对的 UTC 时间戳
-                // 原理：本地时间减去所选时区偏移量 = UTC 时间
-                const localMillis = Date.UTC(year, month - 1, day, hour, minute);
-                const utcMillis = localMillis - (selectedTzOffset * 3600 * 1000);
-                const utcDate = new Date(utcMillis);
+                // 明确定义各时区对应的 UTC 偏移小时数
+                const tzOffsets = {
+                    'est': -5,
+                    'cst_us': -6,
+                    'mst': -7,
+                    'pst': -8,
+                    'akst': -9,
+                    'hst': -10,
+                    'cst_cn': 8
+                };
 
-                // 2. 将此绝对时刻转换到中国标准时间（UTC+8）进行八字排盘
-                // 中国标准时间偏移量为 +8 小时
+                const selectedOffset = tzOffsets[tzValue] !== undefined ? tzOffsets[tzValue] : -5;
+
+                // 1. 将用户输入的本地时间转换为绝对 UTC 毫秒数
+                const localMillis = Date.UTC(year, month - 1, day, hour, minute);
+                const utcMillis = localMillis - (selectedOffset * 3600 * 1000);
+
+                // 2. 转换到中国标准时间（UTC+8）进行八字排盘对齐
                 const cstMillis = utcMillis + (8 * 3600 * 1000);
                 const cstDate = new Date(cstMillis);
 
-                // 3. 调用权威历法引擎，传入对齐后的中国标准时间（CST）
+                // 3. 调用历法引擎
                 const solar = Solar.fromYmdHms(
                     cstDate.getUTCFullYear(),
                     cstDate.getUTCMonth() + 1,
@@ -286,10 +295,9 @@
                     container.appendChild(div);
                 });
 
-                const tzText = document.getElementById('timezone').options[document.getElementById('timezone').selectedIndex].text;
+                const tzText = tzSelect.options[tzSelect.selectedIndex].text;
                 document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} at ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')} (${tzText})`;
                 document.getElementById('resultCard').style.display = 'block';
-                document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
             }
 
             function clearSession() {
