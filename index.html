@@ -3,7 +3,9 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Ba Zi 八字 - Astronomically Accurate Calculator</title>
+        <title>BaZi Calculator - Astronomically Accurate Four Pillars</title>
+        <!-- 引入国内标准、100% 精准的历法与八字计算权威引擎 -->
+        <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.js"></script>
         <style>
             :root {
                 --color_primary: oklch(0.87 0.28 142);
@@ -13,10 +15,10 @@
                 --bg_mid: oklch(0.25 0.05 142);
                 --bg_light: oklch(0.18 0.03 142);
                 --bg_surface: oklch(1 0 0 / 0.05);
-                --bg_surface_hover: oklch(0 0 0 / 0.25);
+                --bg_surface_hover: oklch(0 0 0 / 0.35);
                 --text_primary: oklch(1 0 0);
                 --text_secondary: oklch(0.72 0 0);
-                --border_visible: 1px solid oklch(1 0 0 / 0.2);
+                --border_visible: 1px solid oklch(1 0 0 / 0.3);
             }
             * { margin: 0; padding: 0; box-sizing: border-box; }
             html { background-color: #000; }
@@ -75,6 +77,7 @@
                 color: var(--color_primary_light);
                 font-size: 0.85rem;
                 text-transform: uppercase;
+                letter-spacing: 1px;
             }
             input, select {
                 padding: 12px;
@@ -144,7 +147,7 @@
         <div class="container">
             <header>
                 <h1><span>Ba Zi</span><span lang="zh">八字</span></h1>
-                <p class="validation_badge">✓ Mathematics meets ancient metaphors</p>
+                <p class="validation_badge">✓ Professional Astronomical & Almanac Precision</p>
             </header>
             <main>
                 <section>
@@ -208,85 +211,58 @@
             </main>
         </div>
         <script>
-            const STEMS = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
-            const BRANCHES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-            const PINYIN = {
-                '甲': 'Jiǎ', '乙': 'Yǐ', '丙': 'Bǐng', '丁': 'Dīng', '戊': 'Wù',
-                '己': 'Jǐ', '庚': 'Gēng', '辛': 'Xīn', '壬': 'Rén', '癸': 'Guǐ',
-                '子': 'Zǐ', '丑': 'Chǒu', '寅': 'Yín', '卯': 'Mǎo', '辰': 'Chén',
-                '巳': 'Sì', '午': 'Wǔ', '未': 'Wèi', '申': 'Shēn', '酉': 'Yǒu',
-                '戌': 'Xū', '亥': 'Hài'
+            // 五行属性对照表
+            const ELEMENT_MAP = {
+                '甲': 'Wood', '乙': 'Wood',
+                '丙': 'Fire', '丁': 'Fire',
+                '戊': 'Earth', '己': 'Earth',
+                '庚': 'Metal', '辛': 'Metal',
+                '壬': 'Water', '癸': 'Water'
             };
-            const ANIMALS = { '子': 'Rat', '丑': 'Ox', '寅': 'Tiger', '卯': 'Rabbit', '辰': 'Dragon', '巳': 'Snake', '午': 'Horse', '未': 'Goat', '申': 'Monkey', '酉': 'Rooster', '戌': 'Dog', '亥': 'Pig' };
-            const ELEMENTS = { '甲': 'Wood', '乙': 'Wood', '丙': 'Fire', '丁': 'Fire', '戊': 'Earth', '己': 'Earth', '庚': 'Metal', '辛': 'Metal', '壬': 'Water', '癸': 'Water' };
 
-            // 精准万年历干支对照核心算法（对齐国内专业标准排盘）
             function calculateBaZi() {
-                const y = parseInt(document.getElementById('year').value);
-                const m = parseInt(document.getElementById('month').value);
-                const d = parseInt(document.getElementById('day').value);
-                const h = parseInt(document.getElementById('hour').value);
-                const min = parseInt(document.getElementById('minute').value || 0);
+                const year = parseInt(document.getElementById('year').value);
+                const month = parseInt(document.getElementById('month').value);
+                const day = parseInt(document.getElementById('day').value);
+                const hour = parseInt(document.getElementById('hour').value);
+                const minute = parseInt(document.getElementById('minute').value || 0);
 
-                if (isNaN(y) || isNaN(m) || isNaN(d) || isNaN(h)) {
+                if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour)) {
                     alert("Please fill in valid date fields.");
                     return;
                 }
 
-                // 以 1987年2.19 丁卯年 壬寅月 己亥日 庚午时 为标准校验点进行精准修正映射
-                // 年柱计算（大致以立春 2月4日 左右分界）
-                let targetY = y;
-                if (m < 2 || (m === 2 && d < 4)) targetY -= 1;
-                let ys = (targetY - 4) % 10; if (ys < 0) ys += 10;
-                let yb = (targetY - 4) % 12; if (yb < 0) yb += 12;
-
-                // 月柱计算（按节气简易精准映射）
-                let mb = (m + 1) % 12; // 寅月起算
-                if (d < 5 && m > 1) mb = (m) % 12;
-                let ms = (ys * 2 + mb + 1) % 10;
-
-                // 日柱计算：以 1900年1月31日 为甲辰日（基准偏移量）
-                const baseDate = new Date(1900, 0, 31);
-                const targetDate = new Date(y, m - 1, d);
-                const diffDays = Math.floor((targetDate - baseDate) / (1000 * 60 * 60 * 24));
-                let ds = (0 + diffDays) % 10; if (ds < 0) ds += 10;
-                let db = (4 + diffDays) % 12; if (db < 0) db += 12;
-
-                // 时柱计算（日上起时法）
-                let hb = Math.floor((h + 1) / 2) % 12;
-                let hs = (ds * 2 + hb) % 10;
+                // 使用 lunar-javascript 权威引擎计算公历转农历及八字
+                const solar = Solar.fromYmdHms(year, month, day, hour, minute, 0);
+                const lunar = solar.getLunar();
+                const eightChar = lunar.getEightChar();
 
                 const pillars = [
-                    { title: 'YEAR', stem: STEMS[ys], branch: BRANCHES[yb] },
-                    { title: 'MONTH', stem: STEMS[ms], branch: BRANCHES[mb] },
-                    { title: 'DAY', stem: STEMS[ds], branch: STEMS[ds === 0 ? 0 : db] }, // 修正日支对齐
-                    { title: 'HOUR', stem: STEMS[hs], branch: BRANCHES[hb] }
+                    { title: 'YEAR', pillarStr: eightChar.getYear() },
+                    { title: 'MONTH', pillarStr: eightChar.getMonth() },
+                    { title: 'DAY', pillarStr: eightChar.getDay() },
+                    { title: 'HOUR', pillarStr: eightChar.getTime() }
                 ];
-
-                // 特别针对你刚才测的 1987年2月19日 11:30 做精确硬编码校准（确保丝毫不差）
-                if(y === 1987 && m === 2 && d === 19) {
-                    pillars[2].stem = '己'; pillars[2].branch = '亥';
-                    pillars[3].stem = '庚'; pillars[3].branch = '午';
-                }
 
                 const container = document.getElementById('pillarsContainer');
                 container.innerHTML = '';
+
                 pillars.forEach(p => {
-                    const animal = ANIMALS[p.branch] || 'Horse';
-                    const el = ELEMENTS[p.stem] || 'Fire';
+                    const stem = p.pillarStr.charAt(0);
+                    const branch = p.pillarStr.charAt(1);
+                    const element = ELEMENT_MAP[stem] || 'Fire';
+
                     const div = document.createElement('div');
                     div.className = 'pillar';
                     div.innerHTML = `
                         <div class="pillar_title">${p.title}</div>
-                        <div class="chinese_char">${p.stem} ${p.branch}</div>
-                        <div class="pinyin">${PINYIN[p.stem]} ${PINYIN[p.branch]}</div>
-                        <div style="font-size: 1.2rem; font-weight: bold; margin-top: 10px;">${animal}</div>
-                        <div class="element element_${el.toLowerCase()}">${el}</div>
+                        <div class="chinese_char">${stem} ${branch}</div>
+                        <div class="element element_${element.toLowerCase()}">${element}</div>
                     `;
                     container.appendChild(div);
                 });
 
-                document.getElementById('dateDisplay').innerHTML = `${y}-${m}-${d} at ${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')} (Beijing/Shanghai)`;
+                document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} at ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`;
                 document.getElementById('resultCard').style.display = 'block';
                 document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
             }
@@ -301,6 +277,7 @@
                 document.getElementById('resultCard').style.display = 'none';
             }
 
+            // 页面加载默认计算一次
             window.onload = function() {
                 calculateBaZi();
             };
