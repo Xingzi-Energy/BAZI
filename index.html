@@ -147,7 +147,7 @@
         <div class="container">
             <header>
                 <h1><span>Ba Zi</span><span lang="zh">八字</span></h1>
-                <p class="validation_badge">✓ Professional Astronomical & Almanac Precision</p>
+                <p class="validation_badge">✓ Professional Astronomical & Almanac Precision (v108)</p>
             </header>
             <main>
                 <section>
@@ -156,40 +156,35 @@
                         <fieldset class="input_grid">
                             <div class="input_group">
                                 <label for="year">Year</label>
-                                <input type="number" id="year" min="1900" max="2030" placeholder="e.g. 1987" value="1987" required />
+                                <input type="number" id="year" min="1900" max="2030" value="1987" required />
                             </div>
                             <div class="input_group">
                                 <label for="month">Month</label>
-                                <input type="number" id="month" min="1" max="12" placeholder="1-12" value="2" required />
+                                <input type="number" id="month" min="1" max="12" value="2" required />
                             </div>
                             <div class="input_group">
                                 <label for="day">Day</label>
-                                <input type="number" id="day" min="1" max="31" placeholder="1-31" value="19" required />
+                                <input type="number" id="day" min="1" max="31" value="19" required />
                             </div>
                             <div class="input_group">
                                 <label for="hour">Hour</label>
-                                <input type="number" id="hour" min="0" max="23" placeholder="0-23" value="11" required />
+                                <input type="number" id="hour" min="0" max="23" value="11" required />
                             </div>
                             <div class="input_group">
                                 <label for="minute">Minute</label>
-                                <input type="number" id="minute" min="0" max="59" placeholder="Optional" value="30" />
+                                <input type="number" id="minute" min="0" max="59" value="30" />
                             </div>
                             <div class="input_group">
                                 <label for="timezone">Timezone</label>
                                 <select id="timezone" onchange="calculateBaZi()">
-                                    <option value="est">Eastern Time (EST): UTC-5</option>
-                                    <option value="cst_us">Central Time (CST): UTC-6</option>
-                                    <option value="mst">Mountain Time (MST): UTC-7</option>
-                                    <option value="pst">Pacific Time (PST): UTC-8</option>
-                                    <option value="akst">Alaska Time (AKST): UTC-9</option>
-                                    <option value="hst">Hawaii Time (HST): UTC-10</option>
-                                    <option value="cst_cn">China Standard Time (CST): UTC+8</option>
+                                    <option value="-5" selected>Eastern Time (EST): UTC-5</option>
+                                    <option value="-6">Central Time (CST): UTC-6</option>
+                                    <option value="-7">Mountain Time (MST): UTC-7</option>
+                                    <option value="-8">Pacific Time (PST): UTC-8</option>
+                                    <option value="8">China Standard Time (CST): UTC+8</option>
                                 </select>
                             </div>
                         </fieldset>
-                        <div style="font-size: 0.85rem; color: var(--text_secondary); margin-bottom: 15px; font-style: italic;">
-                            * Changing the timezone will automatically update the BaZi chart.
-                        </div>
                         <div>
                             <button type="submit">Calculate</button>
                             <button type="button" class="stroke" onclick="clearSession()">Clear Session</button>
@@ -229,41 +224,40 @@
                 const day = parseInt(document.getElementById('day').value);
                 const hour = parseInt(document.getElementById('hour').value);
                 const minute = parseInt(document.getElementById('minute').value || 0);
-                const tzSelect = document.getElementById('timezone');
-                const tzValue = tzSelect.value;
+                const tzOffset = parseFloat(document.getElementById('timezone').value); // 获取选中的时区值（如 -5 或 8）
 
-                if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour)) {
-                    return;
+                if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour)) return;
+
+                // 核心时区转换：
+                // 八字以北京时间（UTC+8）为基准历法。
+                // 目标北京时间 = 用户输入的当地时间 + (8 - 用户时区偏移量)
+                const targetHour = hour + (8 - tzOffset);
+                
+                let targetYear = year;
+                let targetMonth = month;
+                let targetDay = day;
+                let finalHour = targetHour;
+                
+                // 处理因时差导致的跨天/跨月/跨年
+                if (targetHour >= 24) {
+                    finalHour = targetHour % 24;
+                    // 简单按天进位（实际JS Date对象可以完美处理溢出）
                 }
 
-                // 明确定义各时区对应的 UTC 偏移小时数
-                const tzOffsets = {
-                    'est': -5,
-                    'cst_us': -6,
-                    'mst': -7,
-                    'pst': -8,
-                    'akst': -9,
-                    'hst': -10,
-                    'cst_cn': 8
-                };
+                // 利用 JS 标准 Date 对象自动处理复杂的跨年、跨月、闰年及加减小时
+                const inputDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+                // 加上时差差值（北京时间 UTC+8 与 用户所选时区的差值毫秒数）
+                const diffHours = 8 - tzOffset;
+                const adjustedMillis = inputDate.getTime() + (diffHours * 3600 * 1000);
+                const adjustedDate = new Date(adjustedMillis);
 
-                const selectedOffset = tzOffsets[tzValue] !== undefined ? tzOffsets[tzValue] : -5;
-
-                // 1. 将用户输入的本地时间转换为绝对 UTC 毫秒数
-                const localMillis = Date.UTC(year, month - 1, day, hour, minute);
-                const utcMillis = localMillis - (selectedOffset * 3600 * 1000);
-
-                // 2. 转换到中国标准时间（UTC+8）进行八字排盘对齐
-                const cstMillis = utcMillis + (8 * 3600 * 1000);
-                const cstDate = new Date(cstMillis);
-
-                // 3. 调用历法引擎
+                // 传给权威历法引擎
                 const solar = Solar.fromYmdHms(
-                    cstDate.getUTCFullYear(),
-                    cstDate.getUTCMonth() + 1,
-                    cstDate.getUTCDate(),
-                    cstDate.getUTCHours(),
-                    cstDate.getUTCMinutes(),
+                    adjustedDate.getUTCFullYear(),
+                    adjustedDate.getUTCMonth() + 1,
+                    adjustedDate.getUTCDate(),
+                    adjustedDate.getUTCHours(),
+                    adjustedDate.getUTCMinutes(),
                     0
                 );
                 
@@ -286,7 +280,7 @@
                     const element = ELEMENT_MAP[stem] || 'Fire';
 
                     const div = document.createElement('div');
-                    div.className = 'pillar';
+                    div.className, div.className = 'pillar';
                     div.innerHTML = `
                         <div class="pillar_title">${p.title}</div>
                         <div class="chinese_char">${stem} ${branch}</div>
@@ -295,7 +289,7 @@
                     container.appendChild(div);
                 });
 
-                const tzText = tzSelect.options[tzSelect.selectedIndex].text;
+                const tzText = document.getElementById('timezone').options[document.getElementById('timezone').selectedIndex].text;
                 document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} at ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')} (${tzText})`;
                 document.getElementById('resultCard').style.display = 'block';
             }
