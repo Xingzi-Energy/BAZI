@@ -147,7 +147,7 @@
         <div class="container">
             <header>
                 <h1><span>Ba Zi</span><span lang="zh">八字</span></h1>
-                <p class="validation_badge">✓ Professional Astronomical & Almanac Precision (v108)</p>
+                <p class="validation_badge">✓ Professional Astronomical & Almanac Precision</p>
             </header>
             <main>
                 <section>
@@ -156,23 +156,23 @@
                         <fieldset class="input_grid">
                             <div class="input_group">
                                 <label for="year">Year</label>
-                                <input type="number" id="year" min="1900" max="2030" value="1987" required />
+                                <input type="number" id="year" min="1900" max="2030" placeholder="e.g. 1987" value="1987" required />
                             </div>
                             <div class="input_group">
                                 <label for="month">Month</label>
-                                <input type="number" id="month" min="1" max="12" value="2" required />
+                                <input type="number" id="month" min="1" max="12" placeholder="1-12" value="2" required />
                             </div>
                             <div class="input_group">
                                 <label for="day">Day</label>
-                                <input type="number" id="day" min="1" max="31" value="19" required />
+                                <input type="number" id="day" min="1" max="31" placeholder="1-31" value="19" required />
                             </div>
                             <div class="input_group">
                                 <label for="hour">Hour</label>
-                                <input type="number" id="hour" min="0" max="23" value="11" required />
+                                <input type="number" id="hour" min="0" max="23" placeholder="0-23" value="11" required />
                             </div>
                             <div class="input_group">
                                 <label for="minute">Minute</label>
-                                <input type="number" id="minute" min="0" max="59" value="30" />
+                                <input type="number" id="minute" min="0" max="59" placeholder="Optional" value="30" />
                             </div>
                             <div class="input_group">
                                 <label for="timezone">Timezone</label>
@@ -185,6 +185,9 @@
                                 </select>
                             </div>
                         </fieldset>
+                        <div style="font-size: 0.85rem; color: var(--text_secondary); margin-bottom: 15px; font-style: italic;">
+                            * Please fill in Year, Month, Day, Hour, and Timezone. Minute is optional.
+                        </div>
                         <div>
                             <button type="submit">Calculate</button>
                             <button type="button" class="stroke" onclick="clearSession()">Clear Session</button>
@@ -203,7 +206,7 @@
                         <div id="shopifyCta" style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(0, 20, 0, 0.8); border: 1px solid #00ff6555; border-radius: 10px;">
                             <h3 style="color: #00ff66; margin-bottom: 10px; font-size: 20px;">Unlock Your Complete Destiny & Wealth Blueprint</h3>
                             <p style="color: #ccc; font-size: 14px; margin-bottom: 20px;">Based on your Ba Zi chart above, get a comprehensive, personalized English PDF report.</p>
-                            <a href="https://j2fpx0-ga.myshopify.com/products/personalized-2026-bazi-chinese-astrology-report" target="_blank" style="display: inline-block; background-color: #00ff66; color: #000; padding: 12px 30px; font-weight: bold; text-decoration: none; border-radius: 6px;">Get My Deep Dive Report ➔</a>
+                            <a href="https://你的Shopify店铺域名/cart/add?id=你的商品ID&quantity=1" target="_blank" style="display: inline-block; background-color: #00ff66; color: #000; padding: 12px 30px; font-weight: bold; text-decoration: none; border-radius: 6px;">Get My Deep Dive Report ➔</a>
                         </div>
                     </div>
                 </section>
@@ -224,34 +227,15 @@
                 const day = parseInt(document.getElementById('day').value);
                 const hour = parseInt(document.getElementById('hour').value);
                 const minute = parseInt(document.getElementById('minute').value || 0);
-                const tzOffset = parseFloat(document.getElementById('timezone').value); // 获取选中的时区值（如 -5 或 8）
+                const tzOffset = parseFloat(document.getElementById('timezone').value);
 
                 if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour)) return;
 
-                // 核心时区转换：
-                // 八字以北京时间（UTC+8）为基准历法。
-                // 目标北京时间 = 用户输入的当地时间 + (8 - 用户时区偏移量)
-                const targetHour = hour + (8 - tzOffset);
-                
-                let targetYear = year;
-                let targetMonth = month;
-                let targetDay = day;
-                let finalHour = targetHour;
-                
-                // 处理因时差导致的跨天/跨月/跨年
-                if (targetHour >= 24) {
-                    finalHour = targetHour % 24;
-                    // 简单按天进位（实际JS Date对象可以完美处理溢出）
-                }
-
-                // 利用 JS 标准 Date 对象自动处理复杂的跨年、跨月、闰年及加减小时
                 const inputDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
-                // 加上时差差值（北京时间 UTC+8 与 用户所选时区的差值毫秒数）
                 const diffHours = 8 - tzOffset;
                 const adjustedMillis = inputDate.getTime() + (diffHours * 3600 * 1000);
                 const adjustedDate = new Date(adjustedMillis);
 
-                // 传给权威历法引擎
                 const solar = Solar.fromYmdHms(
                     adjustedDate.getUTCFullYear(),
                     adjustedDate.getUTCMonth() + 1,
@@ -280,7 +264,7 @@
                     const element = ELEMENT_MAP[stem] || 'Fire';
 
                     const div = document.createElement('div');
-                    div.className, div.className = 'pillar';
+                    div.className = 'pillar';
                     div.innerHTML = `
                         <div class="pillar_title">${p.title}</div>
                         <div class="chinese_char">${stem} ${branch}</div>
