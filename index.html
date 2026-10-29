@@ -72,7 +72,6 @@
                 margin-bottom: 20px;
             }
             .input_group { display: flex; flex-direction: column; }
-            /* 让邮箱独占一整行 */
             .input_group.full_width { grid-column: 1 / -1; }
             label {
                 margin-bottom: 8px;
@@ -84,11 +83,20 @@
             input, select {
                 padding: 12px;
                 border: var(--border_visible);
-                background: var(--bg_surface);
-                color: var(--text_primary);
+                background: var(--bg_surface) !important;
+                color: var(--text_primary) !important;
                 border-radius: 6px;
                 font-size: 1.1rem;
                 width: 100%;
+            }
+            /* 强制覆盖浏览器自动填充时的背景和文字颜色 */
+            input:-webkit-autofill,
+            input:-webkit-autofill:hover, 
+            input:-webkit-autofill:focus, 
+            input:-webkit-autofill:active {
+                -webkit-box-shadow: 0 0 0 30px rgba(0, 30, 10, 0.8) inset !important;
+                -webkit-text-fill-color: var(--text_primary) !important;
+                caret-color: var(--text_primary);
             }
             select option { background-color: #121b14; color: var(--text_primary); }
             button {
@@ -187,7 +195,7 @@
                                 </select>
                             </div>
                             
-                            <!-- 【新增】位于生日与时区下方的必填邮箱输入框 -->
+                            <!-- 邮箱输入框 -->
                             <div class="input_group full_width">
                                 <label for="email">Email Address (For Report Delivery)</label>
                                 <input type="email" id="email" placeholder="Enter your email address to receive your report" required oninvalid="this.setCustomValidity('Please enter a valid email address.')" oninput="this.setCustomValidity('')" />
@@ -211,7 +219,7 @@
                         </div>
                         <div class="pillars_container" id="pillarsContainer"></div>
                         
-                        <!-- Shopify / 支付引导转化区 -->
+                        <!-- 支付引导转化区 -->
                         <div id="shopifyCta" style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(0, 20, 0, 0.8); border: 1px solid #00ff6555; border-radius: 10px;">
                             <h3 style="color: #00ff66; margin-bottom: 10px; font-size: 20px;">Unlock Your Complete Destiny & Wealth Blueprint</h3>
                             <p style="color: #ccc; font-size: 14px; margin-bottom: 20px;">Based on your Ba Zi chart above, get a comprehensive, personalized English PDF report delivered to <span id="emailDisplay" style="color: #00ff66; font-weight: bold;">your email</span>.</p>
@@ -294,7 +302,6 @@
                 const tzText = document.getElementById('timezone').options[document.getElementById('timezone').selectedIndex].text;
                 document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} at ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')} (${tzText})`;
                 
-                // 将用户输入的邮箱实时同步显示在下方的转化文案中
                 document.getElementById('emailDisplay').innerText = userEmail;
                 
                 document.getElementById('resultCard').style.display = 'block';
