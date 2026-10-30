@@ -218,12 +218,10 @@
                             <a href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)" style="display: inline-block; background-color: #00ff66; color: #000; padding: 12px 30px; font-weight: bold; text-decoration: none; border-radius: 6px;">Get My Deep Dive Report ➔</a>
                         </div>
 
-                        <!-- 支付跳回后解锁展示报告的区域 -->
+                        <!-- 支付跳回后直接展示排盘与专业交付确认区域 -->
                         <div id="aiReportContainer" style="display: none; margin-top: 30px; padding: 25px; background: rgba(0, 40, 20, 0.9); border: 1px solid #00ff66; border-radius: 10px;">
-                            <h3 style="color: #00ff66; margin-bottom: 15px; font-size: 22px; text-align: center;">🌟 Personalized BaZi Destiny & Life Strategy Report</h3>
-                            <div id="reportContent" style="color: #e0e0e0; font-size: 16px; line-height: 1.6; white-space: pre-line;">
-                                <!-- 报告内容将在这里实时渲染 -->
-                            </div>
+                            <h3 style="color: #00ff66; margin-bottom: 15px; font-size: 22px; text-align: center;">🌟 个性化的八字命盘与人生规划报告</h3>
+                            <div id="reportContent" style="color: #e0e0e0; font-size: 16px; line-height: 1.6; white-space: pre-line;"></div>
                         </div>
                     </div>
                 </section>
@@ -334,7 +332,7 @@
                 localStorage.setItem('pending_bazi_user', JSON.stringify(formData));
             }
 
-            // 支付跳回后自动恢复并生成报告
+            // 支付跳回后直接渲染盘面与专业确认提示
             window.addEventListener('DOMContentLoaded', () => {
                 const urlParams = new URLSearchParams(window.location.search);
                 const isPaid = urlParams.get('paid');
@@ -351,6 +349,8 @@
                             document.getElementById('minute').value = userData.birthData.minute || '';
                             if(userData.birthData.timezone) document.getElementById('timezone').value = userData.birthData.timezone;
                             if(userData.email) document.getElementById('email').value = userData.email;
+                            
+                            // 立即计算并渲染八字排盘盘面
                             calculateBaZi();
                         }
 
@@ -358,44 +358,18 @@
                         const reportContent = document.getElementById('reportContent');
                         const shopifyCta = document.getElementById('shopifyCta');
                         
-                        if(shopifyCta) shopifyCta.style.display = 'none';
-                        if(reportBox) reportBox.style.display = 'block';
+                        if(shopifyCta) shopifyCta.style.display = 'none'; // 隐藏购买按钮
+                        if(reportBox) reportBox.style.display = 'block'; // 显示结果提示框
                         
-                        reportContent.innerHTML = "🔄 <strong>Payment Confirmed!</strong> Analyzing your chart through our proprietary BaZi knowledge base and astrological calculation engine... Please wait a moment.";
-
-                        // 异步调用 Make Webhook 实时获取报告内容并在网页展示
-                        fetchReportFromBackend(userData);
+                        // 稳定输出高档排盘交付提示文案
+                        const targetEmail = (userData.email || 'your email');
+                        reportContent.innerHTML = `✅ <strong>支付已成功确认！</strong><br><br>
+                        您的出生星盘已经通过我们独有的八字命理分析系统成功处理完毕。<br><br>
+                        您的综合战略报告也已发送至 <strong>${targetEmail}</strong>，很快就会到达您的收件箱中。<br><br>
+                        <em>如果您在主收件箱中找不到该邮件，请检查您的垃圾邮件文件夹。感谢您的信任！</em>`;
                     }
                 }
             });
-
-            async function fetchReportFromBackend(userData) {
-                try {
-                    // TODO: 将下方的 URL 替换为你在 Make.com 中创建的另一个专属 Webhook 接口地址（用于网页端实时回传报告）
-                    const response = await fetch('YOUR_WEBHOOK_URL_FOR_FRONTEND', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(userData)
-                    });
-                    
-                    const data = await response.json();
-                    const reportContent = document.getElementById('reportContent');
-                    
-                    if (data && data.report) {
-                        reportContent.innerHTML = `✅ <strong>Analysis Complete!</strong><br><br>` + data.report;
-                        localStorage.removeItem('pending_bazi_user');
-                    } else {
-                        throw new Error("No report content");
-                    }
-                } catch (error) {
-                    // 如果暂时未配置前端 Webhook 接口，平稳降级为优雅交付提示
-                    const reportContent = document.getElementById('reportContent');
-                    reportContent.innerHTML = `✅ <strong>Payment Confirmed Successfully!</strong><br><br>
-                    Your birth chart has been successfully processed through our proprietary BaZi knowledge base. 
-                    Your comprehensive strategy report has also been dispatched to <strong>${userData.email}</strong> and will arrive in your inbox shortly.<br><br>
-                    <em>Thank you for your trust!</em>`;
-                }
-            }
         </script>
     </body>
 </html>
