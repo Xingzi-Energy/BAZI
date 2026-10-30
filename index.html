@@ -226,7 +226,14 @@
                         <div id="shopifyCta" style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(0, 20, 0, 0.8); border: 1px solid #00ff6555; border-radius: 10px;">
                             <h3 style="color: #00ff66; margin-bottom: 10px; font-size: 20px;">Unlock Your Complete Destiny & Wealth Blueprint</h3>
                             <p style="color: #ccc; font-size: 14px; margin-bottom: 20px;">Based on your Ba Zi chart above, get a comprehensive, personalized English PDF report delivered to <span id="emailDisplay" style="color: #00ff66; font-weight: bold;">your email</span>.</p>
-                            <a href="https://xingzimaster.gumroad.com/l/mnqqi" style="display: inline-block; background-color: #00ff66; color: #000; padding: 12px 30px; font-weight: bold; text-decoration: none; border-radius: 6px;">Get My Deep Dive Report ➔</a>
+                            <!-- 绑定了点击缓存用户数据并跳转到 Gumroad 的行为 -->
+                            <a href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)" style="display: inline-block; background-color: #00ff66; color: #000; padding: 12px 30px; font-weight: bold; text-decoration: none; border-radius: 6px;">Get My Deep Dive Report ➔</a>
+                        </div>
+
+                        <!-- AI 解读报告实时渲染区（支付跳回后自动展示） -->
+                        <div id="aiReportContainer" style="display: none; margin-top: 30px; padding: 25px; background: rgba(0, 40, 20, 0.9); border: 1px solid #00ff66; border-radius: 10px;">
+                            <h3 style="color: #00ff66; margin-bottom: 15px; font-size: 22px; text-align: center;">🌟 Your AI Life Strategy Report</h3>
+                            <div id="reportContent" style="color: #e0e0e0; font-size: 16px; line-height: 1.6; white-space: pre-line;"></div>
                         </div>
                     </div>
                 </section>
@@ -306,30 +313,11 @@
                     div.className = 'pillar';
                     div.innerHTML = `
                         <div class="pillar_title">${p.title}</div>
-                        <div class="chinese_char">${stem} ${branch}</div>
+                        <div class="chinese_char">${stem}${branch}</div>
                         <div class="element element_${element.toLowerCase()}">${element}</div>
                     `;
                     container.appendChild(div);
                 });
 
-                const tzText = document.getElementById('timezone').options[document.getElementById('timezone').selectedIndex].text;
-                document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} at ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')} (${tzText})`;
-                
-                document.getElementById('emailDisplay').innerText = userEmail;
-                
-                document.getElementById('resultCard').style.display = 'block';
-            }
-
-            function clearSession() {
-                document.getElementById('year').value = '';
-                document.getElementById('month').value = '';
-                document.getElementById('day').value = '';
-                document.getElementById('hour').value = '';
-                document.getElementById('minute').value = '';
-                document.getElementById('email').value = '';
-                document.getElementById('pillarsContainer').innerHTML = '';
-                document.getElementById('resultCard').style.display = 'none';
-            }
-        </script>
-    </body>
-</html>
+                const tzText = document.getElementById('timezone').options[document.getElementById('timezone'].selectedIndex].text;
+                document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart
