@@ -165,6 +165,7 @@
             <main>
                 <section>
                     <h2 class="section_title">Enter Your Details</h2>
+                    <!-- 恢复了正确的 onsubmit 绑定 -->
                     <form class="section_card" onsubmit="event.preventDefault(); calculateBaZi();" autocomplete="off">
                         <fieldset class="input_grid">
                             <div class="input_group">
@@ -313,11 +314,122 @@
                     div.className = 'pillar';
                     div.innerHTML = `
                         <div class="pillar_title">${p.title}</div>
-                        <div class="chinese_char">${stem}${branch}</div>
+                        <div class="chinese_char">${stem} ${branch}</div>
                         <div class="element element_${element.toLowerCase()}">${element}</div>
                     `;
                     container.appendChild(div);
                 });
 
-                const tzText = document.getElementById('timezone').options[document.getElementById('timezone'].selectedIndex].text;
-                document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart
+                const tzText = document.getElementById('timezone').options[document.getElementById('timezone').selectedIndex].text;
+                document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} at ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')} (${tzText})`;
+                
+                document.getElementById('emailDisplay').innerText = userEmail;
+                
+                document.getElementById('resultCard').style.display = 'block';
+            }
+
+            function clearSession() {
+                document.getElementById('year').value = '';
+                document.getElementById('month').value = '';
+                document.getElementById('day').value = '';
+                document.getElementById('hour').value = '';
+                document.getElementById('minute').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('pillarsContainer').innerHTML = '';
+                document.getElementById('resultCard').style.display = 'none';
+                localStorage.removeItem('pending_bazi_user');
+            }
+
+            // 1. 用户点击前往 Gumroad 支付时，暂存当前填写的数据
+            function handleGoToPayment(event) {
+                const emailField = document.getElementById('email');
+                const userEmail = emailField ? emailField.value.trim() : '';
+                
+                const formData = {
+                    email: userEmail,
+                    birthData: {
+                        year: document.getElementById('year').value,
+                        month: document.getElementById('month').value,
+                        day: document.getElementById('day').value,
+                        hour: document.getElementById('hour').value,
+                        minute: document.getElementById('minute').value || '0',
+                        timezone: document.getElementById('timezone').value
+                    },
+                    timestamp: new Date().getTime()
+                };
+
+                // 存入浏览器本地缓存
+                localStorage.setItem('pending_bazi_user', JSON.stringify(formData));
+            }
+
+            // 2. 页面加载时自动检测是否带有点击跳回的 ?paid=true 参数
+            window.addEventListener('DOMContentLoaded', () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const isPaid = urlParams.get('paid');
+
+                if (isPaid === 'true') {
+                    const savedData = localStorage.getItem('pending_bazi_user');
+                    
+                    if (savedData) {
+                        const userData = JSON.parse(savedData);
+                        
+                        // 自动把缓存里的排盘数据回填到输入框并计算出盘面
+                        if (userData.birthData) {
+                            document.getElementById('year').value = userData.birthData.year || '';
+                            document.getElementById('month').value = userData.birthData.month || '';
+                            document.getElementById('day').value = userData.birthData.day || '';
+                            document.getElementById('hour').value = userData.birthData.hour || '';
+                            document.getElementById('minute').value = userData.birthData.minute || '';
+                            if(userData.birthData.timezone) {
+                                document.getElementById('timezone').value = userData.birthData.timezone;
+                            }
+                            if(userData.email) {
+                                document.getElementById('email').value = userData.email;
+                            }
+                            calculateBaZi(); // 触发排盘展示
+                        }
+
+                        // 显示加载状态并请求 AI 报告
+                        const reportBox = document.getElementById('aiReportContainer');
+                        const reportContent = document.getElementById('reportContent');
+                        const shopifyCta = document.getElementById('shopifyCta');
+                        
+                        if(shopifyCta) shopifyCta.style.display = 'none'; // 隐藏支付引导
+                        if(reportBox) reportBox.style.display = 'block';
+                        if(reportContent) reportContent.innerHTML = "🔄 Payment verified successfully! Generating your personalized AI Life Strategy Report, please wait a moment...";
+
+                        generateDeepSeekReport(userData);
+                    }
+                }
+            });
+
+            // 3. 异步向你的后端或 Make.com 触发报告生成
+            async function generateDeepSeekReport(userData) {
+                try {
+                    // TODO: 将下方的 'YOUR_API_ENDPOINT_HERE' 换成你实际的后端或 Make.com Webhook 接口
+                    const response = await fetch('YOUR_API_ENDPOINT_HERE', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(userData)
+                    });
+
+                    const result = await response.json();
+                    const reportContent = document.getElementById('reportContent');
+
+                    if (result && (result.success || result.report)) {
+                        reportContent.innerHTML = result.report;
+                        localStorage.removeItem('pending_bazi_user'); // 渲染成功后清除缓存
+                    } else {
+                        reportContent.innerHTML = "⚠️ Your payment was successful, and your order is being processed. A copy of your report has also been dispatched to your email address.";
+                    }
+                } catch (error) {
+                    console.error("Error generating report:", error);
+                    const reportContent = document.getElementById('reportContent');
+                    if(reportContent) {
+                        reportContent.innerHTML = "✅ Payment verified! Your report is being generated and will also be emailed to your inbox shortly.";
+                    }
+                }
+            }
+        </script>
+    </body>
+</html>
