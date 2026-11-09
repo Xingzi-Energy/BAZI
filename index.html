@@ -4,7 +4,13 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>BaZi Calculator - Astronomically Accurate Four Pillars</title>
+        <!-- 引入天文历法计算库 -->
         <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.js"></script>
+        <!-- 引入 Markdown 解析库，用于让 DeepSeek 返回的报告排版更高级 -->
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.js"></script>
+        <!-- 引入 html2pdf.js，用于支持一键下载 PDF -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+        
         <style>
             :root {
                 --color_primary: oklch(0.87 0.28 142);
@@ -166,10 +172,36 @@
                 margin-top: 15px;
             }
             fieldset { border: none; }
+
+            /* 🎯 针对术语与解读分离卡片的视觉美化样式 */
+            #reportDirectContent p strong:contains("Technical"),
+            #reportDirectContent li strong:contains("Technical") {
+                display: block;
+                color: #a7f3d0;
+                background: rgba(6, 78, 59, 0.5);
+                border-left: 3px solid #10b981;
+                padding: 10px 14px;
+                border-radius: 0 8px 8px 0;
+                margin-top: 12px;
+                font-size: 0.95rem;
+            }
+            #reportDirectContent p strong:contains("Life Insight"),
+            #reportDirectContent li strong:contains("Life Insight"),
+            #reportDirectContent p strong:contains("Strategic Focus") {
+                display: block;
+                color: #fef3c7;
+                background: rgba(120, 53, 15, 0.3);
+                border-left: 3px solid #f59e0b;
+                padding: 14px;
+                border-radius: 0 8px 8px 0;
+                margin-top: 8px;
+                margin-bottom: 16px;
+                font-weight: 400;
+            }
         </style>
     </head>
     <body>
-        <div class="container">
+        <div class="container" id="pdf-container">
             <header>
                 <h1><span>Ba Zi</span><span lang="zh">八字</span></h1>
                 <p class="validation_badge">✓ Professional Astronomical & Almanac Precision</p>
@@ -222,9 +254,13 @@
                 </section>
                 <section>
                     <div class="section_card" id="resultCard" style="display: block;">
-                        <div style="text-align: center; margin-bottom: 20px;">
-                            <div style="font-size: 1.1rem; color: var(--text_secondary);">Ba Zi Chart Results</div>
-                            <div id="dateDisplay" style="font-size: 1.8rem; color: var(--color_primary); font-weight: bold; margin-top: 5px;">Professional Astrological Calculation</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <div>
+                                <div style="font-size: 1.1rem; color: var(--text_secondary);">Ba Zi Chart Results</div>
+                                <div id="dateDisplay" style="font-size: 1.8rem; color: var(--color_primary); font-weight: bold; margin-top: 5px;">Professional Astrological Calculation</div>
+                            </div>
+                            <!-- 新增：网页端一键下载 PDF 按钮 -->
+                            <button type="button" onclick="downloadPDF()" style="margin-top: 0; padding: 10px 20px; font-size: 0.95rem; background: linear-gradient(45deg, #34d399, #059669); color: #fff;">📥 Download PDF</button>
                         </div>
                         <div class="pillars_container" id="pillarsContainer"></div>
                         
@@ -251,13 +287,15 @@
                                 <p style="color: #00ff66; font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #00ff6644; padding-bottom: 10px;">
                                     ✓ Report Generated & Dispatched to <span id="targetEmailText"></span>
                                 </p>
-                                <div id="reportDirectContent" style="white-space: pre-wrap; font-size: 1.05rem; line-height: 1.7; color: #d4f8e3;"></div>
+                                <!-- 修改点：这里使用 marked.js 解析，呈现排版极佳的高级卡片文本 -->
+                                <div id="reportDirectContent" style="font-size: 1.05rem; line-height: 1.7; color: #d4f8e3;"></div>
                             </div>
                         </div>
                     </div>
                 </section>
             </main>
         </div>
+
         <script>
             // 你的 Make 专属 Webhook 链接
             const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/k1xw92cyng0as3r2rq9jcqn8i3gwczdl";
@@ -361,6 +399,19 @@
                 localStorage.setItem('pending_bazi_user', JSON.stringify(formData));
             }
 
+            // 新增：网页一键下载 PDF 核心函数
+            function downloadPDF() {
+                const element = document.getElementById('pdf-container');
+                const opt = {
+                    margin:       10,
+                    filename:     'BaZi-Strategic-Blueprint.pdf',
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+                html2pdf().from(element).set(opt).save();
+            }
+
             // 页面加载自动初始化并请求后端获取报告
             window.addEventListener('DOMContentLoaded', () => {
                 const savedData = localStorage.getItem('pending_bazi_user');
@@ -410,7 +461,8 @@
                             document.getElementById('finalReportBox').style.display = 'block';
                             
                             if (data && data.report) {
-                                document.getElementById('reportDirectContent').innerText = data.report;
+                                // 关键点：使用 marked.parse 将 Markdown 转成结构美观的 HTML 渲染
+                                document.getElementById('reportDirectContent').innerHTML = marked.parse(data.report);
                             } else {
                                 document.getElementById('reportDirectContent').innerText = "Your comprehensive strategy report has been successfully processed and dispatched to " + targetEmail + ". Please check your inbox shortly!";
                             }
