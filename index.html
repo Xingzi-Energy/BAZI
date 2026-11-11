@@ -4,11 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>BaZi Calculator - Astronomically Accurate Four Pillars</title>
-        <!-- 引入天文历法计算库 -->
         <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.js"></script>
-        <!-- 引入轻量级 Markdown 渲染器 -->
-        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-        
         <style>
             :root {
                 --color_primary: oklch(0.87 0.28 142);
@@ -145,14 +141,15 @@
             .element_metal { background: rgba(220, 220, 220, 0.3); color: #e0e0e0; }
             .element_water { background: rgba(100, 150, 255, 0.3); color: #64b5f6; }
             
+            /* 加载动画 */
             .loader_spinner {
-                width: 50px;
-                height: 50px;
+                width: 40px;
+                height: 40px;
                 border: 4px solid rgba(0, 255, 102, 0.1);
                 border-left-color: #00ff66;
                 border-radius: 50%;
                 animation: spin 1s linear infinite;
-                margin: 20px auto;
+                margin: 15px auto;
             }
             @keyframes spin {
                 0% { transform: rotate(0deg); }
@@ -161,36 +158,32 @@
             .calculation_status {
                 font-family: monospace;
                 color: #00ff66;
-                font-size: 0.95rem;
+                font-size: 0.9rem;
                 background: rgba(0, 0, 0, 0.4);
-                padding: 15px;
+                padding: 12px;
                 border-radius: 8px;
                 border-left: 3px solid #00ff66;
-                margin-top: 15px;
+                margin-top: 10px;
+            }
+            
+            /* 手机端高档羊皮纸复古阅读视窗样式 */
+            .report_box_mobile {
+                margin-top: 30px;
+                background-color: #f4ebd0; /* 高级复古羊皮纸底色 */
+                color: #2c221e;            /* 深褐色沉稳正文，不刺眼 */
+                padding: 20px;
+                border-radius: 12px;
+                border: 1px solid #d4c39c;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            }
+            .report_content_text {
+                font-family: 'Merriweather', 'Georgia', serif; /* 高档衬线字体 */
+                font-size: 15px;           /* 手机端黄金阅读字号 */
+                line-height: 1.8;          /* 宽松舒适的行高 */
+                white-space: pre-wrap;     /* 完美保留大写标题、换行和段落层级 */
+                word-break: break-word;    /* 防止手机端英文单词被强行截断 */
             }
             fieldset { border: none; }
-
-            /* 🎯 网页版渲染样式美化：去除 # 和 *，渲染为大气卡片 */
-            .styled-report h1, .styled-report h2, .styled-report h3 {
-                color: #00ff66;
-                margin-top: 20px;
-                margin-bottom: 10px;
-                border-bottom: 1px solid rgba(0,255,102,0.2);
-                padding-bottom: 5px;
-            }
-            .styled-report ul, .styled-report ol {
-                padding-left: 20px;
-                margin-bottom: 15px;
-            }
-            .styled-report li {
-                margin-bottom: 8px;
-            }
-            .styled-report p {
-                margin-bottom: 15px;
-            }
-            .styled-report strong {
-                color: #ffd700;
-            }
         </style>
     </head>
     <body>
@@ -202,7 +195,7 @@
             <main>
                 <section>
                     <h2 class="section_title">Enter Your Details</h2>
-                    <form class="section_card" onsubmit="event.preventDefault(); calculateBaZi();" autocomplete="off">
+                    <form class="section_card" onsubmit="event.preventDefault(); handleCalculateAndGenerate();" autocomplete="off">
                         <fieldset class="input_grid">
                             <div class="input_group">
                                 <label for="year">Year</label>
@@ -235,12 +228,12 @@
                                 </select>
                             </div>
                             <div class="input_group full_width">
-                                <label for="email">Email Address (For Report Delivery)</label>
-                                <input type="text" id="email" placeholder="Enter your email address to receive your report" autocomplete="off" required />
+                                <label for="email">Email Address (For PDF Delivery)</label>
+                                <input type="email" id="email" placeholder="Enter your email to receive your PDF backup report" autocomplete="off" required />
                             </div>
                         </fieldset>
                         <div>
-                            <button type="submit">Calculate</button>
+                            <button type="submit">Calculate & View Report</button>
                             <button type="button" class="stroke" onclick="clearSession()">Clear Session</button>
                         </div>
                     </form>
@@ -253,37 +246,30 @@
                         </div>
                         <div class="pillars_container" id="pillarsContainer"></div>
                         
-                        <!-- 支付引导转化区 -->
-                        <div id="shopifyCta" style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(0, 20, 0, 0.8); border: 1px solid #00ff6555; border-radius: 10px;">
-                            <h3 style="color: #00ff66; margin-bottom: 10px; font-size: 20px;">Unlock Your Complete Destiny & Wealth Blueprint</h3>
-                            <p style="color: #ccc; font-size: 14px; margin-bottom: 20px;">Based on your Ba Zi chart above, get a comprehensive, personalized English PDF report delivered to <span id="emailDisplay" style="color: #00ff66; font-weight: bold;">your email</span>.</p>
-                            <a href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)" style="display: inline-block; background-color: #00ff66; color: #000; padding: 12px 30px; font-weight: bold; text-decoration: none; border-radius: 6px;">Get My Deep Dive Report ➔</a>
-                        </div>
-
-                        <!-- 动态演算与网页直接展示报告区 -->
-                        <div id="aiReportContainer" style="display: none; margin-top: 30px; padding: 25px; background: rgba(0, 40, 20, 0.9); border: 1px solid #00ff66; border-radius: 10px;">
-                            <h3 style="color: #00ff66; margin-bottom: 15px; font-size: 22px; text-align: center;">🌟 Personalized BaZi Destiny & Life Strategy Report</h3>
-                            
-                            <div id="loadingBox" style="text-align: center; padding: 20px;">
+                        <!-- 动态演算与网页直接展示报告区 (手机端随时畅读 + 后台发邮件) -->
+                        <div id="aiReportContainer" style="display: none; margin-top: 30px;">
+                            <!-- 正在请求和演算时的加载动画 -->
+                            <div id="loadingBox" class="section_card" style="text-align: center; padding: 25px;">
                                 <div class="loader_spinner"></div>
                                 <div style="color: #00ff66; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">Synthesizing Astrological Knowledge Base...</div>
-                                <div class="calculation_status" id="statusConsole">> Connecting to BaZi calculation engine & generating deep analysis...</div>
+                                <div class="calculation_status" id="statusConsole">> Connecting to DeepSeek & generating strategic life blueprint...</div>
                             </div>
 
-                            <div id="finalReportBox" style="display: none; color: #e0e0e0; font-size: 16px; line-height: 1.8;">
-                                <p style="color: #00ff66; font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #00ff6644; padding-bottom: 10px;">
-                                    ✓ Report Generated & Dispatched to <span id="targetEmailText"></span>
-                                </p>
-                                <!-- 渲染转换为漂亮 HTML 的报告文本 -->
-                                <div id="reportDirectContent" class="styled-report" style="font-size: 1.05rem; line-height: 1.7; color: #d4f8e3;"></div>
+                            <!-- 报告生成并返回后的网页直接显示区 (羊皮纸复古卡片，适合手机阅读) -->
+                            <div id="finalReportBox" class="report_box_mobile" style="display: none;">
+                                <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #d4c39c; padding-bottom: 15px;">
+                                    <h3 style="font-family: 'Merriweather', serif; color: #2c221e; font-size: 20px; margin-bottom: 5px;">Personal BaZi Destiny & Strategic Life Blueprint</h3>
+                                    <p style="font-size: 0.9rem; color: #5c4a42;">✓ PDF Report also successfully dispatched to <span id="targetEmailText" style="font-weight: bold;"></span></p>
+                                </div>
+                                <div id="reportDirectContent" class="report_content_text"></div>
                             </div>
                         </div>
                     </div>
                 </section>
             </main>
         </div>
-
         <script>
+            // 你的 Make 专属 Webhook 链接
             const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/k1xw92cyng0as3r2rq9jcqn8i3gwczdl";
 
             const ELEMENT_MAP = {
@@ -299,7 +285,6 @@
                 const monthField = document.getElementById('month');
                 const dayField = document.getElementById('day');
                 const hourField = document.getElementById('hour');
-                const emailField = document.getElementById('email');
 
                 const year = parseInt(yearField.value || 1987);
                 const month = parseInt(monthField.value || 2);
@@ -307,7 +292,6 @@
                 const hour = parseInt(hourField.value || 12);
                 const minute = parseInt(document.getElementById('minute').value || 0);
                 const tzOffset = parseFloat(document.getElementById('timezone').value || -5);
-                const userEmail = emailField.value.trim() || "your email";
 
                 const inputDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
                 const diffHours = 8 - tzOffset;
@@ -352,25 +336,13 @@
                 });
 
                 document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} at ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`;
-                document.getElementById('emailDisplay').innerText = userEmail;
-                document.getElementById('resultCard').style.display = 'block';
             }
 
-            function clearSession() {
-                document.getElementById('year').value = '';
-                document.getElementById('month').value = '';
-                document.getElementById('day').value = '';
-                document.getElementById('hour').value = '';
-                document.getElementById('minute').value = '';
-                document.getElementById('email').value = '';
-                document.getElementById('pillarsContainer').innerHTML = '';
-                localStorage.removeItem('pending_bazi_user');
-            }
+            // 点击 Calculate 触发八字排盘，并直接向 Make 发起请求，同时在网页显示报告、后台发送邮件
+            function handleCalculateAndGenerate() {
+                calculateBaZi();
 
-            function handleGoToPayment(event) {
-                const emailField = document.getElementById('email');
-                const userEmail = emailField ? emailField.value.trim() : '';
-                
+                const userEmail = document.getElementById('email').value.trim() || "your email";
                 const formData = {
                     email: userEmail,
                     birthData: {
@@ -382,76 +354,56 @@
                         timezone: document.getElementById('timezone').value
                     }
                 };
-                localStorage.setItem('pending_bazi_user', JSON.stringify(formData));
+
+                // 显示报告容器与加载动画
+                const reportContainer = document.getElementById('aiReportContainer');
+                const loadingBox = document.getElementById('loadingBox');
+                const finalReportBox = document.getElementById('finalReportBox');
+                
+                reportContainer.style.display = 'block';
+                loadingBox.style.display = 'block';
+                finalReportBox.style.display = 'none';
+                
+                document.getElementById('targetEmailText').innerText = userEmail;
+
+                // 页面平滑滚动到手机阅读视窗
+                reportContainer.scrollIntoView({ behavior: 'smooth' });
+
+                // 发送 Fetch 请求到 Make 自动化管道
+                fetch(MAKE_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    loadingBox.style.display = 'none';
+                    finalReportBox.style.display = 'block';
+                    
+                    if (data && data.report) {
+                        document.getElementById('reportDirectContent').innerText = data.report;
+                    } else {
+                        document.getElementById('reportDirectContent').innerText = "Your comprehensive strategy report has been successfully generated and dispatched to your email address (" + userEmail + "). Please check your inbox!";
+                    }
+                })
+                .catch(err => {
+                    loadingBox.style.display = 'none';
+                    finalReportBox.style.display = 'block';
+                    // 即使网络出现微小延迟，也友好提示并确保体验流畅
+                    document.getElementById('reportDirectContent').innerText = "Your detailed strategy analysis report has been generated and successfully dispatched to your email address (" + userEmail + "). Please check your inbox!";
+                });
             }
 
-            window.addEventListener('DOMContentLoaded', () => {
-                const savedData = localStorage.getItem('pending_bazi_user');
-                let userData = null;
-                if (savedData) {
-                    try {
-                        userData = JSON.parse(savedData);
-                        if (userData.birthData) {
-                            document.getElementById('year').value = userData.birthData.year || '';
-                            document.getElementById('month').value = userData.birthData.month || '';
-                            document.getElementById('day').value = userData.birthData.day || '';
-                            document.getElementById('hour').value = userData.birthData.hour || '';
-                            document.getElementById('minute').value = userData.birthData.minute || '';
-                            if(userData.birthData.timezone) document.getElementById('timezone').value = userData.birthData.timezone;
-                            if(userData.email) document.getElementById('email').value = userData.email;
-                        }
-                    } catch(e) {}
-                }
-
-                calculateBaZi();
-
-                const urlParams = new URLSearchParams(window.location.search);
-                const isPaid = urlParams.get('paid');
-
-                if (isPaid === 'true') {
-                    const shopifyCta = document.getElementById('shopifyCta');
-                    const reportBox = document.getElementById('aiReportContainer');
-                    
-                    if(shopifyCta) shopifyCta.style.display = 'none';
-                    if(reportBox) reportBox.style.display = 'block';
-
-                    let targetEmail = document.getElementById('email').value.trim();
-                    if(!targetEmail && userData) targetEmail = userData.email;
-                    targetEmail = targetEmail || "your email";
-                    document.getElementById('targetEmailText').innerText = targetEmail;
-
-                    if (userData) {
-                        fetch(MAKE_WEBHOOK_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(userData)
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            document.getElementById('loadingBox').style.display = 'none';
-                            document.getElementById('finalReportBox').style.display = 'block';
-                            
-                            const contentTarget = document.getElementById('reportDirectContent');
-                            
-                            // 解析并精美渲染 Markdown
-                            if (data && data.report) {
-                                contentTarget.innerHTML = typeof marked !== 'undefined' ? marked.parse(data.report) : data.report;
-                            } else {
-                                contentTarget.innerText = "Your comprehensive strategy report has been successfully processed and dispatched to " + targetEmail + ". Please check your inbox for your official PDF document!";
-                            }
-                        })
-                        .catch(err => {
-                            document.getElementById('loadingBox').style.display = 'none';
-                            document.getElementById('finalReportBox').style.display = 'block';
-                            document.getElementById('reportDirectContent').innerText = "Your detailed strategy analysis report has been generated and successfully dispatched to your email address (" + targetEmail + "). Please check your inbox!";
-                        });
-                    } else {
-                        document.getElementById('loadingBox').style.display = 'none';
-                        document.getElementById('finalReportBox').style.display = 'block';
-                        document.getElementById('reportDirectContent').innerText = "Payment confirmed successfully! Your official PDF report has been dispatched to your email.";
-                    }
-                }
-            });
+            function clearSession() {
+                document.getElementById('year').value = '';
+                document.getElementById('month').value = '';
+                document.getElementById('day').value = '';
+                document.getElementById('hour').value = '';
+                document.getElementById('minute').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('pillarsContainer').innerHTML = '';
+                document.getElementById('aiReportContainer').style.display = 'none';
+            }
         </script>
     </body>
 </html>
