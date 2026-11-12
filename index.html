@@ -194,7 +194,6 @@
                 border: 2px solid #8c6f47;
                 box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             }
-            /* 优化正文字号、行高及段落自动分行 */
             .report_content_text {
                 font-family: 'Merriweather', 'Georgia', serif;
                 font-size: 18.5px !important; 
@@ -474,8 +473,9 @@
                             loadingBox.style.display = 'none';
                             finalReportBox.style.display = 'block';
                             
-                            if (data && data.report) {
-                                let rawReport = data.report;
+                            // 【已修复】这里正确对接了 Make 返回的 report 字段，并恢复了标签替换
+                            if (data && (data.report || data.content)) {
+                                let rawReport = data.report || data.content;
                                 let cleanedReport = rawReport
                                     .replace(/&lt;b&gt;/g, '<b>')
                                     .replace(/&lt;\/b&gt;/g, '</b>');
