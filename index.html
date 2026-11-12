@@ -177,7 +177,7 @@
             .report_main_title {
                 font-family: 'Merriweather', serif;
                 color: #2c221e;
-                font-size: 28px !important; /* 显著放大的主标题 */
+                font-size: 28px !important;
                 font-weight: bold;
                 margin-bottom: 12px;
                 display: flex;
@@ -186,7 +186,6 @@
                 gap: 16px;
                 flex-wrap: wrap;
             }
-            /* 标志性放大 Logo 样式 */
             .report_brand_logo {
                 width: 72px;
                 height: 72px;
@@ -195,15 +194,17 @@
                 border: 2px solid #8c6f47;
                 box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             }
-            /* 整体正文字号放大至 18.5px，提供极佳的阅读舒适度 */
+            /* 优化正文字号、行高及段落自动分行 */
             .report_content_text {
                 font-family: 'Merriweather', 'Georgia', serif;
                 font-size: 18.5px !important; 
-                line-height: 1.9 !important;
-                white-space: pre-wrap;
+                line-height: 1.95 !important;
+                white-space: pre-line !important; 
                 word-break: break-word;
             }
-            /* 章节大标题与次级加粗标题同步放大 */
+            .report_content_text p {
+                margin-bottom: 18px !important;
+            }
             .report_content_text b, .report_content_text strong {
                 font-weight: bold !important;
                 color: #1a120e !important;
