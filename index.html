@@ -181,7 +181,6 @@
                 white-space: pre-wrap;
                 word-break: break-word;
             }
-            /* 强制网页中的 b 标签呈现清晰黑体 */
             .report_content_text b, .report_content_text strong {
                 font-weight: bold !important;
                 color: #1a120e !important;
@@ -245,7 +244,7 @@
                     <div class="section_card" id="resultCard" style="display: block;">
                         <div style="text-align: center; margin-bottom: 20px;">
                             <div style="font-size: 1.1rem; color: var(--text_secondary);">Ba Zi Chart Results</div>
-                            <div id="dateDisplay" style="font-size: 1.8rem; color: var(--color_primary); font-weight: bold; margin-top: 5px;">Professional Astrological Calculation</div>
+                            <div id="dateDisplay" style="font-size: 1.8rem; color: var(--color_primary); font-weight: bold; margin-top: 5px;">Awaiting Calculation</div>
                         </div>
                         <div class="pillars_container" id="pillarsContainer"></div>
                         
@@ -292,10 +291,14 @@
                 const hourField = document.getElementById('hour');
                 const emailField = document.getElementById('email');
 
-                const year = parseInt(yearField.value || 1987);
-                const month = parseInt(monthField.value || 2);
-                const day = parseInt(dayField.value || 19);
-                const hour = parseInt(hourField.value || 12);
+                if (!yearField.value || !monthField.value || !dayField.value || !hourField.value) {
+                    return;
+                }
+
+                const year = parseInt(yearField.value);
+                const month = parseInt(monthField.value);
+                const day = parseInt(dayField.value);
+                const hour = parseInt(hourField.value);
                 const minute = parseInt(document.getElementById('minute').value || 0);
                 const tzOffset = parseFloat(document.getElementById('timezone').value || -5);
                 const userEmail = emailField.value.trim() || "your email";
@@ -344,7 +347,6 @@
 
                 document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} at ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`;
                 document.getElementById('emailDisplay').innerText = userEmail;
-                document.getElementById('resultCard').style.display = 'block';
 
                 const formData = {
                     email: userEmail,
@@ -368,6 +370,7 @@
                 document.getElementById('minute').value = '';
                 document.getElementById('email').value = '';
                 document.getElementById('pillarsContainer').innerHTML = '';
+                document.getElementById('dateDisplay').innerHTML = 'Awaiting Calculation';
                 localStorage.removeItem('pending_bazi_user');
                 document.getElementById('aiReportContainer').style.display = 'none';
                 document.getElementById('shopifyCta').style.display = 'block';
@@ -397,7 +400,7 @@
                 if (savedData) {
                     try {
                         userData = JSON.parse(savedData);
-                        if (userData.birthData) {
+                        if (userData.birthData && userData.birthData.year) {
                             document.getElementById('year').value = userData.birthData.year || '';
                             document.getElementById('month').value = userData.birthData.month || '';
                             document.getElementById('day').value = userData.birthData.day || '';
@@ -405,11 +408,11 @@
                             document.getElementById('minute').value = userData.birthData.minute || '';
                             if(userData.birthData.timezone) document.getElementById('timezone').value = userData.birthData.timezone;
                             if(userData.email) document.getElementById('email').value = userData.email;
+                            
+                            calculateBaZi();
                         }
                     } catch(e) {}
                 }
-
-                calculateBaZi();
 
                 const urlParams = new URLSearchParams(window.location.search);
                 const isPaid = urlParams.get('paid');
@@ -444,7 +447,6 @@
                             finalReportBox.style.display = 'block';
                             
                             if (data && data.report) {
-                                // 核心清洗逻辑：自动将实体化的标签还原，并用 innerHTML 完美呈现粗体
                                 let rawReport = data.report;
                                 let cleanedReport = rawReport
                                     .replace(/&lt;b&gt;/g, '<b>')
