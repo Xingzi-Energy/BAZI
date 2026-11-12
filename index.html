@@ -181,7 +181,7 @@
                 white-space: pre-wrap;
                 word-break: break-word;
             }
-            /* 强制让网页直接识别并加粗 b 标签的内容 */
+            /* 确保 b 标签显示为粗体 */
             .report_content_text b {
                 font-weight: bold;
                 color: #1a120e;
@@ -267,7 +267,7 @@
                                     <h3 style="font-family: 'Merriweather', serif; color: #2c221e; font-size: 20px; margin-bottom: 5px;">Personal BaZi Destiny & Strategic Life Blueprint</h3>
                                     <p style="font-size: 0.9rem; color: #5c4a42;">✓ PDF Report also successfully dispatched to <span id="targetEmailText" style="font-weight: bold;"></span></p>
                                 </div>
-                                <!-- 使用 innerHTML 渲染带有 <b> 标签的文本 -->
+                                <!-- 核心修改：使用 innerHTML 解析 HTML 标签 -->
                                 <div id="reportDirectContent" class="report_content_text"></div>
                             </div>
                         </div>
@@ -445,7 +445,7 @@
                             finalReportBox.style.display = 'block';
                             
                             if (data && data.report) {
-                                // 核心修改：直接使用 innerHTML 渲染 HTML 标签，使 <b> 完美生效
+                                // 核心修改：用 innerHTML 代替 innerText，完美让 <b> 标签生效
                                 document.getElementById('reportDirectContent').innerHTML = data.report;
                             } else {
                                 document.getElementById('reportDirectContent').innerText = "Your comprehensive strategy report has been successfully processed and dispatched to " + targetEmail + ". Please check your inbox shortly!";
