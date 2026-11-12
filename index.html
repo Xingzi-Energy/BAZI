@@ -169,19 +169,24 @@
             /* 手机端高档羊皮纸复古阅读视窗样式 */
             .report_box_mobile {
                 margin-top: 30px;
-                background-color: #f4ebd0; /* 高级复古羊皮纸底色 */
-                color: #2c221e;            /* 深褐色沉稳正文 */
+                background-color: #f4ebd0;
+                color: #2c221e;
                 padding: 20px;
                 border-radius: 12px;
                 border: 1px solid #d4c39c;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             }
             .report_content_text {
-                font-family: 'Merriweather', 'Georgia', serif; /* 高档衬线字体 */
-                font-size: 15px;           /* 手机端黄金阅读字号 */
-                line-height: 1.8;          /* 宽松舒适的行高 */
-                white-space: pre-wrap;     /* 完美保留大写标题、换行和段落层级 */
-                word-break: break-word;    /* 防止手机端英文单词被截断 */
+                font-family: 'Merriweather', 'Georgia', serif;
+                font-size: 15px;
+                line-height: 1.8;
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+            /* 自动渲染的次级标题加粗样式 */
+            .report_content_text strong {
+                font-weight: bold;
+                color: #1a120e;
             }
             fieldset { border: none; }
         </style>
@@ -253,16 +258,14 @@
                             <a href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)" style="display: inline-block; background-color: #00ff66; color: #000; padding: 12px 30px; font-weight: bold; text-decoration: none; border-radius: 6px;">Get My Deep Dive Report ➔</a>
                         </div>
 
-                        <!-- 动态演算与网页直接展示报告区 (支付成功返回后自动展示) -->
+                        <!-- 动态演算与网页直接展示报告区 -->
                         <div id="aiReportContainer" style="display: none; margin-top: 30px;">
-                            <!-- 正在请求和演算时的加载动画 -->
                             <div id="loadingBox" class="section_card" style="text-align: center; padding: 25px;">
                                 <div class="loader_spinner"></div>
                                 <div style="color: #00ff66; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">Synthesizing Astrological Knowledge Base...</div>
                                 <div class="calculation_status" id="statusConsole">> Connecting to DeepSeek & generating strategic life blueprint...</div>
                             </div>
 
-                            <!-- 报告生成并返回后的网页直接显示区 (羊皮纸复古卡片，适合手机畅读) -->
                             <div id="finalReportBox" class="report_box_mobile" style="display: none;">
                                 <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #d4c39c; padding-bottom: 15px;">
                                     <h3 style="font-family: 'Merriweather', serif; color: #2c221e; font-size: 20px; margin-bottom: 5px;">Personal BaZi Destiny & Strategic Life Blueprint</h3>
@@ -276,7 +279,6 @@
             </main>
         </div>
         <script>
-            // 你的 Make 专属 Webhook 链接
             const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/k1xw92cyng0as3r2rq9jcqn8i3gwczdl";
 
             const ELEMENT_MAP = {
@@ -348,7 +350,6 @@
                 document.getElementById('emailDisplay').innerText = userEmail;
                 document.getElementById('resultCard').style.display = 'block';
 
-                // 同时把当前输入保存到本地缓存，以便支付跳转回来时恢复数据
                 const formData = {
                     email: userEmail,
                     birthData: {
@@ -394,7 +395,6 @@
                 localStorage.setItem('pending_bazi_user', JSON.stringify(formData));
             }
 
-            // 页面加载自动初始化：恢复缓存数据，并处理支付完成后的跳转渲染
             window.addEventListener('DOMContentLoaded', () => {
                 const savedData = localStorage.getItem('pending_bazi_user');
                 let userData = null;
@@ -413,13 +413,11 @@
                     } catch(e) {}
                 }
 
-                // 先计算并显示排盘
                 calculateBaZi();
 
                 const urlParams = new URLSearchParams(window.location.search);
                 const isPaid = urlParams.get('paid');
 
-                // 如果检测到支付成功跳转回来的标记 (?paid=true)
                 if (isPaid === 'true') {
                     const shopifyCta = document.getElementById('shopifyCta');
                     const reportBox = document.getElementById('aiReportContainer');
@@ -436,10 +434,8 @@
                     targetEmail = targetEmail || "your email";
                     document.getElementById('targetEmailText').innerText = targetEmail;
 
-                    // 页面自动滚动到报告展示区，方便手机用户查看
                     reportBox.scrollIntoView({ behavior: 'smooth' });
 
-                    // 发起真实的 Fetch 请求到 Make 后端获取 DeepSeek 报告
                     if (userData) {
                         fetch(MAKE_WEBHOOK_URL, {
                             method: 'POST',
@@ -452,7 +448,18 @@
                             finalReportBox.style.display = 'block';
                             
                             if (data && data.report) {
-                                document.getElementById('reportDirectContent').innerText = data.report;
+                                let rawText = data.report;
+                                // 核心优化：通过正则自动将次级标题和列表项转换为 HTML 粗体渲染
+                                let formattedText = rawText
+                                    .replace(/\*\*(Technical Chart Specification:\*\*)/g, '<strong>$1</strong>')
+                                    .replace(/\*\*(Life Insight:\*\*)/g, '<strong>$1</strong>')
+                                    .replace(/\*\*(Technical Specification:\*\*)/g, '<strong>$1</strong>')
+                                    .replace(/\*\*(Energy Spec:\*\*)/g, '<strong>$1</strong>')
+                                    .replace(/\*\*(Strategic Focus:\*\*)/g, '<strong>$1</strong>')
+                                    // 兼容直接输出文字未带星号的情况
+                                    .replace(/(Technical Chart Specification:|Life Insight:|Technical Specification:|Energy Spec:|Strategic Focus:)/g, '<strong>$1</strong>');
+
+                                document.getElementById('reportDirectContent').innerHTML = formattedText;
                             } else {
                                 document.getElementById('reportDirectContent').innerText = "Your comprehensive strategy report has been successfully processed and dispatched to " + targetEmail + ". Please check your inbox shortly!";
                             }
