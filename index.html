@@ -473,9 +473,15 @@
                             loadingBox.style.display = 'none';
                             finalReportBox.style.display = 'block';
                             
-                            // 【已修复】这里正确对接了 Make 返回的 report 字段，并恢复了标签替换
-                            if (data && (data.report || data.content)) {
-                                let rawReport = data.report || data.content;
+                            // 万能字段兼容：自动识别 report, content, text 或 message 字段
+                            let rawReport = "";
+                            if (typeof data === 'string') {
+                                rawReport = data;
+                            } else if (data) {
+                                rawReport = data.report || data.content || data.text || data.message || "";
+                            }
+
+                            if (rawReport && rawReport.length > 5) {
                                 let cleanedReport = rawReport
                                     .replace(/&lt;b&gt;/g, '<b>')
                                     .replace(/&lt;\/b&gt;/g, '</b>');
