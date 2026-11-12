@@ -169,43 +169,42 @@
                 margin-top: 30px;
                 background-color: #f4ebd0;
                 color: #2c221e;
-                padding: 35px;
+                padding: 30px;
                 border-radius: 12px;
                 border: 1px solid #d4c39c;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             }
             .report_main_title {
                 font-family: 'Merriweather', serif;
                 color: #2c221e;
-                font-size: 28px !important;
+                font-size: 26px !important; /* 进一步放大的主标题 */
                 font-weight: bold;
-                margin-bottom: 12px;
+                margin-bottom: 10px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 16px;
+                gap: 14px;
                 flex-wrap: wrap;
             }
             .report_brand_logo {
-                width: 72px;
-                height: 72px;
+                width: 44px;
+                height: 44px;
                 object-fit: cover;
                 border-radius: 50%;
-                border: 2px solid #8c6f47;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                border: 1px solid #b39d73;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.25);
             }
-            /* 恢复为文件8稳定可靠的 pre-wrap 渲染，确保内容完美呈现 */
+            /* 整体正文字号放大到 17px，行高更舒适 */
             .report_content_text {
                 font-family: 'Merriweather', 'Georgia', serif;
-                font-size: 18.5px !important; 
-                line-height: 1.9 !important;
-                white-space: pre-wrap !important;
+                font-size: 17px !important; 
+                line-height: 1.85 !important;
+                white-space: pre-wrap;
                 word-break: break-word;
             }
             .report_content_text b, .report_content_text strong {
                 font-weight: bold !important;
                 color: #1a120e !important;
-                font-size: 19px !important;
             }
             fieldset { border: none; }
         </style>
@@ -284,12 +283,12 @@
                             </div>
 
                             <div id="finalReportBox" class="report_box_mobile" style="display: none;">
-                                <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #d4c39c; padding-bottom: 22px;">
+                                <div style="text-align: center; margin-bottom: 25px; border-bottom: 2px solid #d4c39c; padding-bottom: 18px;">
                                     <h3 class="report_main_title">
                                         <img src="https://i.postimg.cc/k507k59s/xin1.png" alt="Xingzi Master" class="report_brand_logo">
                                         <span>Personal BaZi Destiny & Strategic Life Blueprint</span>
                                     </h3>
-                                    <p style="font-size: 1.05rem; color: #5c4a42;">✓ PDF Report also successfully dispatched to <span id="targetEmailText" style="font-weight: bold;"></span></p>
+                                    <p style="font-size: 0.95rem; color: #5c4a42;">✓ PDF Report also successfully dispatched to <span id="targetEmailText" style="font-weight: bold;"></span></p>
                                 </div>
                                 <div id="reportDirectContent" class="report_content_text"></div>
                             </div>
@@ -471,7 +470,6 @@
                             loadingBox.style.display = 'none';
                             finalReportBox.style.display = 'block';
                             
-                            // 恢复了文件8能够稳定识别 report 字段的逻辑
                             if (data && data.report) {
                                 let rawReport = data.report;
                                 let cleanedReport = rawReport
