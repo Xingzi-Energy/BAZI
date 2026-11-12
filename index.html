@@ -194,15 +194,13 @@
                 border: 2px solid #8c6f47;
                 box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             }
+            /* 恢复为文件8稳定可靠的 pre-wrap 渲染，确保内容完美呈现 */
             .report_content_text {
                 font-family: 'Merriweather', 'Georgia', serif;
                 font-size: 18.5px !important; 
-                line-height: 1.95 !important;
-                white-space: pre-line !important; 
+                line-height: 1.9 !important;
+                white-space: pre-wrap !important;
                 word-break: break-word;
-            }
-            .report_content_text p {
-                margin-bottom: 18px !important;
             }
             .report_content_text b, .report_content_text strong {
                 font-weight: bold !important;
@@ -473,15 +471,9 @@
                             loadingBox.style.display = 'none';
                             finalReportBox.style.display = 'block';
                             
-                            // 万能字段兼容：自动识别 report, content, text 或 message 字段
-                            let rawReport = "";
-                            if (typeof data === 'string') {
-                                rawReport = data;
-                            } else if (data) {
-                                rawReport = data.report || data.content || data.text || data.message || "";
-                            }
-
-                            if (rawReport && rawReport.length > 5) {
+                            // 恢复了文件8能够稳定识别 report 字段的逻辑
+                            if (data && data.report) {
+                                let rawReport = data.report;
                                 let cleanedReport = rawReport
                                     .replace(/&lt;b&gt;/g, '<b>')
                                     .replace(/&lt;\/b&gt;/g, '</b>');
