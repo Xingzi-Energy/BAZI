@@ -279,9 +279,9 @@
                                 </select>
                             </div>
                             <div class="input_group full_width">
-                                <label for="cityInput">Birth City (United States)</label>
+                                <label for="cityInput">Birth City (United States or China)</label>
                                 <div class="combo">
-                                    <input type="text" id="cityInput" placeholder="Select from the list or type a city, e.g. Austin, TX" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="cityList" required />
+                                    <input type="text" id="cityInput" placeholder="Select from the list or type a city, e.g. Austin, TX or Beijing" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="cityList" required />
                                     <ul id="cityList" class="city_list" role="listbox" hidden></ul>
                                 </div>
                                 <div id="cityHint" class="city_hint">We use your birth city's longitude and local daylight-saving rules to calculate true solar time.</div>
@@ -365,7 +365,7 @@
                 NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',
                 RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',
                 VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming',
-                PR:'Puerto Rico',GU:'Guam'
+                PR:'Puerto Rico',GU:'Guam',CN:'China'
             };
             const ABBR_BY_NAME = {};
             Object.keys(STATES).forEach(k => { ABBR_BY_NAME[STATES[k].toLowerCase()] = k; });
@@ -602,6 +602,8 @@ WY|Cheyenne|41.14|-104.82|M
 WY|Jackson|43.48|-110.76|M
 PR|San Juan|18.47|-66.11|America/Puerto_Rico
 GU|Tamuning|13.49|144.78|Pacific/Guam
+CN|Beijing|39.90|116.41|Asia/Shanghai
+CN|Guilin|25.27|110.29|Asia/Shanghai
 `;
 
             const LOCAL_CITIES = RAW_CITIES.trim().split('\n').map(line => {
