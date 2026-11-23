@@ -228,6 +228,13 @@
             .city_hint { margin-top: 8px; font-size: 0.85rem; color: var(--color_primary); min-height: 1.1em; }
             .city_hint.error { color: #ff6b6b; }
             .form_msg { color: #ff6b6b; font-size: 0.9rem; margin-top: 10px; min-height: 1em; }
+            .luck_title { text-align: center; color: var(--color_primary_light); font-size: 1rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+            .luck_note { text-align: center; color: var(--text_secondary); font-size: 0.8rem; margin-bottom: 4px; }
+            .luck_grid { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); margin-top: 10px; }
+            .luck_grid .pillar { padding: 12px 8px; }
+            .luck_grid .chinese_char { font-size: 1.6rem; margin: 6px 0; }
+            .luck_grid .luck_age { font-size: 0.85rem; color: var(--text_secondary); }
+            .luck_grid .pillar.current_luck { border-color: var(--color_primary); background: rgba(0, 255, 102, 0.12); }
             #solarInfo { display: none; text-align: left; white-space: pre-line; max-width: 640px; margin: 0 auto 20px; line-height: 1.6; }
             fieldset { border: none; }
         </style>
@@ -263,6 +270,14 @@
                                 <label for="minute">Minute</label>
                                 <input type="number" id="minute" min="0" max="59" placeholder="Optional" />
                             </div>
+                            <div class="input_group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" required>
+                                    <option value="" selected disabled>Select…</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
                             <div class="input_group full_width">
                                 <label for="cityInput">Birth City (United States)</label>
                                 <div class="combo">
@@ -291,6 +306,12 @@
                         </div>
                         <div class="calculation_status" id="solarInfo"></div>
                         <div class="pillars_container" id="pillarsContainer"></div>
+
+                        <div id="luckSection" style="display: none; margin-top: 30px;">
+                            <div class="luck_title">10-Year Luck Pillars</div>
+                            <div class="luck_note" id="luckNote"></div>
+                            <div class="pillars_container luck_grid" id="luckContainer"></div>
+                        </div>
                         
                         <div id="shopifyCta" style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(0, 20, 0, 0.8); border: 1px solid #00ff6555; border-radius: 10px;">
                             <h3 style="color: #00ff66; margin-bottom: 10px; font-size: 20px;">Unlock Your Complete Destiny & Wealth Blueprint</h3>
@@ -657,7 +678,7 @@ GU|Tamuning|13.49|144.78|Pacific/Guam
             }
             function fmtSigned(n) { return (n >= 0 ? '+' : '−') + Math.abs(n).toFixed(1); }
 
-            function computeSolar(year, month, day, hour, minute, city) {
+            function computeSolar(year, month, day, hour, minute, city, gender) {
                 const localMs = Date.UTC(year, month - 1, day, hour, minute, 0);
                 const res = resolveLocalToUtc(city.tz, localMs);
 
@@ -679,7 +700,29 @@ GU|Tamuning|13.49|144.78|Pacific/Guam
                 // Day & Hour pillars depend on local true solar time
                 const eightTrueSolar = Solar.fromYmdHms(tst.y, tst.m, tst.d, tst.h, tst.mi, tst.s).getLunar().getEightChar();
 
+                // 10-year luck pillars (direction & start age depend on gender and the exact solar-term instant)
+                let luck = null;
+                try {
+                    if (gender === 'male' || gender === 'female') {
+                        const yun = eightInstant.getYun(gender === 'male' ? 1 : 0);
+                        const items = yun.getDaYun().filter(d => d.getGanZhi()).map(d => ({
+                            ganzhi: d.getGanZhi(),
+                            startAge: d.getStartAge(), endAge: d.getEndAge(),
+                            startYear: d.getStartYear(), endYear: d.getEndYear()
+                        }));
+                        const curYear = new Date().getFullYear();
+                        const current = items.find(it => curYear >= it.startYear && curYear <= it.endYear) || null;
+                        luck = {
+                            forward: yun.isForward(),
+                            startYears: yun.getStartYear(), startMonths: yun.getStartMonth(), startDays: yun.getStartDay(),
+                            items, current,
+                            firstStartYear: items.length ? items[0].startYear : null
+                        };
+                    }
+                } catch (e) { luck = null; }
+
                 return {
+                    luck,
                     pillars: [
                         { title: 'YEAR', pillarStr: eightInstant.getYear() },
                         { title: 'MONTH', pillarStr: eightInstant.getMonth() },
@@ -930,8 +973,15 @@ GU|Tamuning|13.49|144.78|Pacific/Guam
                 const hour = parseInt(hourField.value);
                 const minute = parseInt(document.getElementById('minute').value || 0);
                 const userEmail = emailField.value.trim() || "your email";
+                const gender = document.getElementById('gender').value;
 
                 setMsg('');
+
+                if (!gender) {
+                    setMsg('Please select your gender (needed to calculate your 10-year luck pillars).');
+                    document.getElementById('gender').focus();
+                    return;
+                }
 
                 // validate the calendar date (e.g. reject Feb 30)
                 const chk = new Date(Date.UTC(year, month - 1, day));
@@ -948,7 +998,7 @@ GU|Tamuning|13.49|144.78|Pacific/Guam
                     return;
                 }
 
-                const r = computeSolar(year, month, day, hour, minute, selectedCity);
+                const r = computeSolar(year, month, day, hour, minute, selectedCity, gender);
                 lastCalc = r;
 
                 const container = document.getElementById('pillarsContainer');
@@ -983,6 +1033,36 @@ GU|Tamuning|13.49|144.78|Pacific/Guam
                 ];
                 if (r.status === 'gap') lines.push('Note: that clock time did not exist locally (daylight saving jump); it was shifted forward by one hour.');
                 if (r.status === 'ambiguous') lines.push('Note: that clock time occurred twice locally (daylight saving ends); the first occurrence was used.');
+                // luck pillars
+                const luckSection = document.getElementById('luckSection');
+                const luckContainer = document.getElementById('luckContainer');
+                luckContainer.innerHTML = '';
+                if (r.luck && r.luck.items.length) {
+                    const L = r.luck;
+                    document.getElementById('luckNote').textContent =
+                        `${L.forward ? 'Forward' : 'Backward'} cycle · first luck pillar begins at age ${L.startYears}y ${L.startMonths}m ${L.startDays}d`;
+                    L.items.slice(0, 9).forEach(it => {
+                        const stem = it.ganzhi.charAt(0), branch = it.ganzhi.charAt(1);
+                        const element = ELEMENT_MAP[stem] || 'Fire';
+                        const isCur = L.current && L.current.ganzhi === it.ganzhi && L.current.startYear === it.startYear;
+                        const div = document.createElement('div');
+                        div.className = 'pillar' + (isCur ? ' current_luck' : '');
+                        div.innerHTML = `
+                            <div class="pillar_title">${isCur ? 'CURRENT' : 'AGE ' + it.startAge}</div>
+                            <div class="chinese_char">${stem} ${branch}</div>
+                            <div class="luck_age">${it.startYear}–${it.endYear}</div>
+                            <div class="element element_${element.toLowerCase()}" style="margin-top:8px;padding:3px 10px;font-size:0.85rem;">${element}</div>
+                        `;
+                        luckContainer.appendChild(div);
+                    });
+                    luckSection.style.display = 'block';
+                    lines.push(L.current
+                        ? `Current 10-year luck pillar: ${L.current.ganzhi} (${L.current.startYear}–${L.current.endYear}, age ${L.current.startAge}–${L.current.endAge})`
+                        : `Current 10-year luck pillar: not started yet (first one begins in ${L.firstStartYear})`);
+                } else {
+                    luckSection.style.display = 'none';
+                }
+
                 const info = document.getElementById('solarInfo');
                 info.textContent = lines.join('\n');
                 info.style.display = 'block';
@@ -1000,12 +1080,13 @@ GU|Tamuning|13.49|144.78|Pacific/Guam
                     hour: document.getElementById('hour').value,
                     minute: document.getElementById('minute').value || '0'
                 };
+                birthData.gender = document.getElementById('gender').value;
                 const data = { email, birthData };
 
                 if (selectedCity) {
                     let r = lastCalc;
                     try {
-                        if (!r) r = computeSolar(parseInt(birthData.year), parseInt(birthData.month), parseInt(birthData.day), parseInt(birthData.hour), parseInt(birthData.minute), selectedCity);
+                        if (!r) r = computeSolar(parseInt(birthData.year), parseInt(birthData.month), parseInt(birthData.day), parseInt(birthData.hour), parseInt(birthData.minute), selectedCity, birthData.gender);
                     } catch (e) { r = null; }
                     data.selectedCity = selectedCity;
                     birthData.city = selectedCity.name;
@@ -1022,6 +1103,16 @@ GU|Tamuning|13.49|144.78|Pacific/Guam
                             year: r.tst.y, month: r.tst.m, day: r.tst.d, hour: r.tst.h, minute: r.tst.mi,
                             text: r.tstStr
                         };
+                        if (r.luck) {
+                            const L = r.luck;
+                            birthData.luckDirection = L.forward ? 'forward' : 'backward';
+                            birthData.luckStartAge = `${L.startYears} years ${L.startMonths} months ${L.startDays} days`;
+                            birthData.currentLuckPillar = L.current
+                                ? `${L.current.ganzhi} (years ${L.current.startYear}-${L.current.endYear}, age ${L.current.startAge}-${L.current.endAge})`
+                                : `None yet - the first luck pillar begins in ${L.firstStartYear}`;
+                            birthData.luckPillars = L.items.slice(0, 9)
+                                .map(it => `${it.ganzhi} (age ${it.startAge}-${it.endAge}, years ${it.startYear}-${it.endYear})`).join('; ');
+                        }
                         birthData.pillars = {
                             year: r.pillars[0].pillarStr, month: r.pillars[1].pillarStr,
                             day: r.pillars[2].pillarStr, hour: r.pillars[3].pillarStr
@@ -1039,6 +1130,8 @@ GU|Tamuning|13.49|144.78|Pacific/Guam
                 document.getElementById('minute').value = '';
                 document.getElementById('email').value = '';
                 cityInput().value = '';
+                document.getElementById('gender').value = '';
+                document.getElementById('luckSection').style.display = 'none';
                 selectedCity = null;
                 lastCalc = null;
                 setHint('');
@@ -1058,13 +1151,13 @@ GU|Tamuning|13.49|144.78|Pacific/Guam
 
             // Force English text for the browser's built-in form validation bubbles
             function initEnglishValidation() {
-                const fields = document.querySelectorAll('form input');
+                const fields = document.querySelectorAll('form input, form select');
                 fields.forEach(el => {
                     el.addEventListener('invalid', () => {
                         const v = el.validity;
                         let msg = 'Please check this field.';
                         if (v.valueMissing) {
-                            msg = el.id === 'cityInput' ? 'Please enter or select your birth city.' : 'Please fill out this field.';
+                            msg = el.id === 'cityInput' ? 'Please enter or select your birth city.' : (el.id === 'gender' ? 'Please select your gender.' : 'Please fill out this field.');
                         } else if (v.typeMismatch) {
                             msg = el.type === 'email' ? 'Please enter a valid email address (e.g. name@example.com).' : 'Please enter a valid value.';
                         } else if (v.badInput) {
@@ -1075,6 +1168,7 @@ GU|Tamuning|13.49|144.78|Pacific/Guam
                         el.setCustomValidity(msg);
                     });
                     el.addEventListener('input', () => el.setCustomValidity(''));
+                    el.addEventListener('change', () => el.setCustomValidity(''));
                 });
             }
 
@@ -1094,8 +1188,9 @@ GU|Tamuning|13.49|144.78|Pacific/Guam
                             document.getElementById('hour').value = userData.birthData.hour || '';
                             document.getElementById('minute').value = userData.birthData.minute || '';
                             if(userData.email) document.getElementById('email').value = userData.email;
+                            if(userData.birthData.gender) document.getElementById('gender').value = userData.birthData.gender;
 
-                            if (userData.selectedCity && userData.selectedCity.tz) {
+                            if (userData.selectedCity && userData.selectedCity.tz && userData.birthData.gender) {
                                 selectCity(userData.selectedCity);
                                 calculateBaZi();
                             }
