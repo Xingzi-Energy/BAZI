@@ -206,6 +206,29 @@
                 font-weight: bold !important;
                 color: #1a120e !important;
             }
+            /* ---- City combobox ---- */
+            .combo { position: relative; }
+            .city_list {
+                position: absolute; left: 0; right: 0; top: calc(100% + 4px);
+                max-height: 320px; overflow-y: auto; z-index: 50;
+                list-style: none; background: #121b14;
+                border: 1px solid oklch(1 0 0 / 0.3); border-radius: 6px;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            }
+            .city_list[hidden] { display: none; }
+            .city_option { padding: 10px 12px; cursor: pointer; font-size: 1rem; }
+            .city_option.active, .city_option:hover { background: rgba(0, 255, 102, 0.15); }
+            .city_sub { color: var(--text_secondary); font-size: 0.85rem; }
+            .city_group_header {
+                padding: 6px 12px; font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase;
+                color: var(--color_primary_light); background: rgba(0, 255, 102, 0.08);
+                position: sticky; top: 0;
+            }
+            .city_status { padding: 10px 12px; font-size: 0.85rem; color: var(--text_secondary); }
+            .city_hint { margin-top: 8px; font-size: 0.85rem; color: var(--color_primary); min-height: 1.1em; }
+            .city_hint.error { color: #ff6b6b; }
+            .form_msg { color: #ff6b6b; font-size: 0.9rem; margin-top: 10px; min-height: 1em; }
+            #solarInfo { display: none; text-align: left; white-space: pre-line; max-width: 640px; margin: 0 auto 20px; line-height: 1.6; }
             fieldset { border: none; }
         </style>
     </head>
@@ -240,15 +263,13 @@
                                 <label for="minute">Minute</label>
                                 <input type="number" id="minute" min="0" max="59" placeholder="Optional" />
                             </div>
-                            <div class="input_group">
-                                <label for="timezone">Timezone</label>
-                                <select id="timezone">
-                                    <option value="-5" selected>Eastern Time (EST): UTC-5</option>
-                                    <option value="-6">Central Time (CST): UTC-6</option>
-                                    <option value="-7">Mountain Time (MST): UTC-7</option>
-                                    <option value="-8">Pacific Time (PST): UTC-8</option>
-                                    <option value="8">China Standard Time (CST): UTC+8</option>
-                                </select>
+                            <div class="input_group full_width">
+                                <label for="cityInput">Birth City (United States)</label>
+                                <div class="combo">
+                                    <input type="text" id="cityInput" placeholder="Select from the list or type a city, e.g. Austin, TX" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="cityList" required />
+                                    <ul id="cityList" class="city_list" role="listbox" hidden></ul>
+                                </div>
+                                <div id="cityHint" class="city_hint">We use your birth city's longitude and local daylight-saving rules to calculate true solar time.</div>
                             </div>
                             <div class="input_group full_width">
                                 <label for="email">Email Address (For Report Delivery)</label>
@@ -259,6 +280,7 @@
                             <button type="submit">Calculate Chart</button>
                             <button type="button" class="stroke" onclick="clearSession()">Clear Session</button>
                         </div>
+                        <div id="formMsg" class="form_msg" role="alert"></div>
                     </form>
                 </section>
                 <section>
@@ -267,6 +289,7 @@
                             <div style="font-size: 1.1rem; color: var(--text_secondary);">Ba Zi Chart Results</div>
                             <div id="dateDisplay" style="font-size: 1.8rem; color: var(--color_primary); font-weight: bold; margin-top: 5px;">Awaiting Calculation</div>
                         </div>
+                        <div class="calculation_status" id="solarInfo"></div>
                         <div class="pillars_container" id="pillarsContainer"></div>
                         
                         <div id="shopifyCta" style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(0, 20, 0, 0.8); border: 1px solid #00ff6555; border-radius: 10px;">
@@ -308,7 +331,589 @@
                 '壬': 'Water', '癸': 'Water'
             };
 
-            function calculateBaZi() {
+            /* =====================================================
+               US CITY DATA (built-in list of major cities; every other
+               US place is found through the live search below)
+               ===================================================== */
+            const STATES = {
+                AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',
+                DE:'Delaware',DC:'District of Columbia',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',
+                IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',
+                MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',
+                NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',
+                NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',
+                RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',
+                VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming',
+                PR:'Puerto Rico',GU:'Guam'
+            };
+            const ABBR_BY_NAME = {};
+            Object.keys(STATES).forEach(k => { ABBR_BY_NAME[STATES[k].toLowerCase()] = k; });
+
+            const TZ = {
+                E:'America/New_York', C:'America/Chicago', M:'America/Denver', A:'America/Phoenix',
+                P:'America/Los_Angeles', K:'America/Anchorage', H:'Pacific/Honolulu',
+                I:'America/Indiana/Indianapolis', L:'America/Kentucky/Louisville', B:'America/Boise', D:'America/Detroit'
+            };
+
+            // format: STATE|City|latitude|longitude|timezone
+            const RAW_CITIES = `
+AL|Birmingham|33.52|-86.80|C
+AL|Huntsville|34.73|-86.59|C
+AL|Mobile|30.69|-88.04|C
+AL|Montgomery|32.38|-86.31|C
+AK|Anchorage|61.22|-149.90|K
+AK|Fairbanks|64.84|-147.72|K
+AK|Juneau|58.30|-134.42|America/Juneau
+AZ|Flagstaff|35.20|-111.65|A
+AZ|Mesa|33.42|-111.83|A
+AZ|Phoenix|33.45|-112.07|A
+AZ|Scottsdale|33.49|-111.93|A
+AZ|Tucson|32.22|-110.93|A
+AR|Fayetteville|36.06|-94.16|C
+AR|Fort Smith|35.39|-94.40|C
+AR|Little Rock|34.75|-92.29|C
+CA|Anaheim|33.84|-117.91|P
+CA|Bakersfield|35.37|-119.02|P
+CA|Berkeley|37.87|-122.27|P
+CA|Cupertino|37.32|-122.03|P
+CA|Fremont|37.55|-121.99|P
+CA|Fresno|36.74|-119.79|P
+CA|Irvine|33.68|-117.83|P
+CA|Long Beach|33.77|-118.19|P
+CA|Los Angeles|34.05|-118.24|P
+CA|Oakland|37.80|-122.27|P
+CA|Palo Alto|37.44|-122.14|P
+CA|Pasadena|34.15|-118.14|P
+CA|Riverside|33.95|-117.40|P
+CA|Sacramento|38.58|-121.49|P
+CA|San Diego|32.72|-117.16|P
+CA|San Francisco|37.77|-122.42|P
+CA|San Jose|37.34|-121.89|P
+CA|Santa Barbara|34.42|-119.70|P
+CA|Santa Clara|37.35|-121.96|P
+CA|Santa Monica|34.02|-118.50|P
+CA|Stockton|37.96|-121.29|P
+CO|Aurora|39.73|-104.83|M
+CO|Boulder|40.01|-105.27|M
+CO|Colorado Springs|38.83|-104.82|M
+CO|Denver|39.74|-104.99|M
+CO|Fort Collins|40.59|-105.08|M
+CT|Bridgeport|41.19|-73.20|E
+CT|Hartford|41.76|-72.69|E
+CT|New Haven|41.31|-72.92|E
+CT|Stamford|41.05|-73.54|E
+DE|Dover|39.16|-75.52|E
+DE|Wilmington|39.74|-75.55|E
+DC|Washington|38.91|-77.04|E
+FL|Fort Lauderdale|26.12|-80.14|E
+FL|Gainesville|29.65|-82.32|E
+FL|Jacksonville|30.33|-81.66|E
+FL|Miami|25.76|-80.19|E
+FL|Naples|26.14|-81.79|E
+FL|Orlando|28.54|-81.38|E
+FL|Pensacola|30.42|-87.22|C
+FL|St. Petersburg|27.77|-82.64|E
+FL|Tallahassee|30.44|-84.28|E
+FL|Tampa|27.95|-82.46|E
+FL|West Palm Beach|26.72|-80.05|E
+GA|Atlanta|33.75|-84.39|E
+GA|Augusta|33.47|-81.97|E
+GA|Columbus|32.46|-84.99|E
+GA|Macon|32.84|-83.63|E
+GA|Savannah|32.08|-81.09|E
+HI|Hilo|19.72|-155.09|H
+HI|Honolulu|21.31|-157.86|H
+HI|Kahului|20.89|-156.47|H
+ID|Boise|43.62|-116.20|B
+ID|Coeur d'Alene|47.68|-116.78|P
+ID|Idaho Falls|43.49|-112.04|M
+ID|Pocatello|42.87|-112.45|M
+IL|Chicago|41.88|-87.63|C
+IL|Naperville|41.79|-88.15|C
+IL|Peoria|40.69|-89.59|C
+IL|Rockford|42.27|-89.09|C
+IL|Springfield|39.78|-89.65|C
+IN|Bloomington|39.17|-86.53|I
+IN|Evansville|37.97|-87.57|C
+IN|Fort Wayne|41.08|-85.14|I
+IN|Indianapolis|39.77|-86.16|I
+IA|Cedar Rapids|41.98|-91.67|C
+IA|Davenport|41.52|-90.58|C
+IA|Des Moines|41.59|-93.62|C
+IA|Iowa City|41.66|-91.53|C
+KS|Kansas City|39.11|-94.63|C
+KS|Overland Park|38.98|-94.67|C
+KS|Topeka|39.05|-95.68|C
+KS|Wichita|37.69|-97.34|C
+KY|Bowling Green|36.99|-86.44|C
+KY|Lexington|38.04|-84.50|E
+KY|Louisville|38.25|-85.76|L
+LA|Baton Rouge|30.45|-91.15|C
+LA|Lafayette|30.22|-92.02|C
+LA|New Orleans|29.95|-90.07|C
+LA|Shreveport|32.53|-93.75|C
+ME|Augusta|44.31|-69.78|E
+ME|Bangor|44.80|-68.77|E
+ME|Portland|43.66|-70.26|E
+MD|Annapolis|38.98|-76.49|E
+MD|Baltimore|39.29|-76.61|E
+MD|Rockville|39.08|-77.15|E
+MA|Boston|42.36|-71.06|E
+MA|Cambridge|42.37|-71.11|E
+MA|Springfield|42.10|-72.59|E
+MA|Worcester|42.26|-71.80|E
+MI|Ann Arbor|42.28|-83.74|D
+MI|Detroit|42.33|-83.05|D
+MI|Flint|43.01|-83.69|D
+MI|Grand Rapids|42.96|-85.67|D
+MI|Lansing|42.73|-84.56|D
+MN|Duluth|46.79|-92.10|C
+MN|Minneapolis|44.98|-93.27|C
+MN|Rochester|44.02|-92.47|C
+MN|St. Paul|44.95|-93.09|C
+MS|Biloxi|30.40|-88.89|C
+MS|Gulfport|30.37|-89.09|C
+MS|Jackson|32.30|-90.18|C
+MO|Columbia|38.95|-92.33|C
+MO|Kansas City|39.10|-94.58|C
+MO|Springfield|37.21|-93.29|C
+MO|St. Louis|38.63|-90.20|C
+MT|Billings|45.78|-108.50|M
+MT|Bozeman|45.68|-111.04|M
+MT|Helena|46.59|-112.04|M
+MT|Missoula|46.87|-114.00|M
+NE|Lincoln|40.81|-96.70|C
+NE|Omaha|41.26|-95.93|C
+NV|Carson City|39.16|-119.77|P
+NV|Henderson|36.04|-114.98|P
+NV|Las Vegas|36.17|-115.14|P
+NV|Reno|39.53|-119.81|P
+NH|Concord|43.21|-71.54|E
+NH|Manchester|42.99|-71.46|E
+NJ|Atlantic City|39.36|-74.42|E
+NJ|Jersey City|40.73|-74.08|E
+NJ|Newark|40.74|-74.17|E
+NJ|Princeton|40.36|-74.67|E
+NM|Albuquerque|35.08|-106.65|M
+NM|Las Cruces|32.32|-106.76|M
+NM|Santa Fe|35.69|-105.94|M
+NY|Albany|42.65|-73.76|E
+NY|Brooklyn|40.68|-73.94|E
+NY|Buffalo|42.89|-78.88|E
+NY|New York|40.71|-74.01|E
+NY|Queens|40.73|-73.79|E
+NY|Rochester|43.16|-77.61|E
+NY|Syracuse|43.05|-76.15|E
+NC|Asheville|35.60|-82.55|E
+NC|Charlotte|35.23|-80.84|E
+NC|Durham|35.99|-78.90|E
+NC|Greensboro|36.07|-79.79|E
+NC|Raleigh|35.78|-78.64|E
+NC|Wilmington|34.23|-77.94|E
+ND|Bismarck|46.81|-100.78|C
+ND|Fargo|46.88|-96.79|C
+ND|Grand Forks|47.93|-97.03|C
+OH|Akron|41.08|-81.52|E
+OH|Cincinnati|39.10|-84.51|E
+OH|Cleveland|41.50|-81.69|E
+OH|Columbus|39.96|-83.00|E
+OH|Dayton|39.76|-84.19|E
+OH|Toledo|41.65|-83.54|E
+OK|Norman|35.22|-97.44|C
+OK|Oklahoma City|35.47|-97.52|C
+OK|Tulsa|36.15|-95.99|C
+OR|Bend|44.06|-121.31|P
+OR|Eugene|44.05|-123.09|P
+OR|Portland|45.52|-122.68|P
+OR|Salem|44.94|-123.04|P
+PA|Allentown|40.61|-75.47|E
+PA|Erie|42.13|-80.09|E
+PA|Harrisburg|40.27|-76.88|E
+PA|Philadelphia|39.95|-75.17|E
+PA|Pittsburgh|40.44|-79.99|E
+RI|Providence|41.82|-71.41|E
+SC|Charleston|32.78|-79.93|E
+SC|Columbia|34.00|-81.03|E
+SC|Greenville|34.85|-82.39|E
+SC|Myrtle Beach|33.69|-78.89|E
+SD|Rapid City|44.08|-103.23|M
+SD|Sioux Falls|43.54|-96.73|C
+TN|Chattanooga|35.05|-85.31|E
+TN|Knoxville|35.96|-83.92|E
+TN|Memphis|35.15|-90.05|C
+TN|Nashville|36.16|-86.78|C
+TX|Arlington|32.74|-97.11|C
+TX|Austin|30.27|-97.74|C
+TX|Corpus Christi|27.80|-97.40|C
+TX|Dallas|32.78|-96.80|C
+TX|El Paso|31.76|-106.49|M
+TX|Fort Worth|32.76|-97.33|C
+TX|Houston|29.76|-95.37|C
+TX|Irving|32.81|-96.95|C
+TX|Lubbock|33.58|-101.86|C
+TX|Plano|33.02|-96.70|C
+TX|San Antonio|29.42|-98.49|C
+TX|Sugar Land|29.62|-95.63|C
+UT|Ogden|41.22|-111.97|M
+UT|Provo|40.23|-111.66|M
+UT|Salt Lake City|40.76|-111.89|M
+UT|St. George|37.10|-113.58|M
+VT|Burlington|44.48|-73.21|E
+VT|Montpelier|44.26|-72.58|E
+VA|Alexandria|38.80|-77.05|E
+VA|Arlington|38.88|-77.10|E
+VA|Norfolk|36.85|-76.29|E
+VA|Richmond|37.54|-77.44|E
+VA|Virginia Beach|36.85|-75.98|E
+WA|Bellevue|47.61|-122.20|P
+WA|Olympia|47.04|-122.90|P
+WA|Seattle|47.61|-122.33|P
+WA|Spokane|47.66|-117.43|P
+WA|Tacoma|47.25|-122.44|P
+WA|Vancouver|45.64|-122.66|P
+WV|Charleston|38.35|-81.63|E
+WV|Morgantown|39.63|-79.96|E
+WI|Green Bay|44.52|-88.02|C
+WI|Madison|43.07|-89.40|C
+WI|Milwaukee|43.04|-87.91|C
+WY|Casper|42.87|-106.31|M
+WY|Cheyenne|41.14|-104.82|M
+WY|Jackson|43.48|-110.76|M
+PR|San Juan|18.47|-66.11|America/Puerto_Rico
+GU|Tamuning|13.49|144.78|Pacific/Guam
+`;
+
+            const LOCAL_CITIES = RAW_CITIES.trim().split('\n').map(line => {
+                const [st, name, lat, lng, tz] = line.trim().split('|');
+                return { name, st, state: STATES[st], lat: parseFloat(lat), lng: parseFloat(lng), tz: TZ[tz] || tz, extra: '' };
+            }).sort((a, b) => a.state.localeCompare(b.state) || a.name.localeCompare(b.name));
+
+            /* =====================================================
+               TRUE SOLAR TIME ENGINE
+               ===================================================== */
+            const _dtfCache = {};
+            function getDtf(tz) {
+                if (!_dtfCache[tz]) {
+                    _dtfCache[tz] = new Intl.DateTimeFormat('en-US', {
+                        timeZone: tz, hourCycle: 'h23',
+                        year: 'numeric', month: 'numeric', day: 'numeric',
+                        hour: 'numeric', minute: 'numeric', second: 'numeric'
+                    });
+                }
+                return _dtfCache[tz];
+            }
+
+            // UTC offset (in minutes) of a time zone at a given UTC instant (handles historical DST rules)
+            function tzOffsetMin(tz, utcMs) {
+                const p = {};
+                getDtf(tz).formatToParts(new Date(Math.floor(utcMs / 1000) * 1000)).forEach(x => { p[x.type] = x.value; });
+                const h = parseInt(p.hour, 10) % 24;
+                const asUtc = Date.UTC(parseInt(p.year, 10), parseInt(p.month, 10) - 1, parseInt(p.day, 10), h, parseInt(p.minute, 10), parseInt(p.second, 10));
+                return Math.round((asUtc - Math.floor(utcMs / 1000) * 1000) / 60000);
+            }
+
+            // Convert a local wall-clock time (expressed as a fake-UTC ms) in tz to a real UTC instant
+            function resolveLocalToUtc(tz, localMs) {
+                const offA = tzOffsetMin(tz, localMs - 864e5);
+                const offB = tzOffsetMin(tz, localMs + 864e5);
+                if (offA === offB) return { utc: localMs - offA * 60000, offset: offA, status: 'ok' };
+                const u1 = localMs - offA * 60000;
+                const u2 = localMs - offB * 60000;
+                const v1 = tzOffsetMin(tz, u1) === offA;
+                const v2 = tzOffsetMin(tz, u2) === offB;
+                if (v1 && v2) { const u = Math.min(u1, u2); return { utc: u, offset: tzOffsetMin(tz, u), status: 'ambiguous' }; }
+                if (v1) return { utc: u1, offset: offA, status: 'ok' };
+                if (v2) return { utc: u2, offset: offB, status: 'ok' };
+                return { utc: u1, offset: tzOffsetMin(tz, u1), status: 'gap' };
+            }
+
+            function tzAbbr(tz, utcMs) {
+                try {
+                    const parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'short' }).formatToParts(new Date(utcMs));
+                    return (parts.find(x => x.type === 'timeZoneName') || {}).value || '';
+                } catch (e) { return ''; }
+            }
+
+            // Equation of time in minutes (NOAA approximation)
+            function equationOfTime(utcMs) {
+                const d = new Date(utcMs);
+                const start = Date.UTC(d.getUTCFullYear(), 0, 1);
+                const doy = Math.floor((utcMs - start) / 864e5) + 1;
+                const g = 2 * Math.PI / 365 * (doy - 1 + (d.getUTCHours() + d.getUTCMinutes() / 60 - 12) / 24);
+                return 229.18 * (0.000075 + 0.001868 * Math.cos(g) - 0.032077 * Math.sin(g) - 0.014615 * Math.cos(2 * g) - 0.040849 * Math.sin(2 * g));
+            }
+
+            function msToFields(ms) {
+                const d = new Date(ms);
+                return { y: d.getUTCFullYear(), m: d.getUTCMonth() + 1, d: d.getUTCDate(), h: d.getUTCHours(), mi: d.getUTCMinutes(), s: d.getUTCSeconds() };
+            }
+            const pad2 = n => String(n).padStart(2, '0');
+            function fmtFields(f) { return `${f.y}-${pad2(f.m)}-${pad2(f.d)} ${pad2(f.h)}:${pad2(f.mi)}`; }
+            function fmtOffset(min) {
+                const sign = min < 0 ? '-' : '+';
+                const a = Math.abs(min);
+                const h = Math.floor(a / 60), m = a % 60;
+                return 'UTC' + sign + h + (m ? ':' + pad2(m) : '');
+            }
+            function fmtSigned(n) { return (n >= 0 ? '+' : '−') + Math.abs(n).toFixed(1); }
+
+            function computeSolar(year, month, day, hour, minute, city) {
+                const localMs = Date.UTC(year, month - 1, day, hour, minute, 0);
+                const res = resolveLocalToUtc(city.tz, localMs);
+
+                // standard (non-DST) offset for that year, to tell whether DST was in effect
+                const jan = tzOffsetMin(city.tz, Date.UTC(year, 0, 1));
+                const jul = tzOffsetMin(city.tz, Date.UTC(year, 6, 1));
+                const dst = res.offset > Math.min(jan, jul);
+
+                const eot = equationOfTime(res.utc);
+                const lngMin = city.lng * 4; // 4 minutes per degree of longitude
+                const tstMs = Math.round((res.utc + (lngMin + eot) * 60000) / 1000) * 1000;
+                const bjMs = res.utc + 8 * 3600000; // Beijing time of the same instant (for solar-term based pillars)
+
+                const tst = msToFields(tstMs);
+                const bj = msToFields(bjMs);
+
+                // Year & Month pillars depend on the exact instant of the solar term -> use the real instant (Beijing-time based almanac)
+                const eightInstant = Solar.fromYmdHms(bj.y, bj.m, bj.d, bj.h, bj.mi, bj.s).getLunar().getEightChar();
+                // Day & Hour pillars depend on local true solar time
+                const eightTrueSolar = Solar.fromYmdHms(tst.y, tst.m, tst.d, tst.h, tst.mi, tst.s).getLunar().getEightChar();
+
+                return {
+                    pillars: [
+                        { title: 'YEAR', pillarStr: eightInstant.getYear() },
+                        { title: 'MONTH', pillarStr: eightInstant.getMonth() },
+                        { title: 'DAY', pillarStr: eightTrueSolar.getDay() },
+                        { title: 'HOUR', pillarStr: eightTrueSolar.getTime() }
+                    ],
+                    offsetMin: res.offset,
+                    status: res.status,
+                    dst,
+                    abbr: tzAbbr(city.tz, res.utc),
+                    eot,
+                    lngMin,
+                    tst,
+                    tstStr: fmtFields(tst)
+                };
+            }
+
+            /* =====================================================
+               CITY COMBOBOX (built-in list + live search of all US places)
+               ===================================================== */
+            let selectedCity = null;
+            let lastCalc = null;
+            let activeIdx = -1;
+            let currentItems = [];
+            let searchSeq = 0;
+            let searchTimer = null;
+            let searchAbort = null;
+            let remoteStatus = ''; // '', 'searching', 'none', 'error'
+
+            const cityInput = () => document.getElementById('cityInput');
+            const cityList = () => document.getElementById('cityList');
+
+            function parseQuery(raw) {
+                const parts = raw.split(',');
+                return { name: parts[0].trim().toLowerCase(), stateQ: (parts[1] || '').trim().toLowerCase() };
+            }
+            function stateMatches(c, stateQ) {
+                if (!stateQ) return true;
+                return (c.st && c.st.toLowerCase() === stateQ) || (c.state && c.state.toLowerCase().startsWith(stateQ));
+            }
+            function cityLabel(c) { return `${c.name}, ${c.st || c.state}`; }
+            function fmtCoord(lat, lng) {
+                return `${Math.abs(lat).toFixed(2)}°${lat >= 0 ? 'N' : 'S'}, ${Math.abs(lng).toFixed(2)}°${lng >= 0 ? 'E' : 'W'}`;
+            }
+
+            function localSearch(raw) {
+                const { name, stateQ } = parseQuery(raw);
+                if (!name) return LOCAL_CITIES.slice();
+                return LOCAL_CITIES
+                    .filter(c => c.name.toLowerCase().includes(name) && stateMatches(c, stateQ))
+                    .sort((a, b) => {
+                        const as = a.name.toLowerCase().startsWith(name) ? 0 : 1;
+                        const bs = b.name.toLowerCase().startsWith(name) ? 0 : 1;
+                        return as - bs || a.name.localeCompare(b.name);
+                    });
+            }
+
+            async function remoteSearch(raw, signal) {
+                const { name, stateQ } = parseQuery(raw);
+                if (name.length < 2) return [];
+                const url = 'https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(name) +
+                    '&count=40&language=en&format=json&countryCode=US';
+                const res = await fetch(url, { signal });
+                if (!res.ok) throw new Error('search failed');
+                const data = await res.json();
+                return (data.results || [])
+                    .filter(r => r.country_code === 'US' && r.timezone)
+                    .map(r => ({
+                        name: r.name,
+                        state: r.admin1 || '',
+                        st: ABBR_BY_NAME[(r.admin1 || '').toLowerCase()] || '',
+                        lat: r.latitude, lng: r.longitude, tz: r.timezone,
+                        extra: r.admin2 || '', pop: r.population || 0
+                    }))
+                    .filter(c => stateMatches(c, stateQ))
+                    .sort((a, b) => {
+                        const as = a.name.toLowerCase().startsWith(name) ? 0 : 1;
+                        const bs = b.name.toLowerCase().startsWith(name) ? 0 : 1;
+                        return as - bs || b.pop - a.pop;
+                    });
+            }
+
+            function mergeResults(local, remote) {
+                const seen = new Set(local.map(c => (c.name + '|' + (c.st || c.state)).toLowerCase()));
+                const out = local.slice();
+                remote.forEach(c => {
+                    const k = (c.name + '|' + (c.st || c.state)).toLowerCase();
+                    if (!seen.has(k)) { seen.add(k); out.push(c); }
+                });
+                return out;
+            }
+
+            function renderList(items, showGroups) {
+                currentItems = items;
+                activeIdx = items.length ? 0 : -1;
+                const ul = cityList();
+                ul.innerHTML = '';
+                let lastState = null;
+                items.forEach((c, i) => {
+                    if (showGroups && c.state !== lastState) {
+                        lastState = c.state;
+                        const h = document.createElement('li');
+                        h.className = 'city_group_header';
+                        h.setAttribute('role', 'presentation');
+                        h.textContent = c.state;
+                        ul.appendChild(h);
+                    }
+                    const li = document.createElement('li');
+                    li.className = 'city_option' + (i === activeIdx ? ' active' : '');
+                    li.setAttribute('role', 'option');
+                    li.dataset.idx = i;
+                    li.appendChild(document.createTextNode(cityLabel(c)));
+                    if (c.extra) {
+                        const sub = document.createElement('span');
+                        sub.className = 'city_sub';
+                        sub.textContent = ' · ' + c.extra;
+                        li.appendChild(sub);
+                    }
+                    li.addEventListener('mousedown', e => { e.preventDefault(); selectCity(c); });
+                    ul.appendChild(li);
+                });
+                const msg = remoteStatus === 'searching' ? 'Searching all U.S. places…'
+                          : remoteStatus === 'error' ? 'Live search unavailable. Pick from the list or try a nearby major city.'
+                          : (remoteStatus === 'none' && !items.length) ? 'No match found. Check the spelling or try a nearby larger city.' : '';
+                if (msg) {
+                    const li = document.createElement('li');
+                    li.className = 'city_status';
+                    li.setAttribute('role', 'presentation');
+                    li.textContent = msg;
+                    ul.appendChild(li);
+                }
+                ul.hidden = !(items.length || msg);
+                cityInput().setAttribute('aria-expanded', String(!ul.hidden));
+            }
+
+            function setActive(idx) {
+                if (!currentItems.length) return;
+                activeIdx = (idx + currentItems.length) % currentItems.length;
+                cityList().querySelectorAll('.city_option').forEach(li => {
+                    const on = parseInt(li.dataset.idx, 10) === activeIdx;
+                    li.classList.toggle('active', on);
+                    if (on) li.scrollIntoView({ block: 'nearest' });
+                });
+            }
+
+            function closeList() {
+                cityList().hidden = true;
+                cityInput().setAttribute('aria-expanded', 'false');
+            }
+
+            function setHint(text, isError) {
+                const el = document.getElementById('cityHint');
+                el.textContent = text || '';
+                el.className = 'city_hint' + (isError ? ' error' : '');
+            }
+            function setMsg(text) { document.getElementById('formMsg').textContent = text || ''; }
+
+            function selectCity(c) {
+                selectedCity = c;
+                cityInput().value = cityLabel(c);
+                closeList();
+                setHint(`✓ ${c.name}, ${c.state || c.st} · ${fmtCoord(c.lat, c.lng)} · ${c.tz}`);
+                setMsg('');
+            }
+
+            function onCityInput() {
+                selectedCity = null;
+                setHint('');
+                const raw = cityInput().value;
+                const local = localSearch(raw);
+                remoteStatus = parseQuery(raw).name.length >= 2 ? 'searching' : '';
+                renderList(local, !raw.trim());
+
+                clearTimeout(searchTimer);
+                if (searchAbort) searchAbort.abort();
+                if (parseQuery(raw).name.length < 2) return;
+
+                const seq = ++searchSeq;
+                searchTimer = setTimeout(async () => {
+                    searchAbort = new AbortController();
+                    try {
+                        const remote = await remoteSearch(raw, searchAbort.signal);
+                        if (seq !== searchSeq) return;
+                        const merged = mergeResults(local, remote);
+                        remoteStatus = merged.length ? '' : 'none';
+                        renderList(merged, false);
+                    } catch (e) {
+                        if (e.name === 'AbortError' || seq !== searchSeq) return;
+                        remoteStatus = 'error';
+                        renderList(local, false);
+                    }
+                }, 250);
+            }
+
+            // If the user typed a city but didn't pick from the list, resolve it automatically
+            async function resolveTypedCity() {
+                if (selectedCity) return true;
+                const raw = cityInput().value.trim();
+                if (!raw) return false;
+                const { name } = parseQuery(raw);
+                const local = localSearch(raw);
+                const exact = local.find(c => c.name.toLowerCase() === name);
+                if (exact) { selectCity(exact); return true; }
+                try {
+                    const remote = await remoteSearch(raw);
+                    if (remote.length) { selectCity(remote[0]); return true; }
+                } catch (e) { /* fall through to local */ }
+                if (local.length) { selectCity(local[0]); return true; }
+                return false;
+            }
+
+            function initCityCombo() {
+                const input = cityInput();
+                input.addEventListener('focus', () => { if (!selectedCity) onCityInput(); else renderList(localSearch(''), true); });
+                input.addEventListener('click', () => { if (cityList().hidden) { remoteStatus = ''; renderList(localSearch(selectedCity ? '' : input.value), !selectedCity ? !input.value.trim() : true); } });
+                input.addEventListener('input', onCityInput);
+                input.addEventListener('keydown', e => {
+                    const open = !cityList().hidden;
+                    if (e.key === 'ArrowDown') { e.preventDefault(); if (!open) onCityInput(); else setActive(activeIdx + 1); }
+                    else if (e.key === 'ArrowUp') { e.preventDefault(); if (open) setActive(activeIdx - 1); }
+                    else if (e.key === 'Enter') {
+                        if (open && currentItems.length) { e.preventDefault(); selectCity(currentItems[Math.max(activeIdx, 0)]); }
+                    }
+                    else if (e.key === 'Escape') { closeList(); }
+                });
+                document.addEventListener('mousedown', e => {
+                    if (!e.target.closest('.combo')) closeList();
+                });
+            }
+
+            /* =====================================================
+               MAIN CALCULATION
+               ===================================================== */
+            async function calculateBaZi() {
                 const yearField = document.getElementById('year');
                 const monthField = document.getElementById('month');
                 const dayField = document.getElementById('day');
@@ -324,37 +929,32 @@
                 const day = parseInt(dayField.value);
                 const hour = parseInt(hourField.value);
                 const minute = parseInt(document.getElementById('minute').value || 0);
-                const tzOffset = parseFloat(document.getElementById('timezone').value || -5);
                 const userEmail = emailField.value.trim() || "your email";
 
-                const inputDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
-                const diffHours = 8 - tzOffset;
-                const adjustedMillis = inputDate.getTime() + (diffHours * 3600 * 1000);
-                const adjustedDate = new Date(adjustedMillis);
+                setMsg('');
 
-                const solar = Solar.fromYmdHms(
-                    adjustedDate.getUTCFullYear(),
-                    adjustedDate.getUTCMonth() + 1,
-                    adjustedDate.getUTCDate(),
-                    adjustedDate.getUTCHours(),
-                    adjustedDate.getUTCMinutes(),
-                    0
-                );
-                
-                const lunar = solar.getLunar();
-                const eightChar = lunar.getEightChar();
+                // validate the calendar date (e.g. reject Feb 30)
+                const chk = new Date(Date.UTC(year, month - 1, day));
+                if (chk.getUTCMonth() !== month - 1 || chk.getUTCDate() !== day) {
+                    setMsg('Please enter a valid calendar date.');
+                    return;
+                }
 
-                const pillars = [
-                    { title: 'YEAR', pillarStr: eightChar.getYear() },
-                    { title: 'MONTH', pillarStr: eightChar.getMonth() },
-                    { title: 'DAY', pillarStr: eightChar.getDay() },
-                    { title: 'HOUR', pillarStr: eightChar.getTime() }
-                ];
+                const ok = await resolveTypedCity();
+                if (!ok) {
+                    setHint('Please choose your birth city from the list, or type a city name and press Enter.', true);
+                    setMsg('Birth city is required to calculate true solar time.');
+                    cityInput().focus();
+                    return;
+                }
+
+                const r = computeSolar(year, month, day, hour, minute, selectedCity);
+                lastCalc = r;
 
                 const container = document.getElementById('pillarsContainer');
                 container.innerHTML = '';
 
-                pillars.forEach(p => {
+                r.pillars.forEach(p => {
                     const stem = p.pillarStr.charAt(0);
                     const branch = p.pillarStr.charAt(1);
                     const element = ELEMENT_MAP[stem] || 'Fire';
@@ -372,18 +972,63 @@
                 document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} at ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`;
                 document.getElementById('emailDisplay').innerText = userEmail;
 
-                const formData = {
-                    email: userEmail,
-                    birthData: {
-                        year: yearField.value,
-                        month: monthField.value,
-                        day: dayField.value,
-                        hour: hourField.value,
-                        minute: document.getElementById('minute').value || '0',
-                        timezone: document.getElementById('timezone').value
-                    }
+                // true-solar-time breakdown
+                const c = selectedCity;
+                let lines = [
+                    `Birth place: ${c.name}, ${c.state || c.st} (${c.tz})`,
+                    `Local clock: ${year}-${pad2(month)}-${pad2(day)} ${pad2(hour)}:${pad2(minute)} ${r.abbr} (${fmtOffset(r.offsetMin)}${r.dst ? ', daylight saving in effect' : ''})`,
+                    `Longitude correction: ${fmtSigned(r.lngMin)} min from UTC (${fmtCoord(c.lat, c.lng)})`,
+                    `Equation of time: ${fmtSigned(r.eot)} min`,
+                    `True solar time: ${r.tstStr}`
+                ];
+                if (r.status === 'gap') lines.push('Note: that clock time did not exist locally (daylight saving jump); it was shifted forward by one hour.');
+                if (r.status === 'ambiguous') lines.push('Note: that clock time occurred twice locally (daylight saving ends); the first occurrence was used.');
+                const info = document.getElementById('solarInfo');
+                info.textContent = lines.join('\n');
+                info.style.display = 'block';
+
+                localStorage.setItem('pending_bazi_user', JSON.stringify(buildFormData(userEmail === "your email" ? '' : userEmail)));
+            }
+
+            function buildFormData(emailOverride) {
+                const emailField = document.getElementById('email');
+                const email = emailOverride !== undefined ? emailOverride : (emailField ? emailField.value.trim() : '');
+                const birthData = {
+                    year: document.getElementById('year').value,
+                    month: document.getElementById('month').value,
+                    day: document.getElementById('day').value,
+                    hour: document.getElementById('hour').value,
+                    minute: document.getElementById('minute').value || '0'
                 };
-                localStorage.setItem('pending_bazi_user', JSON.stringify(formData));
+                const data = { email, birthData };
+
+                if (selectedCity) {
+                    let r = lastCalc;
+                    try {
+                        if (!r) r = computeSolar(parseInt(birthData.year), parseInt(birthData.month), parseInt(birthData.day), parseInt(birthData.hour), parseInt(birthData.minute), selectedCity);
+                    } catch (e) { r = null; }
+                    data.selectedCity = selectedCity;
+                    birthData.city = selectedCity.name;
+                    birthData.state = selectedCity.st || selectedCity.state;
+                    birthData.latitude = selectedCity.lat;
+                    birthData.longitude = selectedCity.lng;
+                    birthData.ianaTimezone = selectedCity.tz;
+                    if (r) {
+                        // "timezone" keeps its old meaning (UTC offset in hours) but is now the real offset for that place and date
+                        birthData.timezone = String(r.offsetMin / 60);
+                        birthData.dst = r.dst;
+                        birthData.equationOfTimeMin = Math.round(r.eot * 10) / 10;
+                        birthData.trueSolarTime = {
+                            year: r.tst.y, month: r.tst.m, day: r.tst.d, hour: r.tst.h, minute: r.tst.mi,
+                            text: r.tstStr
+                        };
+                        birthData.pillars = {
+                            year: r.pillars[0].pillarStr, month: r.pillars[1].pillarStr,
+                            day: r.pillars[2].pillarStr, hour: r.pillars[3].pillarStr
+                        };
+                    }
+                }
+                return data;
             }
 
             function clearSession() {
@@ -393,6 +1038,13 @@
                 document.getElementById('hour').value = '';
                 document.getElementById('minute').value = '';
                 document.getElementById('email').value = '';
+                cityInput().value = '';
+                selectedCity = null;
+                lastCalc = null;
+                setHint('');
+                setMsg('');
+                closeList();
+                document.getElementById('solarInfo').style.display = 'none';
                 document.getElementById('pillarsContainer').innerHTML = '';
                 document.getElementById('dateDisplay').innerHTML = 'Awaiting Calculation';
                 localStorage.removeItem('pending_bazi_user');
@@ -401,24 +1053,12 @@
             }
 
             function handleGoToPayment(event) {
-                const emailField = document.getElementById('email');
-                const userEmail = emailField ? emailField.value.trim() : '';
-                
-                const formData = {
-                    email: userEmail,
-                    birthData: {
-                        year: document.getElementById('year').value,
-                        month: document.getElementById('month').value,
-                        day: document.getElementById('day').value,
-                        hour: document.getElementById('hour').value,
-                        minute: document.getElementById('minute').value || '0',
-                        timezone: document.getElementById('timezone').value
-                    }
-                };
-                localStorage.setItem('pending_bazi_user', JSON.stringify(formData));
+                localStorage.setItem('pending_bazi_user', JSON.stringify(buildFormData()));
             }
 
             window.addEventListener('DOMContentLoaded', () => {
+                initCityCombo();
+
                 const savedData = localStorage.getItem('pending_bazi_user');
                 let userData = null;
                 if (savedData) {
@@ -430,10 +1070,12 @@
                             document.getElementById('day').value = userData.birthData.day || '';
                             document.getElementById('hour').value = userData.birthData.hour || '';
                             document.getElementById('minute').value = userData.birthData.minute || '';
-                            if(userData.birthData.timezone) document.getElementById('timezone').value = userData.birthData.timezone;
                             if(userData.email) document.getElementById('email').value = userData.email;
-                            
-                            calculateBaZi();
+
+                            if (userData.selectedCity && userData.selectedCity.tz) {
+                                selectCity(userData.selectedCity);
+                                calculateBaZi();
+                            }
                         }
                     } catch(e) {}
                 }
