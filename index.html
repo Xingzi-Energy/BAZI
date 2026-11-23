@@ -1056,7 +1056,30 @@ GU|Tamuning|13.49|144.78|Pacific/Guam
                 localStorage.setItem('pending_bazi_user', JSON.stringify(buildFormData()));
             }
 
+            // Force English text for the browser's built-in form validation bubbles
+            function initEnglishValidation() {
+                const fields = document.querySelectorAll('form input');
+                fields.forEach(el => {
+                    el.addEventListener('invalid', () => {
+                        const v = el.validity;
+                        let msg = 'Please check this field.';
+                        if (v.valueMissing) {
+                            msg = el.id === 'cityInput' ? 'Please enter or select your birth city.' : 'Please fill out this field.';
+                        } else if (v.typeMismatch) {
+                            msg = el.type === 'email' ? 'Please enter a valid email address (e.g. name@example.com).' : 'Please enter a valid value.';
+                        } else if (v.badInput) {
+                            msg = 'Please enter a valid number.';
+                        } else if (v.rangeUnderflow || v.rangeOverflow) {
+                            msg = `Please enter a value between ${el.min} and ${el.max}.`;
+                        }
+                        el.setCustomValidity(msg);
+                    });
+                    el.addEventListener('input', () => el.setCustomValidity(''));
+                });
+            }
+
             window.addEventListener('DOMContentLoaded', () => {
+                initEnglishValidation();
                 initCityCombo();
 
                 const savedData = localStorage.getItem('pending_bazi_user');
