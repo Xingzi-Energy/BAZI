@@ -26,10 +26,15 @@
                 background: linear-gradient(135deg, var(--bg_dark) 0%, var(--bg_mid) 50%, var(--bg_light) 100%);
                 min-height: 100vh;
                 color: var(--text_primary);
-                padding: 20px;
+                padding: clamp(12px, 2vw, 30px);
             }
-            .container { max-width: 1000px; margin: 0 auto; }
-            header { text-align: center; margin-bottom: 30px; padding: 20px; }
+            /* Wide, responsive site canvas: spacious on desktop, compact on phones. */
+            .container {
+                width: 100%;
+                max-width: 1800px;
+                margin: 0 auto;
+            }
+            header { text-align: center; margin-bottom: 24px; padding: 16px 12px; }
             h1 {
                 font-size: 2.5rem;
                 margin-bottom: 10px;
@@ -38,7 +43,9 @@
                 -webkit-text-fill-color: transparent;
                 font-weight: 300;
                 display: flex;
-                justify-content: space-between;
+                justify-content: center;
+                align-items: baseline;
+                gap: 28px;
             }
             .validation_badge {
                 display: inline-block;
@@ -229,6 +236,11 @@
             .report_content_text p { margin: 0 0 14px 0; }
             .report_content_text ul { margin: 0 0 14px 0; padding-left: 22px; }
             .report_content_text li { margin-bottom: 8px; }
+            #finalReportBox {
+                max-width: 1120px;
+                margin-left: auto;
+                margin-right: auto;
+            }
             @media (max-width: 600px) {
                 .report_main_title { font-size: 24px !important; }
                 .report_content_text h2 { font-size: 17px !important; }
@@ -240,7 +252,7 @@
             }
             /* ---- Intro section ---- */
             .intro_card {
-                margin: 8px auto 40px; max-width: 960px; padding: 40px 32px 30px;
+                margin: 8px auto 40px; max-width: 100%; padding: 40px 32px 30px;
                 background: linear-gradient(180deg, oklch(1 0 0 / 0.07), oklch(1 0 0 / 0.03));
                 border: var(--border_visible); border-radius: 14px; text-align: center;
             }
@@ -298,6 +310,143 @@
             .luck_grid .pillar.current_luck { border-color: var(--color_primary); background: rgba(0, 255, 102, 0.12); }
             #solarInfo { display: none; text-align: left; white-space: pre-line; max-width: 640px; margin: 0 auto 20px; line-height: 1.6; }
             fieldset { border: none; }
+        
+            /* ================= RESPONSIVE LAYOUT ================= */
+            main { display: grid; grid-template-columns: 1fr; gap: 0; }
+            main > section { min-width: 0; }
+            .intro_lead { max-width: 820px; }
+
+            /* Desktop / large tablet: form on the left, results + payment on the right */
+            @media (min-width: 1024px) {
+                main {
+                    grid-template-columns: minmax(340px, 0.82fr) minmax(0, 1.45fr);
+                    gap: clamp(24px, 2.2vw, 42px);
+                    align-items: start;
+                }
+                main > section:first-child { position: sticky; top: 20px; }
+                .intro_card { padding: clamp(40px, 3vw, 58px) clamp(28px, 4vw, 64px) 42px; }
+                .section_card { padding: clamp(24px, 2vw, 36px); }
+            }
+
+            /* Mobile: comfortable touch targets, two-column number fields, full-width buttons */
+            @media (max-width: 600px) {
+                header { padding: 8px 4px; margin-bottom: 14px; }
+                h1 { font-size: 2rem; }
+                .section_card { padding: 20px 16px; margin-bottom: 20px; }
+                h2.section_title { font-size: 1.4rem; }
+                .input_grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+                input, select { min-height: 50px; font-size: 16px; }
+                button { width: 100%; min-height: 50px; margin-right: 0; margin-top: 12px; }
+                #shopifyCta { padding: 20px 14px !important; }
+                #shopifyCta a { display: block !important; width: 100%; padding: 16px 12px !important; font-size: 1.05rem; text-align: center; }
+                .pillars_container { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+                .pillar { padding: 14px 8px; }
+                .chinese_char { font-size: 1.9rem; }
+                .report_box_mobile { padding: 20px 16px; }
+                #solarInfo { font-size: 0.8rem; overflow-wrap: anywhere; }
+            }
+
+            /* Sticky pay bar (mobile / tablet only) */
+            .sticky_pay {
+                display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
+                padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+                background: rgba(0, 12, 4, 0.96); border-top: 1px solid rgba(0, 255, 102, 0.45);
+                backdrop-filter: blur(8px);
+            }
+            .sticky_pay.show { display: block; }
+            .sticky_pay a {
+                display: block; text-align: center; background: #00ff66; color: #000; font-weight: bold;
+                text-decoration: none; padding: 15px 12px; border-radius: 8px; font-size: 1.05rem;
+            }
+            body.has_sticky { padding-bottom: 96px; }
+            @media (min-width: 1024px) { .sticky_pay { display: none !important; } body.has_sticky { padding-bottom: 20px; } }
+            #resultCard, #enterDetails { scroll-margin-top: 12px; }
+            html { scroll-behavior: smooth; }
+            .intro_jump {
+                display: inline-block; margin-top: 22px; padding: 14px 28px; border-radius: 8px;
+                background: linear-gradient(45deg, var(--color_primary), var(--color_secondary));
+                color: #000; font-weight: bold; text-decoration: none; font-size: 1.05rem;
+            }
+            @media (max-width: 600px) { .intro_jump { display: block; text-align: center; } }
+
+            /* Free preview shown immediately after the local BaZi calculation */
+            .free_preview {
+                display: none;
+                margin-top: 26px;
+                padding: clamp(20px, 2.2vw, 32px);
+                border: 1px solid rgba(0, 255, 102, 0.38);
+                border-radius: 12px;
+                background: linear-gradient(145deg, rgba(0, 28, 12, 0.96), rgba(5, 15, 10, 0.98));
+            }
+            .free_preview h3 { color: var(--color_primary); margin: 0 0 10px; font-size: 1.35rem; }
+            .preview_kicker {
+                color: var(--color_primary);
+                font-size: .76rem;
+                font-weight: 800;
+                letter-spacing: .14em;
+                text-transform: uppercase;
+                margin-bottom: 9px;
+            }
+            .preview_daymaster {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                margin: 18px 0;
+                padding: 16px;
+                border-radius: 10px;
+                background: rgba(255,255,255,.045);
+                border: 1px solid rgba(255,255,255,.09);
+            }
+            .preview_daymaster_char {
+                display: grid;
+                place-items: center;
+                width: 68px;
+                height: 68px;
+                flex: 0 0 68px;
+                border-radius: 10px;
+                background: rgba(0,255,102,.10);
+                color: var(--color_primary);
+                font-size: 2rem;
+                font-weight: 800;
+            }
+            .preview_daymaster p, .preview_copy { color: var(--text_secondary); line-height: 1.75; margin: 5px 0 0; }
+            .preview_elements {
+                display: grid;
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+                gap: 10px;
+                margin: 16px 0 8px;
+            }
+            .preview_element {
+                padding: 11px 7px;
+                text-align: center;
+                border-radius: 8px;
+                background: rgba(255,255,255,.045);
+                border: 1px solid rgba(255,255,255,.08);
+            }
+            .preview_element strong { display: block; color: #fff; font-size: 1.15rem; margin-bottom: 3px; }
+            .preview_element span { color: var(--text_secondary); font-size: .78rem; }
+            .preview_note {
+                margin-top: 18px;
+                padding: 13px 15px;
+                border-left: 3px solid var(--color_primary);
+                background: rgba(255,255,255,.04);
+                color: var(--text_secondary);
+                font-size: .88rem;
+                line-height: 1.65;
+            }
+            .preview_locked {
+                margin-top: 18px;
+                padding-top: 17px;
+                border-top: 1px solid rgba(255,255,255,.12);
+            }
+            .preview_locked ul { margin: 10px 0 0; padding-left: 20px; color: var(--text_secondary); line-height: 1.8; }
+            @media (max-width: 520px) {
+                .preview_elements { gap: 6px; }
+                .preview_element { padding: 10px 3px; }
+                .preview_element span { font-size: .7rem; }
+                .preview_daymaster { gap: 12px; }
+            }
+
         </style>
     </head>
     <body>
@@ -313,6 +462,7 @@
                     BaZi is a traditional Chinese metaphysical system rooted in thousands of years of Chinese calendar science,
                     cosmology, and philosophy. It is a distinct tradition with its own method, built around the exact moment you were born.
                 </p>
+                <a href="#enterDetails" class="intro_jump">Enter My Birth Details &darr;</a>
 
                 <div class="intro_divider">&#10022;</div>
 
@@ -360,9 +510,9 @@
                 </p>
             </section>
             <main>
-                <section>
+                <section id="enterDetails">
                     <h2 class="section_title">Enter Your Details</h2>
-                    <form class="section_card" onsubmit="event.preventDefault(); calculateBaZi();" autocomplete="off">
+                    <form class="section_card" onsubmit="event.preventDefault(); calculateBaZi().then(scrollToResultsOnMobile);" autocomplete="off">
                         <fieldset class="input_grid">
                             <div class="input_group">
                                 <label for="year">Year</label>
@@ -427,6 +577,33 @@
                             <div class="pillars_container luck_grid" id="luckContainer"></div>
                         </div>
                         
+                        <div id="freePreview" class="free_preview" aria-live="polite">
+                            <div class="preview_kicker">Your complimentary chart preview</div>
+                            <h3>A First Look at Your BaZi Profile</h3>
+                            <p class="preview_copy">Your birth chart has been calculated. Here is an immediate, chart-based introduction before you decide whether to unlock the complete report.</p>
+                            <div class="preview_daymaster">
+                                <div class="preview_daymaster_char" id="previewDayMasterChar">—</div>
+                                <div>
+                                    <div style="color:#fff;font-weight:800;font-size:1.05rem;">Your Day Master: <span id="previewDayMasterName"></span></div>
+                                    <p id="previewDayMasterText"></p>
+                                </div>
+                            </div>
+                            <div style="color:#fff;font-weight:800;margin-top:20px;">Visible Five-Element Distribution</div>
+                            <p class="preview_copy" style="font-size:.88rem;">A simple count of the five-element associations of the four heavenly stems shown in your chart.</p>
+                            <div class="preview_elements" id="previewElementCounts"></div>
+                            <div class="preview_note" id="previewSummary"></div>
+                            <div class="preview_locked">
+                                <div style="color:#00ff66;font-weight:800;">Your complete report goes much deeper</div>
+                                <ul>
+                                    <li>Day Master strength and the full Five-Element analysis</li>
+                                    <li>Ten Gods, chart structure, and key interactions</li>
+                                    <li>Wealth, career, relationships, and personal development themes</li>
+                                    <li>10-year Luck Pillars and annual timing analysis</li>
+                                </ul>
+                                <p class="preview_copy" style="margin-top:12px;">The preview is an introductory summary, not a complete interpretation. The full personalized report is generated after payment and delivered through your existing report process.</p>
+                            </div>
+                        </div>
+
                         <div id="shopifyCta" style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(0, 20, 0, 0.8); border: 1px solid #00ff6555; border-radius: 10px;">
                             <h3 style="color: #00ff66; margin-bottom: 10px; font-size: 20px;">Unlock Your Complete BaZi Blueprint</h3>
                             <p style="color: #ccc; font-size: 14px; margin-bottom: 20px;">Based on your Ba Zi chart above, get a comprehensive, personalized English report delivered to <span id="emailDisplay" style="color: #00ff66; font-weight: bold;">your email</span>.</p>
@@ -454,6 +631,9 @@
                     </div>
                 </section>
             </main>
+        </div>
+        <div class="sticky_pay" id="stickyPay">
+            <a href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)">Get My Deep Dive Report ➔</a>
         </div>
         <script>
             const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/k1xw92cyng0as3r2rq9jcqn8i3gwczdl";
@@ -1072,6 +1252,45 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
             /* =====================================================
                MAIN CALCULATION
                ===================================================== */
+            function renderFreePreview(r) {
+                const preview = document.getElementById('freePreview');
+                const dayPillar = r.pillars[2].pillarStr;
+                const dayStem = dayPillar.charAt(0);
+                const dayElement = ELEMENT_MAP[dayStem] || 'Unknown';
+                const dayStemNames = {
+                    '甲':'Yang Wood', '乙':'Yin Wood',
+                    '丙':'Yang Fire', '丁':'Yin Fire',
+                    '戊':'Yang Earth', '己':'Yin Earth',
+                    '庚':'Yang Metal', '辛':'Yin Metal',
+                    '壬':'Yang Water', '癸':'Yin Water'
+                };
+                const elementDescriptions = {
+                    Wood: 'In traditional symbolism, Wood is associated with growth, initiative, learning, and the ability to develop plans.',
+                    Fire: 'In traditional symbolism, Fire is associated with expression, warmth, visibility, enthusiasm, and communication.',
+                    Earth: 'In traditional symbolism, Earth is associated with steadiness, responsibility, support, and practical organization.',
+                    Metal: 'In traditional symbolism, Metal is associated with structure, standards, discernment, and clear decisions.',
+                    Water: 'In traditional symbolism, Water is associated with observation, adaptability, reflection, and the flow of information.'
+                };
+                document.getElementById('previewDayMasterChar').textContent = dayStem;
+                document.getElementById('previewDayMasterName').textContent = `${dayStemNames[dayStem] || dayElement} (${dayElement})`;
+                document.getElementById('previewDayMasterText').textContent = elementDescriptions[dayElement] || '';
+
+                const counts = { Wood: 0, Fire: 0, Earth: 0, Metal: 0, Water: 0 };
+                r.pillars.forEach(p => {
+                    const stem = p.pillarStr.charAt(0);
+                    const element = ELEMENT_MAP[stem];
+                    if (Object.prototype.hasOwnProperty.call(counts, element)) counts[element]++;
+                });
+                const order = ['Wood', 'Fire', 'Earth', 'Metal', 'Water'];
+                document.getElementById('previewElementCounts').innerHTML = order.map(el =>
+                    `<div class="preview_element"><strong>${counts[el]}</strong><span>${el}</span></div>`
+                ).join('');
+
+                document.getElementById('previewSummary').textContent =
+                    `Your Day Pillar is ${dayPillar}. In this introductory preview, the Day Master is used as the starting point for interpretation. The element count above covers only the four visible heavenly stems; it does not include hidden stems in the branches and should not be read as a complete measure of element strength or balance.`;
+                preview.style.display = 'block';
+            }
+
             async function calculateBaZi() {
                 const yearField = document.getElementById('year');
                 const monthField = document.getElementById('month');
@@ -1183,7 +1402,10 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 info.textContent = lines.join('\n');
                 info.style.display = 'block';
 
+                renderFreePreview(r);
+
                 localStorage.setItem('pending_bazi_user', JSON.stringify(buildFormData(userEmail === "your email" ? '' : userEmail)));
+                updateStickyPay();
             }
 
             function buildFormData(emailOverride) {
@@ -1238,6 +1460,22 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 return data;
             }
 
+            let ctaVisible = false;
+            function updateStickyPay() {
+                const bar = document.getElementById('stickyPay');
+                if (!bar) return;
+                const paid = new URLSearchParams(window.location.search).get('paid') === 'true';
+                const cta = document.getElementById('shopifyCta');
+                const ctaShown = cta && cta.style.display !== 'none';
+                bar.classList.toggle('show', !!lastCalc && !paid && !!ctaShown && !ctaVisible);
+                document.body.classList.toggle('has_sticky', bar.classList.contains('show'));
+            }
+            function scrollToResultsOnMobile() {
+                if (window.innerWidth < 1024 && lastCalc) {
+                    document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
             function clearSession() {
                 document.getElementById('year').value = '';
                 document.getElementById('month').value = '';
@@ -1248,6 +1486,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 cityInput().value = '';
                 document.getElementById('gender').value = '';
                 document.getElementById('luckSection').style.display = 'none';
+                document.getElementById('freePreview').style.display = 'none';
                 selectedCity = null;
                 lastCalc = null;
                 setHint('');
@@ -1257,6 +1496,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 document.getElementById('pillarsContainer').innerHTML = '';
                 document.getElementById('dateDisplay').innerHTML = 'Awaiting Calculation';
                 localStorage.removeItem('pending_bazi_user');
+                updateStickyPay();
                 document.getElementById('aiReportContainer').style.display = 'none';
                 document.getElementById('shopifyCta').style.display = 'block';
             }
@@ -1291,6 +1531,10 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
             window.addEventListener('DOMContentLoaded', () => {
                 initEnglishValidation();
                 initCityCombo();
+                const ctaEl = document.getElementById('shopifyCta');
+                if (ctaEl && 'IntersectionObserver' in window) {
+                    new IntersectionObserver(entries => { ctaVisible = entries[0].isIntersecting; updateStickyPay(); }, { threshold: 0.3 }).observe(ctaEl);
+                }
 
                 const savedData = localStorage.getItem('pending_bazi_user');
                 let userData = null;
