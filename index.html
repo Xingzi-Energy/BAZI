@@ -1946,24 +1946,42 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 return { loading: document.getElementById('loadingBox'), final: document.getElementById('finalReportBox'),
                          content: document.getElementById('reportDirectContent'), status: document.getElementById('statusConsole') };
             }
+            function setReportChrome(on) {
+                const a = document.querySelector('#finalReportBox .report_actions'); if (a) a.style.display = on ? '' : 'none';
+                const t = document.getElementById('targetEmailText'); if (t && t.parentNode) t.parentNode.style.display = on ? '' : 'none';
+            }
             function showReportHtml(html, email) {
+                setReportChrome(true);
                 const u = reportUi(); u.loading.style.display = 'none'; u.final.style.display = 'block'; u.content.innerHTML = html;
                 const p = document.getElementById('targetEmailText') && document.getElementById('targetEmailText').parentNode;
                 if (p) p.innerHTML = email ? '&#10003; A copy has also been emailed to <b>' + email.replace(/</g, '&lt;') + '</b>' : '&#10003; Your report is ready. You can also save it with the PDF button.';
             }
             function showReportNotice(msg, retryFn) {
+                setReportChrome(false);
+                let ref = ''; try { ref = localStorage.getItem('bazi_order_id') || ''; } catch (e) {}
+                if (ref) msg += '<br><small>Order reference: ' + ref.replace(/[^\w-]/g, '') + '</small>';
+                if (/[?&]debug=1/.test(location.search) && window.__lastWebhook) msg += '<pre style="white-space:pre-wrap;font-size:12px;margin-top:10px">Make replied: ' + String(window.__lastWebhook.status) + '\n' + String(window.__lastWebhook.body).replace(/</g, '&lt;') + '</pre>';
                 const u = reportUi(); u.loading.style.display = 'none'; u.final.style.display = 'block';
                 u.content.innerHTML = '<p>' + msg + '</p>' + (retryFn ? '<p><button type="button" class="share_btn report_share" id="reportRetryBtn">Check again</button></p>' : '');
                 const b = document.getElementById('reportRetryBtn'); if (b) b.onclick = () => { u.final.style.display = 'none'; u.loading.style.display = 'block'; retryFn(); };
             }
             function parseMaybeJson(text) { try { return JSON.parse(text); } catch (e) { return null; } }
+            // Tolerant reader for Make's response: handles unescaped line breaks / quotes inside the JSON, or a plain HTML/text body.
+            function parseReportResponse(text) {
+                text = String(text || '');
+                let d = parseMaybeJson(text) || parseMaybeJson(text.replace(/[\u0000-\u001f]+/g, ' '));
+                if (!d) { const m = text.match(/"report"\s*:\s*"([\s\S]*)"\s*\}?\s*$/); if (m) d = { report: m[1].replace(/\\n/g, '\n').replace(/\\"/g, '"') }; }
+                if (!d && text.length > 300 && /<h[1-3]|<p>|<ul>/i.test(text)) d = { report: text };
+                return d;
+            }
+            window.__lastWebhook = null;
 
             async function pollReport(id, email, tries) {
                 const delay = ms => new Promise(r => setTimeout(r, ms));
                 for (let n = 0; n < (tries || 80); n++) {          // ~8 minutes at 6s
                     try {
                         const res = await fetch(REPORT_STATUS_URL + (REPORT_STATUS_URL.includes('?') ? '&' : '?') + 'orderId=' + encodeURIComponent(id), { cache: 'no-store' });
-                        const d = parseMaybeJson(await res.text());
+                        const txt = await res.text(); const d = parseReportResponse(txt);
                         if (d && d.report) { const html = cleanReportHtml(d.report); try { localStorage.setItem('bazi_report_cache', JSON.stringify({ id, html })); } catch (e) {} showReportHtml(html, email); return; }
                         if (d && d.status === 'failed') break;
                     } catch (e) {}
@@ -1988,9 +2006,11 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                     try {
                         const res = await fetch(MAKE_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(Object.assign({}, userData, { orderId: id })), signal: ctl.signal });
-                        const d = parseMaybeJson(await res.text());
+                        const txt = await res.text(); window.__lastWebhook = { status: res.status, body: txt.slice(0, 400) };
+                        console.warn('[report] webhook response', res.status, txt.slice(0, 300));
+                        const d = parseReportResponse(txt);
                         if (d && d.report) { const html = cleanReportHtml(d.report); try { localStorage.setItem('bazi_report_cache', JSON.stringify({ id, html })); } catch (e) {} showReportHtml(html, email); return; }
-                    } catch (e) { /* slow or unreadable response: the job may still be running */ }
+                    } catch (e) { window.__lastWebhook = { status: 'no readable response', body: String(e) }; console.warn('[report] webhook error', e); /* slow or unreadable response: the job may still be running */ }
                     finally { clearTimeout(timer); }
                 }
                 if (REPORT_STATUS_URL) { pollReport(id, email); return; }
