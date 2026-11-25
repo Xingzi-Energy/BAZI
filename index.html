@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <title>BaZi Calculator - Astronomically Accurate Four Pillars</title>
         <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.js"></script>
         <style>
@@ -422,7 +422,85 @@
             .unlock_item p { color:var(--text_secondary); font-size:.86rem; line-height:1.6; }
             .unlock_item svg { position:absolute; top:16px; right:16px; width:16px; height:16px; fill:none; stroke:var(--color_primary); stroke-width:2; opacity:.8; }
             .snap_disclaimer { margin-top:22px; color:var(--text_secondary); font-size:.78rem; line-height:1.6; font-style:italic; text-align:center; }
+            .snap_hl { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-top:16px; }
+            .snap_hl div { padding:14px 16px; border-radius:10px; background:rgba(181,48,42,.16); border:1px solid rgba(217,84,74,.35); }
+            .snap_hl small { display:block; font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:#e9b3ac; margin-bottom:4px; }
+            .snap_hl b { font-family:var(--font_serif); font-weight:500; font-size:1.1rem; color:var(--text_primary); }
+            .lock_list { margin-top:14px; display:grid; gap:8px; }
+            .lock_row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px; background:rgba(0,0,0,.3); border:1px dashed rgba(214,178,94,.35); font-size:.9rem; color:var(--text_primary); }
+            .lock_row svg { flex:0 0 16px; width:16px; height:16px; fill:none; stroke:var(--color_primary); stroke-width:2; }
+            .lock_row span { flex:1; }
+            .lock_row i { flex:0 0 clamp(60px,14vw,130px); height:9px; border-radius:99px; background:linear-gradient(90deg,rgba(214,178,94,.5),rgba(214,178,94,.15)); filter:blur(3px); }
+            .snap_note { margin-top:12px; color:var(--text_secondary); font-size:.8rem; line-height:1.6; font-style:italic; }
+            .snap_cta_row { margin-top:30px; padding:22px; text-align:center; border-radius:12px; background:linear-gradient(160deg,rgba(125,29,26,.4),rgba(20,11,9,.9)); border:1px solid rgba(214,178,94,.5); }
+            .snap_cta_row p { color:var(--color_primary_light); font-family:var(--font_serif); font-size:1.1rem; line-height:1.5; margin-bottom:14px; }
+            .snap_cta { display:inline-block; padding:13px 30px; border-radius:8px; font-weight:bold; text-decoration:none; color:#fbeccb; background:linear-gradient(45deg,var(--cinnabar_deep),var(--cinnabar)); border:1px solid var(--color_primary); box-shadow:0 4px 16px rgba(181,48,42,.35); }
+            .snap_cta_row small { display:block; margin-top:10px; color:var(--text_secondary); font-size:.78rem; }
+            @media (max-width:600px) { .snap_cta { display:block; } }
             @media (max-width:560px) { .snap_day { flex-direction:column; text-align:center; } .snap_tags { justify-content:center; } .snap_label b { font-size:1.5rem; } }
+
+            /* ================= MOBILE POLISH (phones first) ================= */
+            html { -webkit-text-size-adjust: 100%; }
+            body { overflow-wrap: break-word; }
+            .snap_card, .lock_row span, .snap_more, .snap_day p { overflow-wrap: anywhere; }
+            @media (max-width: 600px) {
+                body { padding: 8px; }
+                #resultCard.section_card { padding: 16px 8px; }
+                .validation_badge { font-size: .8rem; padding: 6px 12px; line-height: 1.4; }
+                .intro_lead { font-size: 1rem; }
+                .intro_item p, .intro_disclaimer { font-size: .95rem; }
+                .intro_disclaimer { font-size: .82rem; }
+                .intro_tags span { font-size: .88rem; }
+                #solarInfo { font-size: .85rem; }
+                #dateDisplay { font-size: 1.4rem !important; }
+                /* luck pillars: swipeable strip instead of a long 2-column stack */
+                .luck_grid { display: flex; overflow-x: auto; gap: 10px; padding: 4px 2px 12px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+                .luck_grid .pillar { flex: 0 0 96px; scroll-snap-align: start; }
+                .luck_note { font-size: .85rem; }
+                /* free preview */
+                .free_preview { padding: 18px 12px; margin-top: 20px; }
+                .free_preview h3 { font-size: 1.45rem; }
+                .preview_copy { font-size: .98rem; line-height: 1.7; }
+                .preview_kicker { font-size: .72rem; }
+                .snap_sec { margin-top: 28px; padding-top: 22px; }
+                .snap_label { gap: 12px; margin-bottom: 14px; }
+                .snap_label h4 { font-size: 1.2rem; line-height: 1.3; }
+                .snap_label span { font-size: .88rem; }
+                .snap_day { padding: 16px 14px; gap: 14px; }
+                .snap_seal { flex-basis: 80px; width: 80px; height: 80px; font-size: 2.7rem; }
+                .snap_day h5 { font-size: 1.25rem; }
+                .snap_day p, .snap_card p, .snap_card li { font-size: 1rem; line-height: 1.7; }
+                .snap_tags span { font-size: .85rem; }
+                .snap_hl { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+                .snap_hl div { padding: 10px 8px; text-align: center; }
+                .snap_hl small { font-size: .62rem; letter-spacing: .06em; }
+                .snap_hl b { font-size: .98rem; line-height: 1.25; display: block; }
+                .snap_card { padding: 16px 14px; }
+                .snap_card h5 { font-size: .78rem; }
+                .snap_card .big { font-size: 1.3rem; }
+                .snap_bar { grid-template-columns: 50px 1fr; font-size: .88rem; }
+                .snap_more, .snap_note { font-size: .92rem; }
+                .lock_row { font-size: .98rem; padding: 12px; gap: 10px; }
+                .lock_row i { display: none; }
+                /* unlock list: compact rows with the seal on the left */
+                .snap_unlock { grid-template-columns: 1fr; gap: 10px; }
+                .unlock_item { display: grid; grid-template-columns: 44px 1fr; column-gap: 14px; padding: 14px 40px 14px 14px; }
+                .unlock_item .ch { grid-row: 1 / span 2; margin: 0; align-self: start; }
+                .unlock_item h5 { font-size: 1.02rem; margin-bottom: 4px; }
+                .unlock_item p { font-size: .93rem; }
+                .unlock_item svg { top: 14px; right: 14px; }
+                .snap_cta_row { padding: 20px 14px; margin-top: 26px; }
+                .snap_cta_row p { font-size: 1.1rem; }
+                .snap_cta, #shopifyCta a { display: block !important; width: 100%; padding: 16px 12px !important; font-size: 1.05rem; text-align: center; }
+                .snap_cta_row small { font-size: .82rem; }
+                #shopifyCta h3 { font-size: 1.3rem; }
+                #shopifyCta p { font-size: 1rem; }
+                .sticky_pay a { padding: 16px 12px; font-size: 1.08rem; }
+            }
+            @media (max-width: 360px) {
+                .snap_hl b { font-size: .88rem; }
+                .snap_label b { font-size: 1.3rem; min-width: 1.8rem; }
+            }
         </style>
     </head>
     <body>
@@ -563,9 +641,11 @@
                             <section class="snap_sec"><div class="snap_label"><b>01</b><div><h4>Discover Your Inner Nature</h4><span>Your Day Master: the heart of your chart</span></div></div><div id="snapNature"></div></section>
                             <section class="snap_sec"><div class="snap_label"><b>02</b><div><h4>Beyond Your Day Master</h4><span>What your birth time adds to the picture</span></div></div><div id="snapBeyond"></div></section>
                             <section class="snap_sec"><div class="snap_label"><b>03</b><div><h4>Your Career &amp; Wealth Potential</h4><span>Directions worth exploring, not conclusions</span></div></div><div id="snapCareer"></div></section>
-                            <section class="snap_sec"><div class="snap_label"><b>04</b><div><h4>Health &amp; Wellness Overview</h4><span>A traditional wellness perspective</span></div></div><div id="snapHealth"></div></section>
+                                                        <div class="snap_cta_row"><p>Your chart has more to say. Find out what these findings mean for you.</p><a class="snap_cta" href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)">Unlock My Full Report ➔</a><small>Delivered to your email and shown right here after checkout</small></div>
+<section class="snap_sec"><div class="snap_label"><b>04</b><div><h4>Health &amp; Wellness Overview</h4><span>A traditional wellness perspective</span></div></div><div id="snapHealth"></div></section>
+                                                        <section class="snap_sec"><div class="snap_label"><b>05</b><div><h4>What Is Coming Next</h4><span>Your timing, calculated from your chart</span></div></div><div id="snapTiming"></div></section>
                             <section class="snap_sec">
-                                <div class="snap_label"><b>05</b><div><h4>Your Complete Destiny Blueprint</h4><span>What the full report unlocks</span></div></div>
+                                <div class="snap_label"><b>06</b><div><h4>Your Complete Destiny Blueprint</h4><span>What the full report unlocks</span></div></div>
                                 <div class="snap_unlock">
                                     <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">命</div><h5>Chart Deep Analysis</h5><p>Day Master strength, chart structure, Ten Gods, and favorable and challenging elements.</p></div>
                                     <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">财</div><h5>Wealth &amp; Career Analysis</h5><p>Your wealth pattern, career directions, and the working styles that suit your chart.</p></div>
@@ -575,6 +655,7 @@
                                     <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">策</div><h5>Personal Action Guide</h5><p>Practical reflection points built around your chart's particular features.</p></div>
                                 </div>
                             </section>
+                            <div class="snap_cta_row"><p>Ready to see the full picture of your chart?</p><a class="snap_cta" href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)">Unlock My Full Report ➔</a><small>Delivered to your email and shown right here after checkout</small></div>
                             <p class="snap_disclaimer">BaZi is a traditional cultural practice offered for reflection, personal insight, and entertainment. It does not predict events with certainty, and nothing here is medical, legal, financial, or psychological advice.</p>
                         </div>
                         <div id="shopifyCta">
@@ -1276,6 +1357,10 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
             }
             function levelOf(t) { return t <= 0 ? 'Not present' : t < 1.5 ? 'Light presence' : t < 3 ? 'Moderate presence' : 'Prominent presence'; }
 
+            const LOCK_SVG = '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>';
+            const lock = items => `<div class="lock_list">${items.map(t => `<div class="lock_row">${LOCK_SVG}<span>${t}</span><i></i></div>`).join('')}</div>`;
+            const GAN = '甲乙丙丁戊己庚辛壬癸', ZHI = '子丑寅卯辰巳午未申酉戌亥';
+
             function renderFreePreview(r) {
                 const P = r.pillars, pn = ['Year', 'Month', 'Day', 'Hour'];
                 const dayStem = P[2].pillarStr.charAt(0), dm = ELEMENT_MAP[dayStem], S = STEM[dayStem];
@@ -1317,7 +1402,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                         <div class="snap_card"><h5>Chart Interactions</h5>
                             ${found.length ? `<ul>${found.map(f => `<li>${f}</li>`).join('')}</ul>` : `<p>No major harmonies or clashes appear between your four branches. The full report also examines subtler interactions.</p>`}</div>
                     </div>
-                    <div class="snap_more"><b>Going deeper:</b> The full report weighs these factors together to assess Day Master strength, chart structure, and favorable elements.</div>`;
+                    ${lock(['Is your Day Master strong or weak?','Your favorable and challenging elements','Your chart structure and Ten Gods'])}`;
 
                 // 03 Career & wealth
                 const we = CTRL[dm], L = r.luck && r.luck.current, lrel = L ? relOf(dm, ELEMENT_MAP[L.ganzhi.charAt(0)]) : null;
@@ -1330,13 +1415,35 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                         <div class="snap_card"><h5>Your Wealth Element</h5><div class="big">${we}</div><span class="snap_pill">${levelOf(score[we])}</span><p>${vis[we]} visible stem${vis[we] === 1 ? '' : 's'} in your chart${score[we] === 0 ? '; it may arrive through Luck Pillars.' : ', plus any hidden stems in your branches.'}</p></div>
                         <div class="snap_card"><h5>Your Current Luck Pillar</h5>${luckTxt}</div>
                     </div>
-                    <div class="snap_more"><b>Your full report explores:</b> the position and condition of your Wealth star, whether you suit active expansion or steady accumulation, and how each Luck Pillar shapes career timing. This preview points to directions for study and draws no conclusions about income or financial outcomes.</div>`;
+                    ${lock(['Your Wealth pattern and best earning style','Career directions that suit your chart','Your most supportive and most demanding career years'])}<p class="snap_note">This preview points to areas for study and draws no conclusions about income or financial outcomes.</p>`;
 
                 // 04 Health
                 const hc = (e, title) => `<div class="snap_card"><h5>${title}</h5><div class="big">${e}</div><p>Traditionally linked with ${HEALTH[e][0]}. You may enjoy giving this theme some extra attention through:</p><ul>${HEALTH[e][1].map(x => `<li>${x}</li>`).join('')}</ul></div>`;
                 document.getElementById('snapHealth').innerHTML = `
                     <div class="snap_grid">${hc(top, 'Most Prominent in Your Chart')}${hc(low, score[low] === 0 ? 'Not Present in Your Chart' : 'Gentlest in Your Chart')}</div>
-                    <div class="snap_more"><b>A cultural framework, not a medical one:</b> In traditional Chinese wellness thinking, each element is symbolically linked to certain body systems and daily rhythms. These are lifestyle ideas for reflection only and do not diagnose, treat, or replace advice from a licensed healthcare professional. Your full report adds seasonal routines and wellness guidance built around your chart.</div>`;
+                    <div class="snap_more"><b>A cultural framework, not a medical one:</b> In traditional Chinese wellness thinking, each element is symbolically linked to certain body systems and daily rhythms. These are lifestyle ideas for reflection only and do not diagnose, treat, or replace advice from a licensed healthcare professional. </div>${lock(['Your personalized seasonal wellness routine','Life stages that call for extra self-care'])}`;
+
+                // 05 Timing + highlights
+                const items = (r.luck && r.luck.items) || [];
+                const ci = L ? items.findIndex(i => i.ganzhi === L.ganzhi && i.startYear === L.startYear) : -1;
+                const nx = items[ci + 1];
+                const now = new Date(), Y = now.getFullYear() + (now.getMonth() >= 9 ? 1 : 0);
+                const yg = GAN[(Y - 4) % 10] + ZHI[(Y - 4) % 12], yb = yg.charAt(1), ye = ELEMENT_MAP[yg.charAt(0)];
+                const hits = [];
+                P.forEach((p, i) => {
+                    const b = p.pillarStr.charAt(1);
+                    if (HARM.some(x => (x[0] === yb && x[1] === b) || (x[1] === yb && x[0] === b))) hits.push(`a <b>harmony</b> with your ${pn[i]} Branch (${b})`);
+                    if (CLASH.some(x => (x[0] === yb && x[1] === b) || (x[1] === yb && x[0] === b))) hits.push(`a <b>clash</b> with your ${pn[i]} Branch (${b})`);
+                });
+                const yearTxt = hits.length ? `The ${Y} year branch ${yb} forms ${hits.join(' and ')}. Years like this are traditionally studied as moments of change or connection.` : `The ${Y} year branch ${yb} makes no direct harmony or clash with your four branches. The full report checks subtler effects.`;
+                document.getElementById('snapTiming').innerHTML = `<div class="snap_grid">
+                    ${nx ? `<div class="snap_card"><h5>Your Next Luck Pillar</h5><div class="big">${nx.ganzhi} · ${ELEMENT_MAP[nx.ganzhi.charAt(0)]}</div><p>Begins in <b>${nx.startYear}</b> (age ${nx.startAge})${L ? `, when your current ${L.ganzhi} pillar ends` : ''}. Luck Pillar changes are traditionally read as shifts in life themes.</p>${lock(['What this transition means for you'])}</div>` : ''}
+                    <div class="snap_card"><h5>Your ${Y} Year Pillar</h5><div class="big">${yg} · ${ye}</div><p>${yearTxt}</p>${lock([`Your ${Y} outlook, month by month`])}</div></div>`;
+
+                document.getElementById('snapNature').innerHTML += `<div class="snap_hl">
+                    <div><small>Birth season</small><b>${B[3].charAt(0).toUpperCase() + B[3].slice(1)}</b></div>
+                    <div><small>Interactions</small><b>${found.length ? found.length + ' found' : 'None major'}</b></div>
+                    <div><small>${nx ? 'Next turning point' : 'Year in focus'}</small><b>${nx ? nx.startYear : Y + ' · ' + yg}</b></div></div>`;
 
                 document.getElementById('freePreview').style.display = 'block';
             }
@@ -1583,7 +1690,13 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 initCityCombo();
                 const ctaEl = document.getElementById('shopifyCta');
                 if (ctaEl && 'IntersectionObserver' in window) {
-                    new IntersectionObserver(entries => { ctaVisible = entries[0].isIntersecting; updateStickyPay(); }, { threshold: 0.3 }).observe(ctaEl);
+                    const seen = new Set();
+                    const io = new IntersectionObserver(entries => {
+                        entries.forEach(e => { e.isIntersecting ? seen.add(e.target) : seen.delete(e.target); });
+                        ctaVisible = seen.size > 0; updateStickyPay();
+                    }, { threshold: 0.3 });
+                    io.observe(ctaEl);
+                    document.querySelectorAll('.snap_cta_row').forEach(el => io.observe(el));
                 }
 
                 const savedData = localStorage.getItem('pending_bazi_user');
