@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <meta name="theme-color" content="#110b09" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <title>Free BaZi Chart Reading | Accurate Four Pillars of Destiny Report</title>
         <meta name="description" content="Generate your free BaZi (Four Pillars of Destiny) chart preview online. An accurate Chinese astrology reading calculated from your exact birth time and city with true solar time — for career, money, relationships, and life timing." />
@@ -392,7 +393,7 @@
             #shopifyCta a { display: inline-block; background: linear-gradient(45deg,var(--cinnabar_deep),var(--cinnabar)); color: #fbeccb; border: 1px solid var(--color_primary); padding: 13px 32px; font-weight: bold; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 16px rgba(181,48,42,.35); }
             /* ===== CTA trust block ===== */
             .opt_hint { color: var(--text_secondary); font-weight: 400; font-size: .82rem; }
-            .cta_guarantee { max-width: 560px; margin: 0 auto 18px; padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(126,190,138,.45); background: rgba(80,140,90,.12); color: #cfe6cf; font-size: .92rem; line-height: 1.6; }
+            .cta_guarantee { max-width: 560px; margin: 0 auto 18px; padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(214,178,94,.45); background: rgba(214,178,94,.1); color: var(--color_primary_light); font-size: .92rem; line-height: 1.6; }
             .cta_badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; margin: 14px auto 4px; color: var(--text_secondary); font-size: .82rem; }
             .cta_badges span { white-space: nowrap; }
             .cta_receive { max-width: 560px; margin: 20px auto 0; padding: 18px 20px; border-radius: 12px; border: 1px solid rgba(214,178,94,.3); background: rgba(0,0,0,.28); text-align: left; }
@@ -413,11 +414,16 @@
             .pdf_btn:disabled { opacity: .6; cursor: wait; }
             .report_actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 12px; }
             .share_btn { display: inline-block; margin-top: 14px; padding: 10px 22px; border-radius: 8px; border: 1px solid rgba(214,178,94,.5); background: transparent; color: var(--color_primary_light); font-size: .92rem; font-weight: 600; cursor: pointer; }
+            .health_note { border-left-color: #e0a63a !important; background: rgba(224,166,58,.12) !important; color: var(--text_primary) !important; font-size: .95rem !important; }
+            .share_panel { margin: 14px auto 0; max-width: 440px; padding: 14px; border: 1px solid rgba(201,162,75,.6); border-radius: 10px; background: rgba(201,162,75,.12); text-align: center; font-size: .95rem; color: inherit; }
+            .sp_input { width: 100%; margin: 8px 0 10px; padding: 11px 10px; border-radius: 8px; border: 1px solid rgba(201,162,75,.6); background: #fff; color: #2d231e; font-size: 16px; }
+            .sp_links { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+            .sp_links a { padding: 9px 14px; border-radius: 999px; border: 1px solid rgba(201,162,75,.7); color: inherit; text-decoration: none; font-weight: 600; font-size: .9rem; }
             .share_btn:hover { background: rgba(214,178,94,.12); }
             .report_share { color: #6e1f2a; border-color: #c9a24b; margin-top: 0; }
             .report_share:hover { background: rgba(201,162,75,.12); }
             .sticky_pay small { display: block; text-align: center; margin-top: 6px; color: var(--text_secondary); font-size: .76rem; }
-            /* ===== Personal Destiny Snapshot (free preview) ===== */
+            /* ===== Personal Life Blueprint Snapshot (free preview) ===== */
             .free_preview { display:none; margin-top:26px; padding:clamp(18px,2.4vw,36px); border:1px solid rgba(214,178,94,.5); border-radius:14px;
                 background:linear-gradient(160deg, rgba(40,19,14,.97), rgba(16,10,8,.98));
                 box-shadow: inset 0 0 0 5px rgba(16,10,8,.95), inset 0 0 0 6px rgba(214,178,94,.2); }
@@ -579,7 +585,7 @@
             </header>
             <section class="intro_card" aria-label="Your Personal BaZi Snapshot">
                 <div class="intro_eyebrow">八字 &middot; Four Pillars of Destiny &middot; Chinese Astrology in Plain English</div>
-                <h2>Tired of generic sun-sign horoscopes? Read the blueprint you were born with.</h2>
+                <h2>Tired of generic sun-sign horoscopes? See the natural patterns in your birth chart.</h2>
                 <p class="intro_lead">Your BaZi (Four Pillars) chart maps your natural strengths, money and career patterns, relationship themes, and the timing of life's seasons — calculated from your exact birth time and city. It's like a natal chart built from four layers, instead of one sun sign.</p>
                 <a href="#enterDetails" class="intro_jump">See My Free BaZi Snapshot &rarr;</a>
                 <p class="intro_cta">No sign-up required to preview your chart. Read your free snapshot first — unlock the full report only if it resonates.</p>
@@ -677,7 +683,7 @@
                         <div class="pillars_container" id="pillarsContainer"></div>
 
                         <div id="luckSection" style="display: none; margin-top: 30px;">
-                            <div class="luck_title">10-Year Luck Pillars</div>
+                            <div class="luck_title">Your 10-Year Life Cycles <span style="font-weight:400;opacity:.8;font-size:.8em">(Luck Pillars)</span></div>
                             <div class="luck_note" id="luckNote"></div>
                             <div class="pillars_container luck_grid" id="luckContainer"></div>
                         </div>
@@ -705,13 +711,13 @@
                         </div>
                         <div id="shopifyCta">
                             <h3>Get Your Full Personal BaZi Report</h3>
-                            <p>A complete, personalized reading built from the chart you just generated — shown on this page after checkout, downloadable as a PDF, with a readable copy emailed to you.</p>
+                            <p>A complete, personalized reading built from the chart you just generated — shown on this page after checkout, downloadable as a PDF (a copy is emailed if you entered an email).</p>
                             <div id="priceLine" class="price_line"></div>
                             <div class="cta_guarantee">&#10003; 60-Day Money-Back Guarantee &mdash; if the report doesn't resonate, reply to your Gumroad receipt email for a full refund, no questions asked.</div>
                             <a href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)" id="mainCtaBtn">Get My Full BaZi Report &nbsp;&#10132;</a>
                             <div class="cta_badges">
                                 <span>Secure checkout by Gumroad</span>
-                                <span>Visa &middot; Mastercard &middot; PayPal &middot; Apple Pay</span>
+                                <span>Visa &middot; Mastercard &middot; PayPal</span>
                                 <span>One-time payment &middot; No subscription</span>
                             </div>
                             <button type="button" class="share_btn" id="shareBtn" onclick="shareWithFriend(event)">&#8686; Share this free chart with a friend</button>
@@ -720,40 +726,19 @@
                                 <ul>
                                     <li>Your complete personalized BaZi report, generated from <b>your exact chart</b></li>
                                     <li>Full analysis: core nature, money &amp; career fit, relationship patterns, daily rhythm, and 10-year cycle timing</li>
-                                    <li>Read it instantly on this page and <b>download it as a PDF</b> anytime; a readable copy is also emailed to you</li>
-                                    <li>Calculated with true solar time correction most online BaZi tools skip</li>
+                                    <li>Read it on this page after checkout and <b>download it as a PDF</b>; if you entered an email, a copy is sent there too</li>
+                                    <li>Calculated with true solar time correction for your birth city</li>
                                 </ul>
                             </div>
-                            <div class="cta_reviews">
-                                <div class="review_card">
-                                    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                                    <p>&ldquo;I went in skeptical, expecting generic astrology fluff. The career section actually described my working style — worth it on that alone.&rdquo;</p>
-                                    <small>&mdash; Melissa R., Texas</small>
-                                </div>
-                                <div class="review_card">
-                                    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                                    <p>&ldquo;The 10-year cycle timing section helped me frame my career move instead of rushing into it. Clear and personalized, nothing scary.&rdquo;</p>
-                                    <small>&mdash; David K., Washington</small>
-                                </div>
-                                <div class="review_card">
-                                    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                                    <p>&ldquo;I've had Western natal readings before; this felt far more specific about how I actually operate day to day.&rdquo;</p>
-                                    <small>&mdash; Sarah L., California</small>
-                                </div>
-                                <div class="review_card">
-                                    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                                    <p>&ldquo;Short, direct, and reflective — not a fortune-telling show. Good value for a thoughtful weekend read.&rdquo;</p>
-                                    <small>&mdash; James T., Florida</small>
-                                </div>
-                            </div>
+                            <div class="cta_reviews" id="reviewsBox" style="display:none"></div>
                             <small class="cta_note">The final price is shown on the secure Gumroad checkout page before you pay. We never charge a recurring fee.</small>
                         </div>
 
                         <div id="aiReportContainer" style="display: none; margin-top: 30px;">
                             <div id="loadingBox" class="section_card" style="text-align: center; padding: 25px;">
                                 <div class="loader_spinner"></div>
-                                <div style="color: #d6b25e; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">Synthesizing Astrological Knowledge Base...</div>
-                                <div class="calculation_status" id="statusConsole">> Generating your personalized BaZi report...</div>
+                                <div style="color: #d6b25e; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">Preparing your personalized report&hellip;</div>
+                                <div class="calculation_status" id="statusConsole">> This can take a few minutes. Please keep this page open and do not pay again.</div>
                             </div>
 
                             <div id="finalReportBox" class="report_box_mobile" style="display: none;">
@@ -778,9 +763,9 @@
         <section class="trust_card" aria-label="Privacy and FAQ">
             <h3>Privacy &amp; Common Questions</h3>
             <details><summary>Do I need my exact birth time?</summary><p>Your birth hour shapes the fourth Pillar, so an accurate time gives the most precise chart. An approximate hour still produces a useful reading; the minute helps us refine true solar time. If you only know a rough window, enter your best estimate.</p></details>
-            <details><summary>What is true solar time, and why does my birth city matter?</summary><p>Most online BaZi tools convert your birth time only by time zone. We additionally correct for your city's longitude, the equation of time, and local daylight-saving rules, so the chart is anchored to the sun's real position where you were born. This is the step that makes the Four Pillars calculation astronomically accurate.</p></details>
+            <details><summary>What is true solar time, and why does my birth city matter?</summary><p>Clock time and the sun's actual position can differ by 30 minutes or more depending on where you were born. We correct for your city's longitude, the equation of time, and local daylight-saving rules, so the chart is anchored to the sun's real position where you were born. This is the step that makes the Four Pillars calculation astronomically accurate.</p></details>
             <details><summary>Will this report predict my future?</summary><p>No. BaZi is a traditional cultural framework offered for reflection, personal insight, and entertainment. It does not predict events with certainty, and it is not medical, legal, financial, or psychological advice. Think of it as a mirror for your natural tendencies and timing themes, not a fixed fate.</p></details>
-            <details><summary>What format will I receive?</summary><p>After checkout your report is generated and displayed on this page instantly, and a copy is also emailed to the address you use at checkout.</p></details>
+            <details><summary>What format will I receive?</summary><p>After checkout you return to this page and your report is prepared and displayed here. This can take a few minutes, so please keep the page open. You can save it as a PDF, and if you entered an email above, a copy is sent there.</p></details>
             <details><summary>Is this a subscription?</summary><p>No. It is a one-time payment through Gumroad. There are no recurring charges, no renewal, and no auto-billing.</p></details>
             <details><summary>What if I'm not satisfied?</summary><p>We offer a 60-day, no-questions-asked money-back guarantee. If the report does not resonate, reply to your Gumroad receipt email for a full refund.</p></details>
             <details><summary>How is my information used?</summary><p>Your birth details and email are used to calculate your chart, generate your report, and deliver it to you. Report generation uses third-party processing services. To request deletion of your data, reply to your Gumroad receipt email.</p></details>
@@ -797,6 +782,17 @@
             // It feeds the price line, the main button, and the sticky bar.
             // ============================================================
             const REPORT_PRICE_TEXT = "$19.90 &middot; One-time payment &middot; No subscription"; // shown in the price line (HTML allowed)
+            // REAL customer reviews only (with the customer's permission). Leave empty until you have them; nothing is shown while empty.
+            // Example: { text: "…", name: "Jane D.", place: "Ohio" }
+            const CUSTOMER_REVIEWS = [];
+            document.addEventListener('DOMContentLoaded', () => {
+                const box = document.getElementById('reviewsBox'); if (!box || !CUSTOMER_REVIEWS.length) return;
+                CUSTOMER_REVIEWS.forEach(r => { const c = document.createElement('div'); c.className = 'review_card';
+                    const p = document.createElement('p'); p.textContent = '\u201C' + r.text + '\u201D';
+                    const m = document.createElement('small'); m.textContent = '\u2014 ' + r.name + (r.place ? ', ' + r.place : '');
+                    c.appendChild(p); c.appendChild(m); box.appendChild(c); });
+                box.style.display = 'grid';
+            });
             const REPORT_PRICE_SHORT = "$19.90"; // appended to the buttons
             document.addEventListener('DOMContentLoaded', () => {
                 const el = document.getElementById('priceLine');
@@ -807,6 +803,9 @@
                 fillBtn(document.getElementById('mainCtaBtn'), 'Get My Full BaZi Report &#10132;');
                 fillBtn(document.getElementById('stickyCtaBtn'), 'Get My Full BaZi Report &#10132;');
             });
+            // OPTIONAL but strongly recommended: a 2nd Make webhook that returns {"status":"ready","report":"..."} or {"status":"processing"}
+            // for ?orderId=... . With it the report appears on this page however long the AI takes. Leave "" to use single-request mode.
+            const REPORT_STATUS_URL = "";
             const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/k1xw92cyng0as3r2rq9jcqn8i3gwczdl";
 
             const ELEMENT_MAP = {
@@ -1538,7 +1537,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                     </div>
                     <div class="snap_grid" style="margin-top:14px"><div class="snap_card"><h5>Your Working Style</h5><div class="big">${S[1]}</div><p>Traditionally, this nature ${S[4]}.</p></div></div>
                     <div class="snap_more"><b>One important question remains:</b> does your whole chart support this money energy, or does it need help from your 10-year cycles? Your full report examines it.</div>
-                    ${lock(['How strong is your overall wealth potential?', 'Which earning styles and career directions suit you best?', 'Which years bring opportunity — and which demand caution?'])}
+                    ${lock(['How strong is your overall wealth potential, and what could be holding it back?', 'Which work environments and career paths match your natural energy?', 'Which years bring money opportunities, and which call for caution?'])}
                     <p class="snap_note">This preview points to areas for reflection and draws no conclusions about income or financial outcomes.</p>`;
 
                 // 03 chart built
@@ -1556,12 +1555,12 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                     <div class="snap_card"><h5>Five Energies in Your Chart</h5>${EL5.map(e => `<div class="snap_bar"><span>${e}</span><div><i class="i_${e}" style="width:${Math.round(score[e] / max * 100)}%"></i></div></div>`).join('')}
                         <p style="margin-top:8px">Strongest: <b>${top}</b>. ${score[low] === 0 ? `<b>${low}</b> does not appear in your birth chart.` : `Quietest: <b>${low}</b>.`}</p></div>
                     <div class="snap_card"><h5>How Your Chart Connects</h5>${found.length ? `<ul>${found.map(x => `<li>${x}</li>`).join('')}</ul>` : '<p>No major pairings or tensions appear between the parts of your chart. The full report also looks at subtler links.</p>'}</div></div>
-                    ${lock(['How strong or delicate is your core nature?', 'Which energies support you — and which challenge you?', 'How does your whole chart fit together?'])}`;
+                    ${lock(['What are your biggest inner strengths and blind spots?', 'How balanced is your chart, and which energies support or challenge you?', 'What patterns show up in your relationships and close partnerships?'])}`;
 
                 // 04 balance & rhythm
                 const hc = (e, title) => `<div class="snap_card"><h5>${title}</h5><div class="big">${e}</div><p>Traditionally associated with ${HEALTH[e][0]}. Everyday ideas to reflect on:</p><ul>${HEALTH[e][1].map(x => `<li>${x}</li>`).join('')}</ul></div>`;
                 $('snapHealth').innerHTML = `<div class="snap_grid">${hc(top, 'Your Strongest Energy')}${hc(low, 'A Theme to Nurture')}</div>
-                    <div class="snap_more"><b>General lifestyle reflections only.</b> These ideas are not medical advice and do not diagnose, treat, or suggest any health condition. For any health concern, please consult a licensed healthcare professional.</div>${lock(['What daily rhythm and seasonal habits fit your energy?'])}`;
+                    <div class="snap_more health_note"><b>General lifestyle reflections only.</b> These ideas are not medical advice and do not diagnose, treat, or suggest any health condition. For any health concern, please consult a licensed healthcare professional.</div>${lock(['What daily rhythm and seasonal habits fit your energy?'])}`;
 
                 // 05 timing
                 const hits = [];
@@ -1651,8 +1650,8 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                     `Birth place: ${c.name}, ${c.state || c.st} (${c.tz})`,
                     `Local clock: ${year}-${pad2(month)}-${pad2(day)} ${pad2(hour)}:${pad2(minute)} ${r.abbr} (${fmtOffset(r.offsetMin)}${r.dst ? ', daylight saving in effect' : ''})`,
                     `Longitude correction: ${fmtSigned(r.lngMin)} min from UTC (${fmtCoord(c.lat, c.lng)})`,
-                    `Equation of time: ${fmtSigned(r.eot)} min`,
-                    `True solar time: ${r.tstStr}`
+                    `Sun-position correction (equation of time): ${fmtSigned(r.eot)} min`,
+                    `True solar time (birth time adjusted to the sun's real position): ${r.tstStr}`
                 ];
                 if (r.status === 'gap') lines.push('Note: that clock time did not exist locally (daylight saving jump); it was shifted forward by one hour.');
                 if (r.status === 'ambiguous') lines.push('Note: that clock time occurred twice locally (daylight saving ends); the first occurrence was used.');
@@ -1663,7 +1662,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 if (r.luck && r.luck.items.length) {
                     const L = r.luck;
                     document.getElementById('luckNote').textContent =
-                        `${L.forward ? 'Forward' : 'Backward'} cycle · first luck pillar begins at age ${L.startYears}y ${L.startMonths}m ${L.startDays}d`;
+                        `Your first 10-year life cycle begins at age ${L.startYears} years, ${L.startMonths} months`;
                     L.items.slice(0, 9).forEach(it => {
                         const stem = it.ganzhi.charAt(0), branch = it.ganzhi.charAt(1);
                         const element = ELEMENT_MAP[stem] || 'Fire';
@@ -1680,8 +1679,8 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                     });
                     luckSection.style.display = 'block';
                     lines.push(L.current
-                        ? `Current 10-year luck pillar: ${L.current.ganzhi} (${L.current.startYear}–${L.current.endYear}, age ${L.current.startAge}–${L.current.endAge})`
-                        : `Current 10-year luck pillar: not started yet (first one begins in ${L.firstStartYear})`);
+                        ? `Current 10-year life cycle: ${cname(L.current.ganzhi)} (${L.current.startYear}–${L.current.endYear}, age ${L.current.startAge}–${L.current.endAge})`
+                        : `Current 10-year life cycle: not started yet (the first begins in ${L.firstStartYear})`);
                 } else {
                     luckSection.style.display = 'none';
                 }
@@ -1787,11 +1786,12 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 localStorage.removeItem('pending_bazi_user');
                 updateStickyPay();
                 document.getElementById('aiReportContainer').style.display = 'none';
-                document.getElementById('shopifyCta').style.display = 'block';
+                if (new URLSearchParams(location.search).get('paid') !== 'true') document.getElementById('shopifyCta').style.display = 'block';
             }
 
             function handleGoToPayment(event) {
                 localStorage.setItem('pending_bazi_user', JSON.stringify(buildFormData()));
+                try { localStorage.setItem('bazi_order_id', 'o' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8)); } catch (e) {}
             }
 
             // Build a personal PDF filename from the saved birth data (date + city).
@@ -1873,33 +1873,44 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
             // Share the free chart page: native share sheet → clipboard API →
             // legacy copy fallback → manual prompt. Every path gives visible feedback.
             async function shareWithFriend(evt) {
-                const url = location.origin + location.pathname;
-                const full = 'I just generated my free BaZi (Four Pillars) chart. Check yours: ' + url;
-                const btn = evt && evt.currentTarget ? evt.currentTarget : document.getElementById('shareBtn');
-                const flash = (msg) => {
-                    if (!btn) return;
-                    if (!btn.dataset.old) btn.dataset.old = btn.innerHTML;
-                    btn.innerHTML = msg;
-                    setTimeout(() => { btn.innerHTML = btn.dataset.old; }, 2600);
-                };
-                let shared = false;
-                try {
-                    if (navigator.share) { await navigator.share({ title: 'Free BaZi Chart Reading', text: full, url }); shared = true; }
-                } catch (e) { shared = false; } // user cancelled or share unsupported → fall through to copy
-                if (shared) return;
-                try {
-                    await navigator.clipboard.writeText(full);
-                    flash('&#10003; Link copied — paste it to share'); return;
-                } catch (e) {}
-                try {
-                    const ta = document.createElement('textarea');
-                    ta.value = full;
-                    ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none;';
-                    document.body.appendChild(ta); ta.focus(); ta.select();
-                    document.execCommand('copy'); ta.remove();
-                    flash('&#10003; Link copied — paste it to share'); return;
-                } catch (e) {}
-                prompt('Copy this link to share:', url);
+                const url = (location.origin && location.origin !== 'null') ? location.origin + location.pathname : location.href;
+                const text = 'I just generated my free BaZi (Four Pillars) chart. Check yours:';
+                const btn = (evt && evt.currentTarget) || document.getElementById('shareBtn');
+                // 1) Native share sheet (most phones). Cancelling it does nothing else.
+                if (navigator.share) {
+                    try { await navigator.share({ title: 'Free BaZi Chart Reading', text, url }); return; }
+                    catch (e) { if (e && e.name === 'AbortError') return; }
+                }
+                // 2) Copy to clipboard, checking that it really worked
+                let copied = false;
+                try { await navigator.clipboard.writeText(text + ' ' + url); copied = true; } catch (e) {}
+                if (!copied) {
+                    try {
+                        const ta = document.createElement('textarea');
+                        ta.value = text + ' ' + url; ta.setAttribute('readonly', '');
+                        ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+                        document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, 99999);
+                        copied = document.execCommand('copy'); ta.remove();
+                    } catch (e) {}
+                }
+                // 3) Always show a visible panel with share links (works inside in-app browsers too)
+                const old = document.getElementById('sharePanel'); if (old) old.remove();
+                const enc = encodeURIComponent, t = enc(text), u = enc(url);
+                const panel = document.createElement('div');
+                panel.id = 'sharePanel'; panel.className = 'share_panel';
+                panel.innerHTML = `<div class="sp_msg">${copied ? '&#10003; Link copied. Paste it to share.' : 'Copy this link to share:'}</div>
+                    <input class="sp_input" type="text" readonly value="${url}" onfocus="this.select()" aria-label="Page link">
+                    <div class="sp_links">
+                        <a href="https://wa.me/?text=${t}%20${u}" target="_blank" rel="noopener">WhatsApp</a>
+                        <a href="https://t.me/share/url?url=${u}&text=${t}" target="_blank" rel="noopener">Telegram</a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=${u}" target="_blank" rel="noopener">Facebook</a>
+                        <a href="https://twitter.com/intent/tweet?text=${t}&url=${u}" target="_blank" rel="noopener">X</a>
+                        <a href="sms:?&body=${t}%20${u}">Text</a>
+                        <a href="mailto:?subject=${enc('Free BaZi Chart Reading')}&body=${t}%20${u}">Email</a>
+                    </div>`;
+                const anchor = btn ? (btn.closest('.report_actions') || btn) : document.body;
+                anchor.insertAdjacentElement('afterend', panel);
+                const inp = panel.querySelector('.sp_input'); if (inp && !copied) { inp.focus(); inp.select(); }
             }
 
             // Force English text for the browser's built-in form validation bubbles
@@ -1923,6 +1934,78 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                     el.addEventListener('input', () => el.setCustomValidity(''));
                     el.addEventListener('change', () => el.setCustomValidity(''));
                 });
+            }
+
+            // ---------- Paid-return report flow ----------
+            function cleanReportHtml(raw) {
+                return String(raw || '').replace(/&lt;b&gt;/g, '<b>').replace(/&lt;\/b&gt;/g, '</b>')
+                    .replace(/<\s*(script|iframe|object|embed|style)[\s\S]*?<\s*\/\s*\1\s*>/gi, '')
+                    .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+            }
+            function reportUi() {
+                return { loading: document.getElementById('loadingBox'), final: document.getElementById('finalReportBox'),
+                         content: document.getElementById('reportDirectContent'), status: document.getElementById('statusConsole') };
+            }
+            function showReportHtml(html, email) {
+                const u = reportUi(); u.loading.style.display = 'none'; u.final.style.display = 'block'; u.content.innerHTML = html;
+                const p = document.getElementById('targetEmailText') && document.getElementById('targetEmailText').parentNode;
+                if (p) p.innerHTML = email ? '&#10003; A copy has also been emailed to <b>' + email.replace(/</g, '&lt;') + '</b>' : '&#10003; Your report is ready. You can also save it with the PDF button.';
+            }
+            function showReportNotice(msg, retryFn) {
+                const u = reportUi(); u.loading.style.display = 'none'; u.final.style.display = 'block';
+                u.content.innerHTML = '<p>' + msg + '</p>' + (retryFn ? '<p><button type="button" class="share_btn report_share" id="reportRetryBtn">Check again</button></p>' : '');
+                const b = document.getElementById('reportRetryBtn'); if (b) b.onclick = () => { u.final.style.display = 'none'; u.loading.style.display = 'block'; retryFn(); };
+            }
+            function parseMaybeJson(text) { try { return JSON.parse(text); } catch (e) { return null; } }
+
+            async function pollReport(id, email, tries) {
+                const delay = ms => new Promise(r => setTimeout(r, ms));
+                for (let n = 0; n < (tries || 80); n++) {          // ~8 minutes at 6s
+                    try {
+                        const res = await fetch(REPORT_STATUS_URL + (REPORT_STATUS_URL.includes('?') ? '&' : '?') + 'orderId=' + encodeURIComponent(id), { cache: 'no-store' });
+                        const d = parseMaybeJson(await res.text());
+                        if (d && d.report) { const html = cleanReportHtml(d.report); try { localStorage.setItem('bazi_report_cache', JSON.stringify({ id, html })); } catch (e) {} showReportHtml(html, email); return; }
+                        if (d && d.status === 'failed') break;
+                    } catch (e) {}
+                    await delay(6000);
+                }
+                showReportNotice('Your report is taking longer than usual. Please do not pay again. Keep this page, then tap "Check again" in a minute.' + (email ? ' A copy will also be emailed to ' + email.replace(/</g, '&lt;') + '.' : ''), () => pollReport(id, email, 40));
+            }
+
+            async function startReport(userData) {
+                const u = reportUi(), box = document.getElementById('aiReportContainer');
+                box.style.display = 'block'; u.loading.style.display = 'block'; u.final.style.display = 'none';
+                let id = null; try { id = localStorage.getItem('bazi_order_id'); } catch (e) {}
+                if (!id) { id = 'o' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); try { localStorage.setItem('bazi_order_id', id); } catch (e) {} }
+                const email = (userData && userData.email) || '';
+                let cached = null; try { cached = JSON.parse(localStorage.getItem('bazi_report_cache') || 'null'); } catch (e) {}
+                if (cached && cached.id === id && cached.html) { showReportHtml(cached.html, email); return; }
+                const startedKey = 'bazi_started_' + id;
+                let started = false; try { started = !!localStorage.getItem(startedKey); } catch (e) {}
+                if (!started) {
+                    try { localStorage.setItem(startedKey, '1'); } catch (e) {}
+                    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 45000);
+                    try {
+                        const res = await fetch(MAKE_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(Object.assign({}, userData, { orderId: id })), signal: ctl.signal });
+                        const d = parseMaybeJson(await res.text());
+                        if (d && d.report) { const html = cleanReportHtml(d.report); try { localStorage.setItem('bazi_report_cache', JSON.stringify({ id, html })); } catch (e) {} showReportHtml(html, email); return; }
+                    } catch (e) { /* slow or unreadable response: the job may still be running */ }
+                    finally { clearTimeout(timer); }
+                }
+                if (REPORT_STATUS_URL) { pollReport(id, email); return; }
+                showReportNotice('Thank you for your order. Your report is being prepared' + (email ? ' and will be emailed to ' + email.replace(/</g, '&lt;') : '') + '. Please do not pay again. If nothing arrives after a while, check your spam folder or reply to your Gumroad receipt email for help.', null);
+            }
+
+            function initPaidReturn(userData) {
+                const shopifyCta = document.getElementById('shopifyCta'), box = document.getElementById('aiReportContainer');
+                if (shopifyCta) shopifyCta.style.display = 'none';
+                box.style.display = 'block'; box.scrollIntoView({ behavior: 'smooth' });
+                if (userData && userData.birthData && userData.birthData.year) { startReport(userData); return; }
+                // Paid in a different browser/app than the one used for the chart: let the customer rebuild it.
+                showReportNotice('Thank you for your order! We could not find your saved chart in this browser (this can happen when checkout opens in another app). Please enter your birth details above, tap <b>Calculate Chart</b>, then press the button below to show your report.<br><br><button type="button" class="share_btn report_share" id="recoverBtn">Show My Report</button>', null);
+                const rb = document.getElementById('recoverBtn');
+                if (rb) rb.onclick = () => { if (!lastCalc) { rb.textContent = 'Please calculate your chart first'; return; } startReport(buildFormData()); };
             }
 
             window.addEventListener('DOMContentLoaded', () => {
@@ -1964,63 +2047,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 const urlParams = new URLSearchParams(window.location.search);
                 const isPaid = urlParams.get('paid');
 
-                if (isPaid === 'true') {
-                    const shopifyCta = document.getElementById('shopifyCta');
-                    const reportBox = document.getElementById('aiReportContainer');
-                    const loadingBox = document.getElementById('loadingBox');
-                    const finalReportBox = document.getElementById('finalReportBox');
-                    
-                    if(shopifyCta) shopifyCta.style.display = 'none';
-                    if(reportBox) reportBox.style.display = 'block';
-                    loadingBox.style.display = 'block';
-                    finalReportBox.style.display = 'none';
-
-                    let targetEmail = document.getElementById('email').value.trim();
-                    if(!targetEmail && userData) targetEmail = userData.email;
-                    targetEmail = targetEmail || "the email you used at checkout";
-                    document.getElementById('targetEmailText').innerText = targetEmail;
-
-                    reportBox.scrollIntoView({ behavior: 'smooth' });
-
-                    const ukey = userData ? JSON.stringify(userData) : '';
-                    let cached = null; try { cached = JSON.parse(localStorage.getItem('bazi_report_cache') || 'null'); } catch (e) {}
-                    if (userData && cached && cached.key === ukey && cached.html) {
-                        loadingBox.style.display = 'none'; finalReportBox.style.display = 'block';
-                        document.getElementById('reportDirectContent').innerHTML = cached.html;
-                    } else if (userData) {
-                        fetch(MAKE_WEBHOOK_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(userData)
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            loadingBox.style.display = 'none';
-                            finalReportBox.style.display = 'block';
-                            
-                            if (data && data.report) {
-                                let rawReport = data.report;
-                                let cleanedReport = rawReport
-                                    .replace(/&lt;b&gt;/g, '<b>')
-                                    .replace(/&lt;\/b&gt;/g, '</b>');
-
-                                document.getElementById('reportDirectContent').innerHTML = cleanedReport;
-                                try { localStorage.setItem('bazi_report_cache', JSON.stringify({ key: ukey, html: cleanedReport })); } catch (e) {}
-                            } else {
-                                document.getElementById('reportDirectContent').innerText = "Thank you for your order. We could not display your report here. It will be emailed to " + targetEmail + ". If it has not arrived after a while, please check your spam folder or reply to your Gumroad receipt email for help.";
-                            }
-                        })
-                        .catch(err => {
-                            loadingBox.style.display = 'none';
-                            finalReportBox.style.display = 'block';
-                            document.getElementById('reportDirectContent').innerText = "We could not generate your report on this page right now. Please do not pay again. Check your email (" + targetEmail + ") and spam folder, or reply to your Gumroad receipt email for help.";
-                        });
-                    } else {
-                        loadingBox.style.display = 'none';
-                        finalReportBox.style.display = 'block';
-                        document.getElementById('reportDirectContent').innerText = "Thank you for your order. Please check your email for your report. If you need help, reply to your Gumroad receipt email.";
-                    }
-                }
+                if (isPaid === 'true') initPaidReturn(userData);
             });
         </script>
     </body>
