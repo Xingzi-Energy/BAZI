@@ -11,8 +11,9 @@
         <meta property="og:title" content="Free BaZi Chart Reading | Accurate Four Pillars of Destiny Report" />
         <meta property="og:description" content="See your personal BaZi chart preview free. A personalized Four Pillars reading calculated with true solar time from your exact birth moment." />
         <meta property="og:locale" content="en_US" />
+        <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%237d1d1a'/%3E%3Ctext x='16' y='23' font-size='18' text-anchor='middle' fill='%23f1dca0' font-family='serif'%3E%E5%85%AB%3C/text%3E%3C/svg%3E" />
         <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
         <style>
             :root {
                 --color_primary: #d6b25e;
@@ -465,6 +466,7 @@
             .lock_row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px; background:rgba(0,0,0,.3); border:1px dashed rgba(214,178,94,.35); font-size:.9rem; color:var(--text_primary); }
             .lock_row svg { flex:0 0 16px; width:16px; height:16px; fill:none; stroke:var(--color_primary); stroke-width:2; }
             .lock_row span { flex:1; }
+            .lock_row em { flex:0 0 auto; font-style: normal; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--color_primary); opacity: .85; }
             .lock_row i { flex:0 0 clamp(60px,14vw,130px); height:9px; border-radius:99px; background:linear-gradient(90deg,rgba(214,178,94,.5),rgba(214,178,94,.15)); filter:blur(3px); }
             .snap_note { margin-top:12px; color:var(--text_secondary); font-size:.8rem; line-height:1.6; font-style: normal; }
             .snap_cta_row { margin-top:30px; padding:22px; text-align:center; border-radius:12px; background:linear-gradient(160deg,rgba(125,29,26,.4),rgba(20,11,9,.9)); border:1px solid rgba(214,178,94,.5); }
@@ -712,7 +714,7 @@
                                 <span>Visa &middot; Mastercard &middot; PayPal &middot; Apple Pay</span>
                                 <span>One-time payment &middot; No subscription</span>
                             </div>
-                            <button type="button" class="share_btn" id="shareBtn" onclick="shareWithFriend()">&#8686; Share this free chart with a friend</button>
+                            <button type="button" class="share_btn" id="shareBtn" onclick="shareWithFriend(event)">&#8686; Share this free chart with a friend</button>
                             <div class="cta_receive">
                                 <div class="receive_title">What you receive after checkout</div>
                                 <ul>
@@ -763,7 +765,7 @@
                                     <p style="font-size: 0.95rem; color: #5c4a42;">✓ This report has also been sent to <span id="targetEmailText" style="font-weight: bold;"></span></p>
                                     <div class="report_actions">
                                         <button type="button" id="pdfBtn" class="pdf_btn" onclick="downloadReportPdf()">&#8681; Download PDF Copy</button>
-                                        <button type="button" class="share_btn report_share" onclick="shareWithFriend()">&#8686; Share with a friend</button>
+                                        <button type="button" class="share_btn report_share" onclick="shareWithFriend(event)">&#8686; Share with a friend</button>
                                     </div>
                                 </div>
                                 <div id="reportDirectContent" class="report_content_text"></div>
@@ -1473,7 +1475,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
             function levelOf(t) { return t <= 0 ? 'Not present' : t < 1.5 ? 'Light presence' : t < 3 ? 'Moderate presence' : 'Prominent presence'; }
 
             const LOCK_SVG = '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>';
-            const lock = items => `<div class="lock_list">${items.map(t => `<div class="lock_row">${LOCK_SVG}<span>${t}</span><i></i></div>`).join('')}</div>`;
+            const lock = items => `<div class="lock_list">${items.map(t => `<div class="lock_row">${LOCK_SVG}<span>${t}</span><em>Unlocks in full report</em><i></i></div>`).join('')}</div>`;
             const GAN = '甲乙丙丁戊己庚辛壬癸', ZHI = '子丑寅卯辰巳午未申酉戌亥';
 
             const REL2 = {
@@ -1804,24 +1806,63 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 return 'my-bazi-report.pdf';
             }
 
-            // Download the rendered report as a PDF from this page.
-            // Falls back to the browser print dialog (Save as PDF) if the library fails to load.
+            // Download the rendered report as a real, selectable-text PDF (jsPDF typesets
+            // the report directly — no screenshot, so nothing comes out blank).
+            // Falls back to the browser print dialog if jsPDF fails to load.
             async function downloadReportPdf() {
                 const el = document.getElementById('reportDirectContent');
                 const btn = document.getElementById('pdfBtn');
-                if (!el) return;
+                if (!el || !el.innerHTML.trim()) { alert('Your report is still loading. Please wait a moment.'); return; }
                 const setBtn = (txt, disabled) => { if (btn) { btn.disabled = disabled; btn.innerHTML = txt; } };
                 setBtn('Preparing PDF&hellip;', true);
                 try {
-                    if (typeof html2pdf === 'undefined') { window.print(); return; }
-                    const opt = {
-                        margin: [12, 12, 14, 12],
-                        filename: reportFileName(),
-                        image: { type: 'jpeg', quality: 0.95 },
-                        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#f4ebd0', windowWidth: 1100 },
-                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    if (!window.jspdf || !window.jspdf.jsPDF) { window.print(); return; }
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+                    const M = 16, W = 210, H = 297, UW = W - M * 2;
+                    let y = 24;
+
+                    // Title block (first page)
+                    doc.setFont('helvetica', 'bold'); doc.setFontSize(18); doc.setTextColor(110, 31, 42);
+                    doc.text('Personal BaZi & Strategic Life Blueprint', M, y);
+                    y += 8;
+                    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(110, 110, 110);
+                    doc.text('Generated from your exact birth chart · For reflection and personal insight', M, y);
+                    y += 6;
+                    doc.setDrawColor(201, 162, 75); doc.setLineWidth(0.6); doc.line(M, y, W - M, y);
+                    y += 10;
+
+                    const needPage = (n) => { if (y + n > H - M) { doc.addPage(); y = M + 4; } };
+                    const para = (text, opts) => {
+                        const size = (opts && opts.size) || 11;
+                        const lead = (opts && opts.lead) || 0;
+                        const c = (opts && opts.color) || [45, 35, 30];
+                        doc.setFont('helvetica', (opts && opts.bold) ? 'bold' : 'normal');
+                        doc.setFontSize(size);
+                        doc.setTextColor(c[0], c[1], c[2]);
+                        const lines = doc.splitTextToSize(String(text || ''), UW);
+                        needPage(lines.length * (size === 15 ? 8 : 6) + 4);
+                        doc.text(lines, M, y + lead);
+                        y += lines.length * (size === 15 ? 8 : 6) + (opts && opts.gap != null ? opts.gap : 3.5);
                     };
-                    await html2pdf().set(opt).from(el).save();
+
+                    Array.from(el.children).forEach(node => {
+                        const tag = node.tagName;
+                        if (tag === 'H2') {
+                            para(node.textContent, { size: 15, bold: true, color: [110, 31, 42], gap: 5 });
+                        } else if (tag === 'H3') {
+                            para(node.textContent, { size: 12.5, bold: true, color: [138, 106, 47], gap: 4 });
+                        } else if (tag === 'UL' || tag === 'OL') {
+                            Array.from(node.children).forEach(li => {
+                                para('•  ' + li.textContent, { size: 11, gap: 2.5 });
+                            });
+                            y += 2;
+                        } else {
+                            para(node.textContent, { size: 11, gap: 3.5 });
+                        }
+                    });
+
+                    doc.save(reportFileName());
                 } catch (e) {
                     window.print();
                 } finally {
@@ -1829,29 +1870,36 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 }
             }
 
-            // Share the free chart page via the native share sheet;
-            // fall back to copying the link when Web Share is unavailable.
-            async function shareWithFriend() {
+            // Share the free chart page: native share sheet → clipboard API →
+            // legacy copy fallback → manual prompt. Every path gives visible feedback.
+            async function shareWithFriend(evt) {
                 const url = location.origin + location.pathname;
-                const shareData = {
-                    title: 'Free BaZi Chart Reading',
-                    text: 'I just generated my free BaZi (Four Pillars) chart. Check yours:',
-                    url: url
+                const full = 'I just generated my free BaZi (Four Pillars) chart. Check yours: ' + url;
+                const btn = evt && evt.currentTarget ? evt.currentTarget : document.getElementById('shareBtn');
+                const flash = (msg) => {
+                    if (!btn) return;
+                    if (!btn.dataset.old) btn.dataset.old = btn.innerHTML;
+                    btn.innerHTML = msg;
+                    setTimeout(() => { btn.innerHTML = btn.dataset.old; }, 2600);
                 };
-                const btn = document.getElementById('shareBtn');
+                let shared = false;
                 try {
-                    if (navigator.share) { await navigator.share(shareData); return; }
-                } catch (e) { return; } // user cancelled the share sheet
+                    if (navigator.share) { await navigator.share({ title: 'Free BaZi Chart Reading', text: full, url }); shared = true; }
+                } catch (e) { shared = false; } // user cancelled or share unsupported → fall through to copy
+                if (shared) return;
                 try {
-                    await navigator.clipboard.writeText(shareData.text + ' ' + shareData.url);
-                    if (btn) {
-                        const old = btn.innerHTML;
-                        btn.innerHTML = '&#10003; Link copied — paste it to share';
-                        setTimeout(() => { btn.innerHTML = old; }, 2500);
-                    }
-                } catch (e) {
-                    prompt('Copy this link to share:', shareData.url);
-                }
+                    await navigator.clipboard.writeText(full);
+                    flash('&#10003; Link copied — paste it to share'); return;
+                } catch (e) {}
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = full;
+                    ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none;';
+                    document.body.appendChild(ta); ta.focus(); ta.select();
+                    document.execCommand('copy'); ta.remove();
+                    flash('&#10003; Link copied — paste it to share'); return;
+                } catch (e) {}
+                prompt('Copy this link to share:', url);
             }
 
             // Force English text for the browser's built-in form validation bubbles
