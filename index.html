@@ -232,7 +232,7 @@
             .report_content_text h3 {
                 font-family: 'Merriweather', 'Georgia', serif;
                 font-size: 17px !important;
-                font-style: italic;
+                font-style: normal;
                 font-weight: normal;
                 color: #8a6a2f;
                 margin: 22px 0 8px 0;
@@ -276,7 +276,7 @@
             .intro_tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 760px; margin: 0 auto 6px; }
             .intro_tags span { padding: 7px 14px; border: 1px solid oklch(1 0 0 / 0.28); border-radius: 999px; font-size: 0.85rem; color: var(--text_primary); background: oklch(0 0 0 / 0.2); }
             .intro_cta { color: var(--color_primary); font-weight: bold; font-size: 1.05rem; margin: 26px 0 16px; }
-            .intro_disclaimer { color: var(--text_secondary); font-size: 0.78rem; line-height: 1.6; max-width: 720px; margin: 0 auto; font-style: italic; }
+            .intro_disclaimer { color: var(--text_secondary); font-size: 0.78rem; line-height: 1.6; max-width: 720px; margin: 0 auto; font-style: normal; }
             @media (min-width: 900px) {
                 .intro_grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
                 .intro_item { flex-direction: column; gap: 10px; padding: 22px 20px; }
@@ -421,7 +421,7 @@
             .unlock_item h5 { color:var(--color_primary_light); font-size:1rem; margin-bottom:6px; font-weight:600; }
             .unlock_item p { color:var(--text_secondary); font-size:.86rem; line-height:1.6; }
             .unlock_item svg { position:absolute; top:16px; right:16px; width:16px; height:16px; fill:none; stroke:var(--color_primary); stroke-width:2; opacity:.8; }
-            .snap_disclaimer { margin-top:22px; color:var(--text_secondary); font-size:.78rem; line-height:1.6; font-style:italic; text-align:center; }
+            .snap_disclaimer { margin-top:22px; color:var(--text_secondary); font-size:.78rem; line-height:1.6; font-style: normal; text-align:center; }
             .snap_hl { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-top:16px; }
             .snap_hl div { padding:14px 16px; border-radius:10px; background:rgba(181,48,42,.16); border:1px solid rgba(217,84,74,.35); }
             .snap_hl small { display:block; font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:#e9b3ac; margin-bottom:4px; }
@@ -431,16 +431,36 @@
             .lock_row svg { flex:0 0 16px; width:16px; height:16px; fill:none; stroke:var(--color_primary); stroke-width:2; }
             .lock_row span { flex:1; }
             .lock_row i { flex:0 0 clamp(60px,14vw,130px); height:9px; border-radius:99px; background:linear-gradient(90deg,rgba(214,178,94,.5),rgba(214,178,94,.15)); filter:blur(3px); }
-            .snap_note { margin-top:12px; color:var(--text_secondary); font-size:.8rem; line-height:1.6; font-style:italic; }
+            .snap_note { margin-top:12px; color:var(--text_secondary); font-size:.8rem; line-height:1.6; font-style: normal; }
             .snap_cta_row { margin-top:30px; padding:22px; text-align:center; border-radius:12px; background:linear-gradient(160deg,rgba(125,29,26,.4),rgba(20,11,9,.9)); border:1px solid rgba(214,178,94,.5); }
             .snap_cta_row p { color:var(--color_primary_light); font-family:var(--font_serif); font-size:1.1rem; line-height:1.5; margin-bottom:14px; }
             .snap_cta { display:inline-block; padding:13px 30px; border-radius:8px; font-weight:bold; text-decoration:none; color:#fbeccb; background:linear-gradient(45deg,var(--cinnabar_deep),var(--cinnabar)); border:1px solid var(--color_primary); box-shadow:0 4px 16px rgba(181,48,42,.35); }
             .snap_cta_row small { display:block; margin-top:10px; color:var(--text_secondary); font-size:.78rem; }
             @media (max-width:600px) { .snap_cta { display:block; } }
+            .snap_sec.money { padding:22px 18px 20px; border:1px solid rgba(214,178,94,.6); border-radius:14px; background:radial-gradient(600px 240px at 50% 0%,rgba(214,178,94,.14),transparent 70%),rgba(0,0,0,.25); box-shadow:0 0 28px rgba(214,178,94,.12); }
+            .money_hero { display:grid; grid-template-columns:minmax(0,260px) 1fr; gap:20px; align-items:center; padding:18px; border-radius:12px; background:linear-gradient(145deg,rgba(125,29,26,.45),rgba(30,16,12,.8)); border:1px solid rgba(214,178,94,.45); margin-bottom:14px; }
+            .money_hero small { color:#f0c9a0; font-size:.72rem; letter-spacing:.18em; font-weight:700; }
+            .money_big { font-family:var(--font_serif); font-size:2.4rem; color:var(--color_primary_light); line-height:1.15; margin:4px 0 10px; }
+            .gauge { display:flex; gap:6px; } .gauge i { flex:1; height:10px; border-radius:99px; background:rgba(255,255,255,.12); } .gauge i.on { background:linear-gradient(90deg,#b8923a,#f1dca0); box-shadow:0 0 8px rgba(241,220,160,.4); }
+            .gauge_label { margin-top:8px; font-size:.88rem; color:var(--text_secondary); }
+            .money_hero p { color:var(--text_primary); font-size:1rem; line-height:1.75; }
+            .money_chip { padding:14px 16px; border-radius:10px; background:rgba(0,0,0,.3); border:1px solid rgba(214,178,94,.2); }
+            .money_chip.on { border-color:var(--color_primary); background:rgba(214,178,94,.1); }
+            .money_chip b { display:block; font-size:.74rem; letter-spacing:.12em; text-transform:uppercase; color:var(--color_primary); margin-bottom:4px; }
+            .money_chip span { display:block; font-family:var(--font_serif); font-size:1.15rem; color:var(--text_primary); }
+            .money_chip u { display:block; text-decoration:none; margin-top:4px; font-size:.9rem; color:var(--text_secondary); }
+            .money_chip.on u { color:var(--color_primary_light); }
+            @media (max-width:600px) { .intro_card .intro_item { flex-direction: column; gap: 4px; } }
+            @media (max-width:700px) { .money_hero { grid-template-columns:1fr; gap:12px; padding:16px 14px; } .money_big { font-size:2.1rem; } .snap_sec.money { padding:18px 12px; } .money_chip u, .gauge_label { font-size:.95rem; } }
             @media (max-width:560px) { .snap_day { flex-direction:column; text-align:center; } .snap_tags { justify-content:center; } .snap_label b { font-size:1.5rem; } }
 
             .intro_card .intro_tags { margin: 18px 0 20px; justify-content: center; }
             .intro_card .intro_cta { font-weight: 400; font-size: .95rem; color: var(--text_secondary); margin: 16px 0 0; }
+            .intro_head { font-family:var(--font_serif); font-size:1.35rem; color:var(--color_primary_light); margin:2px 0 14px; text-align:center; }
+            .intro_card .intro_item h3 { font-size:1.2rem !important; }
+            .intro_card .intro_item p { font-size:1.08rem !important; line-height:1.75 !important; }
+            .intro_card .intro_lead { font-size:1.15rem !important; }
+            .intro_card .intro_disclaimer { font-size:.92rem !important; }
             .intro_more { margin-top:16px; text-align:left; color:var(--text_secondary); font-size:.95rem; line-height:1.7; }
             .intro_more summary, .trust_card summary { cursor:pointer; color:var(--color_primary_light); font-weight:600; padding:10px 0; }
             .intro_more p, .trust_card p { padding:0 0 10px; }
@@ -524,16 +544,33 @@
                 <div class="intro_eyebrow">八字 &middot; The Four Pillars of Destiny</div>
                 <h2>Discover the Hidden Patterns Behind Your Life</h2>
                 <p class="intro_lead">Explore your natural strengths, career and wealth tendencies, relationship patterns, and timing themes through your personal BaZi chart.</p>
-                <div class="intro_tags"><span>Personalized Analysis</span><span>Four Pillars Calculation</span><span>10-Year Life Cycles</span></div>
                 <a href="#enterDetails" class="intro_jump">Generate My Free Destiny Snapshot &rarr;</a>
                 <p class="intro_cta">Start with your birth details. Preview your personal chart before deciding whether to unlock the complete report.</p>
                 <div class="intro_divider">&#10022;</div>
+                <div class="intro_head">What is BaZi?</div>
                 <div class="intro_grid">
-                    <div class="intro_item"><div class="intro_num">01</div><div><h3>Enter Your Birth Details</h3><p>Your birth date, time, and place.</p></div></div>
-                    <div class="intro_item"><div class="intro_num">02</div><div><h3>Discover Your Personal Chart</h3><p>See your Four Pillars and a free personalized snapshot.</p></div></div>
-                    <div class="intro_item"><div class="intro_num">03</div><div><h3>Unlock Your Complete Blueprint</h3><p>Get your full personal report after checkout.</p></div></div>
+                    <div class="intro_item">
+                        <div class="intro_num">01</div>
+                        <div>
+                            <h3>Depth Beyond a Sun Sign</h3>
+                            <p>A sun sign draws on a single factor. BaZi reads four layers of your birth, the year, month, day, and hour, as Four Pillars, then interprets how the Five Elements within them (Wood, Fire, Earth, Metal, and Water) interact.</p>
+                        </div>
+                    </div>
+                    <div class="intro_item">
+                        <div class="intro_num">02</div>
+                        <div>
+                            <h3>A Chart Unique to You</h3>
+                            <p>Every BaZi chart is calculated from your own birth year, month, day, hour, and birthplace, so your reading is personal to you, never a one-size-fits-all horoscope. Your birth city sets true solar time, so the chart is anchored to the sun's real position where you were born.</p>
+                        </div>
+                    </div>
+                    <div class="intro_item">
+                        <div class="intro_num">03</div>
+                        <div>
+                            <h3>A Map of Timing</h3>
+                            <p>Beyond personality, BaZi looks at 10-year Luck Cycles and yearly influences, offering a thoughtful framework for reflecting on career, wealth, relationships, and wellbeing in the years ahead.</p>
+                        </div>
+                    </div>
                 </div>
-                <details class="intro_more"><summary>New to BaZi? What it is</summary><p>BaZi is a traditional Chinese system built around the exact moment you were born. It reads four layers of your birth (year, month, day, hour) as Four Pillars, then looks at how the Five Elements within them interact and how 10-year Luck Cycles unfold. Your birth city sets true solar time, so every chart is personal to you.</p></details>
                 <p class="intro_disclaimer">
                     BaZi is a traditional cultural practice offered for reflection, personal insight, and entertainment.
                     It does not predict events with certainty and is not a substitute for medical, legal, financial, or psychological advice.
@@ -609,25 +646,22 @@
                         </div>
                         
                         <div id="freePreview" class="free_preview" aria-live="polite">
-                            <div class="snap_head">
-                                <div class="preview_kicker">Free Preview</div>
-                                <h3>Your Personal Destiny Snapshot</h3>
-                                <p class="preview_copy">Every observation below is read from your own Four Pillars, so no two charts see exactly the same preview. It points to what your full report explores in depth.</p>
-                            </div>
-                            <section class="snap_sec"><div class="snap_label"><b>01</b><div><h4>Discover Your Inner Nature</h4><span>Your Day Master: the heart of your chart</span></div></div><div id="snapNature"></div></section>
-                            <section class="snap_sec"><div class="snap_label"><b>02</b><div><h4>Beyond Your Day Master</h4><span>What your birth time adds to the picture</span></div></div><div id="snapBeyond"></div></section>
-                            <section class="snap_sec"><div class="snap_label"><b>03</b><div><h4>Your Career &amp; Wealth Potential</h4><span>Directions worth exploring, not conclusions</span></div></div><div id="snapCareer"></div></section>
-<section class="snap_sec"><div class="snap_label"><b>04</b><div><h4>Balance &amp; Daily Rhythm Reflection</h4><span>General lifestyle reflections</span></div></div><div id="snapHealth"></div></section>
-                                                        <section class="snap_sec"><div class="snap_label"><b>05</b><div><h4>What Is Coming Next</h4><span>Your timing, calculated from your chart</span></div></div><div id="snapTiming"></div></section>
+                            <div class="snap_head"><div class="preview_kicker">Free Preview</div><h3>Your Personal Destiny Snapshot</h3>
+                            <p class="preview_copy">Every observation below is read from your own birth chart, so no two previews are the same. It points to what your complete report explores in depth.</p></div>
+                            <section class="snap_sec"><div class="snap_label"><b>01</b><div><h4>Discover Your Inner Nature</h4><span>The core of who you are</span></div></div><div id="snapNature"></div></section>
+                            <section class="snap_sec money"><div class="snap_label"><b>02</b><div><h4>Your Money &amp; Career Potential</h4><span>Your wealth energy and timing</span></div></div><div id="snapMoney"></div></section>
+                            <section class="snap_sec"><div class="snap_label"><b>03</b><div><h4>How Your Birth Chart Is Built</h4><span>What your birth time adds to the picture</span></div></div><div id="snapBeyond"></div></section>
+                            <section class="snap_sec"><div class="snap_label"><b>04</b><div><h4>Balance &amp; Daily Rhythm Reflection</h4><span>General lifestyle reflections</span></div></div><div id="snapHealth"></div></section>
+                            <section class="snap_sec"><div class="snap_label"><b>05</b><div><h4>What Is Coming Next</h4><span>Your timing, calculated from your chart</span></div></div><div id="snapTiming"></div></section>
                             <section class="snap_sec">
                                 <div class="snap_label"><b>06</b><div><h4>What Your Free Preview Does Not Reveal</h4><span>Questions your complete report answers</span></div></div>
                                 <div class="snap_unlock">
-                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">命</div><h5>Chart Deep Analysis</h5><p>Day Master strength, chart structure, Ten Gods, and favorable and challenging elements.</p></div>
-                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">财</div><h5>Wealth &amp; Career Analysis</h5><p>Your wealth pattern, career directions, and the working styles that suit your chart.</p></div>
-                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">运</div><h5>10-Year Luck &amp; Annual Outlook</h5><p>Life-stage themes, notable years, and timing to reflect on.</p></div>
+                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">命</div><h5>Deep Chart Analysis</h5><p>How balanced your chart is, what supports you, and what challenges you.</p></div>
+                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">财</div><h5>Wealth &amp; Career Analysis</h5><p>Your money pattern, career directions, and the working styles that suit you.</p></div>
+                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">运</div><h5>10-Year Cycles &amp; Yearly Outlook</h5><p>Themes for each stage of life, notable years, and timing to reflect on.</p></div>
                                     <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">康</div><h5>Balance &amp; Daily Rhythm Guidance</h5><p>Everyday rest, routine, and balance reflections shaped by your chart.</p></div>
                                     <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">缘</div><h5>Relationship Themes</h5><p>How your chart relates to partnership, family, and the people around you.</p></div>
-                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">策</div><h5>Personal Action Guide</h5><p>Practical reflection points built around your chart's particular features.</p></div>
+                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">策</div><h5>Personal Action Guide</h5><p>Practical reflection points built around your chart.</p></div>
                                 </div>
                             </section>
                             <p class="snap_disclaimer">BaZi is a traditional cultural practice offered for reflection, personal insight, and entertainment. It does not predict events with certainty, and nothing here is medical, legal, financial, or psychological advice.</p>
@@ -1346,92 +1380,104 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
             const lock = items => `<div class="lock_list">${items.map(t => `<div class="lock_row">${LOCK_SVG}<span>${t}</span><i></i></div>`).join('')}</div>`;
             const GAN = '甲乙丙丁戊己庚辛壬癸', ZHI = '子丑寅卯辰巳午未申酉戌亥';
 
+            const REL2 = {
+                same: 'echoes your own nature, which often points to self-reliance and a steady sense of identity.',
+                resource: 'tends to nourish your nature, often linked to learning, mentors, and support.',
+                output: 'draws your nature outward, often linked to creativity, expression, and building skills.',
+                wealth: 'places your nature in a practical, results-focused setting, often linked to resources and material matters.',
+                influence: 'places your nature under structure and responsibility, often linked to discipline and outside expectations.'
+            };
+            const WT = {
+                Earth: 'steady assets, property, and dependable, service-based income',
+                Metal: 'finance, precision work, technology, and well-structured business',
+                Water: 'trade, communication, travel, and flexible, flowing opportunities',
+                Wood: 'growth ventures, education, and creative or people-centered work',
+                Fire: 'visibility-driven work, media, energy, and leading with presence'
+            };
+            const cname = gz => ELEMENT_MAP[gz.charAt(0)] + ' ' + BR[gz.charAt(1)][1];
+
             function renderFreePreview(r) {
-                const P = r.pillars, pn = ['Year', 'Month', 'Day', 'Hour'];
+                const P = r.pillars, pn = ['birth year', 'birth month', 'birth day', 'birth hour'];
                 const dayStem = P[2].pillarStr.charAt(0), dm = ELEMENT_MAP[dayStem], S = STEM[dayStem];
-                const score = {Wood:0,Fire:0,Earth:0,Metal:0,Water:0}, vis = {Wood:0,Fire:0,Earth:0,Metal:0,Water:0};
+                const score = {Wood:0,Fire:0,Earth:0,Metal:0,Water:0};
                 P.forEach(p => {
-                    const s = p.pillarStr.charAt(0), b = p.pillarStr.charAt(1);
-                    vis[ELEMENT_MAP[s]]++; score[ELEMENT_MAP[s]] += 1;
-                    BR[b][4].forEach((h, i) => { score[ELEMENT_MAP[h]] += [1, .5, .3][i]; });
+                    score[ELEMENT_MAP[p.pillarStr.charAt(0)]] += 1;
+                    BR[p.pillarStr.charAt(1)][4].forEach((h, i) => { score[ELEMENT_MAP[h]] += [1, .5, .3][i]; });
                 });
                 const ranked = EL5.slice().sort((a, b) => score[b] - score[a]);
                 const top = ranked[0], low = ranked[4], max = score[top] || 1;
-
-                // 01 Inner nature
-                document.getElementById('snapNature').innerHTML = `
-                    <div class="snap_day"><div class="snap_seal">${dayStem}</div><div>
-                        <h5>${S[0]} · <em>${S[1]}</em></h5>
-                        <p>Your Day Master is ${dayStem} (${S[0]}). In traditional BaZi imagery it is the ${S[1].replace(/^The /, '')}: ${S[2].charAt(0).toLowerCase() + S[2].slice(1)} It speaks to how a person approaches goals, work, and pressure.</p>
-                        <div class="snap_tags">${S[3].split(' · ').map(t => `<span>${t}</span>`).join('')}</div>
-                    </div></div>
-                    <div class="snap_more"><b>Note:</b> This is the classical symbolism of your Day Master. It is a starting point and does not describe your whole personality.</div>`;
-
-                // 02 Beyond day master
-                const mb = P[1].pillarStr.charAt(1), B = BR[mb], rel = REL[relOf(dm, B[0])];
-                const found = [];
-                for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) {
-                    const a = P[i].pillarStr.charAt(1), b = P[j].pillarStr.charAt(1);
-                    if (HARM.some(x => (x[0] === a && x[1] === b) || (x[0] === b && x[1] === a))) found.push(`<b>${pn[i]} ${a}</b> and <b>${pn[j]} ${b}</b> form a <b>harmony</b> (六合), a pairing traditionally read as a binding or supportive link.`);
-                    if (CLASH.some(x => (x[0] === a && x[1] === b) || (x[0] === b && x[1] === a))) found.push(`<b>${pn[i]} ${a}</b> and <b>${pn[j]} ${b}</b> form a <b>clash</b> (六冲), traditionally read as a point of movement or change.`);
-                }
-                const brs = P.map(p => p.pillarStr.charAt(1));
-                TRIAD.forEach(t => { if (t.slice(0, 3).every(x => brs.includes(x))) found.push(`<b>${t[0]}${t[1]}${t[2]}</b> form a <b>three-way harmony</b> (三合) of ${t[3]}.`); });
-                document.getElementById('snapBeyond').innerHTML = `
-                    <div class="snap_grid">
-                        <div class="snap_card"><h5>Your Birth Season</h5><div class="big">${B[3].charAt(0).toUpperCase() + B[3].slice(1)}</div>
-                            <p>Month Pillar <b>${P[1].pillarStr}</b>, the ${B[1]} month (typically ${B[2]}). Its ${B[0]} energy is a <b>${rel[0]}</b> influence for your ${dm} Day Master: ${rel[1]}</p></div>
-                        <div class="snap_card"><h5>Elements in Your Chart</h5>
-                            ${EL5.map(e => `<div class="snap_bar"><span>${e}</span><div><i class="i_${e}" style="width:${Math.round(score[e] / max * 100)}%"></i></div></div>`).join('')}
-                            <p style="margin-top:8px;font-size:.82rem;">Includes visible stems and hidden stems. Most prominent: <b>${top}</b>. ${score[low] === 0 ? `<b>${low}</b> does not appear in the natal chart.` : `Gentlest: <b>${low}</b>.`}</p></div>
-                        <div class="snap_card"><h5>Chart Interactions</h5>
-                            ${found.length ? `<ul>${found.map(f => `<li>${f}</li>`).join('')}</ul>` : `<p>No major harmonies or clashes appear between your four branches. The full report also examines subtler interactions.</p>`}</div>
-                    </div>
-                    ${lock(['Is your Day Master strong or weak?','Your favorable and challenging elements','Your chart structure and Ten Gods'])}`;
-
-                // 03 Career & wealth
-                const we = CTRL[dm], L = r.luck && r.luck.current, lrel = L ? relOf(dm, ELEMENT_MAP[L.ganzhi.charAt(0)]) : null;
-                const luckTxt = L
-                    ? `<div class="big">${L.ganzhi} · ${ELEMENT_MAP[L.ganzhi.charAt(0)]}</div><p>Years ${L.startYear}–${L.endYear} (age ${L.startAge}–${L.endAge}). Its stem is a <b>${REL[lrel][0]}</b> influence for your Day Master. ${lrel === 'wealth' ? 'This is your Wealth element, so wealth-related themes are a natural area to study in the full report.' : 'The full report explores how this cycle interacts with your chart.'}</p>`
-                    : `<div class="big">Not started yet</div><p>Your first 10-year Luck Pillar begins in ${r.luck ? r.luck.firstStartYear : 'a later year'}.</p>`;
-                document.getElementById('snapCareer').innerHTML = `
-                    <div class="snap_grid">
-                        <div class="snap_card"><h5>Working Style Imagery</h5><div class="big">${S[1]}</div><p>Traditionally, a ${S[0]} Day Master ${S[4]}.</p></div>
-                        <div class="snap_card"><h5>Your Wealth Element</h5><div class="big">${we}</div><span class="snap_pill">${levelOf(score[we])}</span><p>${vis[we]} visible stem${vis[we] === 1 ? '' : 's'} in your chart${score[we] === 0 ? '; it may arrive through Luck Pillars.' : ', plus any hidden stems in your branches.'}</p></div>
-                        <div class="snap_card"><h5>Your Current Luck Pillar</h5>${luckTxt}</div>
-                    </div>
-                    <div class="snap_more"><b>One important question remains:</b> does your complete chart support this wealth pattern, or does it call for stronger support from your Luck Pillars? Your full report examines it.</div>${lock(['Your Wealth pattern and best earning style','Career directions that suit your chart','Your most supportive and most demanding career years'])}<p class="snap_note">This preview points to areas for study and draws no conclusions about income or financial outcomes.</p>`;
-
-                // 04 Health
-                const hc = (e, title) => `<div class="snap_card"><h5>${title}</h5><div class="big">${e}</div><p>Traditionally associated with ${HEALTH[e][0]}. Everyday ideas to reflect on:</p><ul>${HEALTH[e][1].map(x => `<li>${x}</li>`).join('')}</ul></div>`;
-                document.getElementById('snapHealth').innerHTML = `
-                    <div class="snap_grid">${hc(top, 'Your Most Prominent Element')}${hc(low, 'A Theme to Nurture')}</div>
-                    <div class="snap_more"><b>General lifestyle reflections only.</b> These ideas are not medical advice and do not diagnose, treat, or suggest any health condition. For any health concern, please consult a licensed healthcare professional.</div>${lock(['Your personalized daily rhythm and seasonal reflections'])}`;
-
-                // 05 Timing + highlights
-                const items = (r.luck && r.luck.items) || [];
+                const items = (r.luck && r.luck.items) || [], L = r.luck && r.luck.current;
                 const ci = L ? items.findIndex(i => i.ganzhi === L.ganzhi && i.startYear === L.startYear) : -1;
                 const nx = items[ci + 1];
                 const now = new Date(); let Y = now.getFullYear();
                 try { const g = Solar.fromDate(now).getLunar().getYearInGanZhiExact(); Y = [Y, Y - 1].find(y => GAN[(y - 4) % 10] + ZHI[(y - 4) % 12] === g) || Y; } catch (e) {}
-                const yg = GAN[(Y - 4) % 10] + ZHI[(Y - 4) % 12], yb = yg.charAt(1), ye = ELEMENT_MAP[yg.charAt(0)];
+                const yg = GAN[(Y - 4) % 10] + ZHI[(Y - 4) % 12], yb = yg.charAt(1);
+                const isW = gz => relOf(dm, ELEMENT_MAP[gz.charAt(0)]) === 'wealth';
+                const pair = (a, b) => [HARM, CLASH].map(list => list.some(x => (x[0] === a && x[1] === b) || (x[1] === a && x[0] === b)));
+                const $ = id => document.getElementById(id);
+
+                // 01 inner nature
+                $('snapNature').innerHTML = `
+                    <div class="snap_day"><div class="snap_seal">${dayStem}</div><div>
+                        <h5>Your core nature: <em>${S[1]}</em></h5>
+                        <p>In traditional BaZi imagery, your core nature is the ${S[1].replace(/^The /, '')}: ${S[2].charAt(0).toLowerCase() + S[2].slice(1)} It shapes how you approach goals, work, and pressure.</p>
+                        <div class="snap_tags">${S[3].split(' · ').map(t => `<span>${t}</span>`).join('')}</div>
+                    </div></div>
+                    <div class="snap_more"><b>Note:</b> This is classical symbolism, a starting point rather than a description of your whole personality.</div>`;
+
+                // 02 money & career
+                const we = CTRL[dm], t = score[we], fill = t <= 0 ? 0 : Math.min(5, Math.max(1, Math.round(t * 1.2)));
+                const chip = (label, gz, extra) => `<div class="money_chip ${isW(gz) ? 'on' : ''}"><b>${label}</b><span>${cname(gz)}${extra}</span><u>${isW(gz) ? 'Brings your money energy to the forefront' : 'Highlights other life themes'}</u></div>`;
+                $('snapMoney').innerHTML = `
+                    <div class="money_hero"><div><small>YOUR MONEY ENERGY</small><div class="money_big">${we}</div>
+                        <div class="gauge">${[1,2,3,4,5].map(k => `<i class="${k <= fill ? 'on' : ''}"></i>`).join('')}</div>
+                        <div class="gauge_label">${levelOf(t)} in your birth chart</div></div>
+                        <p>For your core nature (${S[1]}), <b>${we}</b> is the energy most closely tied to wealth. Money themes that often resonate with it include ${WT[we]}.${t <= 0 ? ' It does not appear in your birth chart itself, so it may arrive through your 10-year cycles.' : ''}</p></div>
+                    <div class="snap_grid">
+                        ${chip('This year · ' + Y, yg, ' year')}
+                        ${L ? chip('Current 10-year cycle', L.ganzhi, ` (${L.startYear}–${L.endYear})`) : ''}
+                        ${nx ? chip('Next 10-year cycle', nx.ganzhi, ` (from ${nx.startYear})`) : ''}
+                    </div>
+                    <div class="snap_grid" style="margin-top:14px"><div class="snap_card"><h5>Your Working Style</h5><div class="big">${S[1]}</div><p>Traditionally, this nature ${S[4]}.</p></div></div>
+                    <div class="snap_more"><b>One important question remains:</b> does your whole chart support this money energy, or does it need help from your 10-year cycles? Your full report examines it.</div>
+                    ${lock(['How strong your overall wealth potential is', 'Your best earning style and career directions', 'Your most promising and most demanding money years'])}
+                    <p class="snap_note">This preview points to areas for reflection and draws no conclusions about income or financial outcomes.</p>`;
+
+                // 03 chart built
+                const mb = P[1].pillarStr.charAt(1), B = BR[mb], rel = REL2[relOf(dm, B[0])];
+                const found = [];
+                for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) {
+                    const [h, c] = pair(P[i].pillarStr.charAt(1), P[j].pillarStr.charAt(1));
+                    if (h) found.push(`Your <b>${pn[i]}</b> and <b>${pn[j]}</b> are in a <b>supportive pairing</b>, traditionally read as ease or cooperation between those parts of life.`);
+                    if (c) found.push(`Your <b>${pn[i]}</b> and <b>${pn[j]}</b> are in <b>tension</b>, traditionally read as a point of change or movement.`);
+                }
+                const brs = P.map(p => p.pillarStr.charAt(1));
+                TRIAD.forEach(x => { if (x.slice(0, 3).every(y => brs.includes(y))) found.push(`Three parts of your chart align to strengthen <b>${x[3]}</b> energy.`); });
+                $('snapBeyond').innerHTML = `<div class="snap_grid">
+                    <div class="snap_card"><h5>Your Birth Season</h5><div class="big">${B[3].charAt(0).toUpperCase() + B[3].slice(1)}</div><p>You were born in the ${B[1]} month (typically ${B[2]}). Its ${B[0]} energy ${rel}</p></div>
+                    <div class="snap_card"><h5>Five Energies in Your Chart</h5>${EL5.map(e => `<div class="snap_bar"><span>${e}</span><div><i class="i_${e}" style="width:${Math.round(score[e] / max * 100)}%"></i></div></div>`).join('')}
+                        <p style="margin-top:8px">Strongest: <b>${top}</b>. ${score[low] === 0 ? `<b>${low}</b> does not appear in your birth chart.` : `Quietest: <b>${low}</b>.`}</p></div>
+                    <div class="snap_card"><h5>How Your Chart Connects</h5>${found.length ? `<ul>${found.map(x => `<li>${x}</li>`).join('')}</ul>` : '<p>No major pairings or tensions appear between the parts of your chart. The full report also looks at subtler links.</p>'}</div></div>
+                    ${lock(['How strong or delicate your core nature is', 'Which energies support you and which challenge you', 'How your whole chart is structured'])}`;
+
+                // 04 balance & rhythm
+                const hc = (e, title) => `<div class="snap_card"><h5>${title}</h5><div class="big">${e}</div><p>Traditionally associated with ${HEALTH[e][0]}. Everyday ideas to reflect on:</p><ul>${HEALTH[e][1].map(x => `<li>${x}</li>`).join('')}</ul></div>`;
+                $('snapHealth').innerHTML = `<div class="snap_grid">${hc(top, 'Your Strongest Energy')}${hc(low, 'A Theme to Nurture')}</div>
+                    <div class="snap_more"><b>General lifestyle reflections only.</b> These ideas are not medical advice and do not diagnose, treat, or suggest any health condition. For any health concern, please consult a licensed healthcare professional.</div>${lock(['Your personalized daily rhythm and seasonal reflections'])}`;
+
+                // 05 timing
                 const hits = [];
-                P.forEach((p, i) => {
-                    const b = p.pillarStr.charAt(1);
-                    if (HARM.some(x => (x[0] === yb && x[1] === b) || (x[1] === yb && x[0] === b))) hits.push(`a <b>harmony</b> with your ${pn[i]} Branch (${b})`);
-                    if (CLASH.some(x => (x[0] === yb && x[1] === b) || (x[1] === yb && x[0] === b))) hits.push(`a <b>clash</b> with your ${pn[i]} Branch (${b})`);
-                });
-                const yearTxt = hits.length ? `The ${Y} year branch ${yb} forms ${hits.join(' and ')}. Years like this are traditionally studied as moments of change or connection.` : `The ${Y} year branch ${yb} makes no direct harmony or clash with your four branches. The full report checks subtler effects.`;
-                document.getElementById('snapTiming').innerHTML = `<div class="snap_grid">
-                    ${nx ? `<div class="snap_card"><h5>Your Next Luck Pillar</h5><div class="big">${nx.ganzhi} · ${ELEMENT_MAP[nx.ganzhi.charAt(0)]}</div><p>Begins in <b>${nx.startYear}</b> (age ${nx.startAge})${L ? `, when your current ${L.ganzhi} pillar ends` : ''}. Luck Pillar changes are traditionally read as shifts in life themes.</p>${lock(['What this transition means for you'])}</div>` : ''}
-                    <div class="snap_card"><h5>Your Current Year Pillar · ${Y}</h5><div class="big">${yg} · ${ye}</div><p>${yearTxt}</p><p style="font-size:.82rem;margin-top:6px">The BaZi year changes at Li Chun, around February 4.</p>${lock([`Your ${Y} annual outlook`])}</div></div>`;
+                P.forEach((p, i) => { const [h, c] = pair(yb, p.pillarStr.charAt(1)); if (h) hits.push(`a <b>supportive link</b> with your ${pn[i]}`); if (c) hits.push(`a <b>point of tension</b> with your ${pn[i]}`); });
+                $('snapTiming').innerHTML = `<div class="snap_grid">
+                    ${nx ? `<div class="snap_card"><h5>Your Next 10-Year Cycle</h5><div class="big">${cname(nx.ganzhi)} cycle</div><p>Begins in <b>${nx.startYear}</b> (age ${nx.startAge})${L ? `, when your current ${cname(L.ganzhi)} cycle ends` : ''}. Changes of cycle are traditionally read as shifts in life themes.</p>${lock(['What this transition means for you'])}</div>` : ''}
+                    <div class="snap_card"><h5>This Year's Energy · ${Y}</h5><div class="big">${cname(yg)} year</div><p>${hits.length ? `This year forms ${hits.join(' and ')}. Years like this are traditionally studied as moments of change or connection.` : 'This year makes no direct pairing or tension with the parts of your chart. The full report looks at subtler effects.'}</p><p style="font-size:.85rem;margin-top:6px">The traditional year changes around February 4.</p>${lock([`Your ${Y} annual outlook`])}</div></div>`;
 
-                document.getElementById('snapNature').innerHTML += `<div class="snap_hl">
+                // highlights under nature
+                $('snapNature').innerHTML += `<div class="snap_hl">
+                    <div><small>Money energy</small><b>${levelOf(t).replace(' presence', '')}</b></div>
                     <div><small>Birth season</small><b>${B[3].charAt(0).toUpperCase() + B[3].slice(1)}</b></div>
-                    <div><small>Interactions</small><b>${found.length ? found.length + ' found' : 'None major'}</b></div>
-                    <div><small>${nx ? 'Next turning point' : 'Year in focus'}</small><b>${nx ? nx.startYear : Y + ' · ' + yg}</b></div></div>`;
-
-                document.getElementById('freePreview').style.display = 'block';
+                    <div><small>${nx ? 'Next turning point' : 'This year'}</small><b>${nx ? nx.startYear : cname(yg)}</b></div></div>`;
+                $('freePreview').style.display = 'block';
             }
 
             async function calculateBaZi() {
