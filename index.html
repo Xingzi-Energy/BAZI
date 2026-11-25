@@ -1438,7 +1438,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 const yearTxt = hits.length ? `The ${Y} year branch ${yb} forms ${hits.join(' and ')}. Years like this are traditionally studied as moments of change or connection.` : `The ${Y} year branch ${yb} makes no direct harmony or clash with your four branches. The full report checks subtler effects.`;
                 document.getElementById('snapTiming').innerHTML = `<div class="snap_grid">
                     ${nx ? `<div class="snap_card"><h5>Your Next Luck Pillar</h5><div class="big">${nx.ganzhi} · ${ELEMENT_MAP[nx.ganzhi.charAt(0)]}</div><p>Begins in <b>${nx.startYear}</b> (age ${nx.startAge})${L ? `, when your current ${L.ganzhi} pillar ends` : ''}. Luck Pillar changes are traditionally read as shifts in life themes.</p>${lock(['What this transition means for you'])}</div>` : ''}
-                    <div class="snap_card"><h5>Your ${Y} Year Pillar</h5><div class="big">${yg} · ${ye}</div><p>${yearTxt}</p>${lock([`Your ${Y} outlook, month by month`])}</div></div>`;
+                    <div class="snap_card"><h5>Your ${Y} Year Pillar</h5><div class="big">${yg} · ${ye}</div><p>${yearTxt}</p>${lock([`Your ${Y} annual outlook`])}</div></div>`;
 
                 document.getElementById('snapNature').innerHTML += `<div class="snap_hl">
                     <div><small>Birth season</small><b>${B[3].charAt(0).toUpperCase() + B[3].slice(1)}</b></div>
