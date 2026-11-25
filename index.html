@@ -439,6 +439,17 @@
             @media (max-width:600px) { .snap_cta { display:block; } }
             @media (max-width:560px) { .snap_day { flex-direction:column; text-align:center; } .snap_tags { justify-content:center; } .snap_label b { font-size:1.5rem; } }
 
+            .intro_card .intro_tags { margin: 18px 0 20px; justify-content: center; }
+            .intro_card .intro_cta { font-weight: 400; font-size: .95rem; color: var(--text_secondary); margin: 16px 0 0; }
+            .intro_more { margin-top:16px; text-align:left; color:var(--text_secondary); font-size:.95rem; line-height:1.7; }
+            .intro_more summary, .trust_card summary { cursor:pointer; color:var(--color_primary_light); font-weight:600; padding:10px 0; }
+            .intro_more p, .trust_card p { padding:0 0 10px; }
+            .price_line { font-family:var(--font_serif); font-size:1.5rem; color:var(--color_primary_light); margin-bottom:14px; }
+            .cta_note { display:block; margin-top:10px; color:var(--text_secondary); font-size:.82rem; }
+            .trust_card { max-width:900px; margin:10px auto 40px; padding:22px; border:1px solid rgba(214,178,94,.3); border-radius:12px; background:rgba(0,0,0,.28); color:var(--text_secondary); line-height:1.7; }
+            .trust_card h3 { font-family:var(--font_serif); font-weight:500; color:var(--color_primary_light); font-size:1.3rem; margin-bottom:8px; }
+            .trust_card details { border-top:1px solid rgba(214,178,94,.2); }
+            @media (max-width:600px) { .trust_card { padding:16px 14px; margin:6px 0 90px; } .intro_item p { font-size:.95rem; } }
             /* ================= MOBILE POLISH (phones first) ================= */
             html { -webkit-text-size-adjust: 100%; }
             body { overflow-wrap: break-word; }
@@ -509,55 +520,20 @@
                 <h1><span>Ba Zi</span><span lang="zh">八字</span></h1>
                 <p class="validation_badge">✓ Calculated with Astronomical & Almanac Precision</p>
             </header>
-            <section class="intro_card" aria-label="About BaZi">
+            <section class="intro_card" aria-label="Your Personal BaZi Destiny Snapshot">
                 <div class="intro_eyebrow">八字 &middot; The Four Pillars of Destiny</div>
-                <h2>An Ancient Chinese System of Self-Understanding</h2>
-                <p class="intro_lead">
-                    BaZi is a traditional Chinese metaphysical system rooted in thousands of years of Chinese calendar science,
-                    cosmology, and philosophy. It is a distinct tradition with its own method, built around the exact moment you were born.
-                </p>
-                <a href="#enterDetails" class="intro_jump">Enter My Birth Details &darr;</a>
-
+                <h2>Discover the Hidden Patterns Behind Your Life</h2>
+                <p class="intro_lead">Explore your natural strengths, career and wealth tendencies, relationship patterns, and timing themes through your personal BaZi chart.</p>
+                <div class="intro_tags"><span>Personalized Analysis</span><span>Four Pillars Calculation</span><span>10-Year Life Cycles</span></div>
+                <a href="#enterDetails" class="intro_jump">Generate My Free Destiny Snapshot &rarr;</a>
+                <p class="intro_cta">Start with your birth details. Preview your personal chart before deciding whether to unlock the complete report.</p>
                 <div class="intro_divider">&#10022;</div>
-
                 <div class="intro_grid">
-                    <div class="intro_item">
-                        <div class="intro_num">01</div>
-                        <div>
-                            <h3>Depth Beyond a Sun Sign</h3>
-                            <p>A sun sign draws on a single factor. BaZi reads four layers of your birth, the year, month, day, and hour, as Four Pillars, then interprets how the Five Elements within them (Wood, Fire, Earth, Metal, and Water) interact.</p>
-                        </div>
-                    </div>
-                    <div class="intro_item">
-                        <div class="intro_num">02</div>
-                        <div>
-                            <h3>A Chart Unique to You</h3>
-                            <p>Every BaZi chart is calculated from your own birth year, month, day, hour, and birthplace, so your reading is personal to you, never a one-size-fits-all horoscope. Your birth city sets true solar time, so the chart is anchored to the sun's real position where you were born.</p>
-                        </div>
-                    </div>
-                    <div class="intro_item">
-                        <div class="intro_num">03</div>
-                        <div>
-                            <h3>A Map of Timing</h3>
-                            <p>Beyond personality, BaZi looks at 10-year Luck Cycles and yearly influences, offering a thoughtful framework for reflecting on career, wealth, relationships, and wellbeing in the years ahead.</p>
-                        </div>
-                    </div>
+                    <div class="intro_item"><div class="intro_num">01</div><div><h3>Enter Your Birth Details</h3><p>Your birth date, time, and place.</p></div></div>
+                    <div class="intro_item"><div class="intro_num">02</div><div><h3>Discover Your Personal Chart</h3><p>See your Four Pillars and a free personalized snapshot.</p></div></div>
+                    <div class="intro_item"><div class="intro_num">03</div><div><h3>Unlock Your Complete Blueprint</h3><p>Get your full personal report after checkout.</p></div></div>
                 </div>
-
-                <div class="intro_divider">&#10022;</div>
-
-                <div class="intro_includes_title">YOUR FULL REPORT COVERS</div>
-                <div class="intro_tags">
-                    <span>Core Identity &amp; Day Master</span>
-                    <span>Strengths &amp; Mindset</span>
-                    <span>Personal Action Guide</span>
-                    <span>Wealth &amp; Career Pathways</span>
-                    <span>Relationships</span>
-                    <span>Health &amp; Wellness Overview</span>
-                    <span>10-Year Luck Cycle</span>
-                    <span>10-Year Annual Outlook</span>
-                </div>
-                <p class="intro_cta">Enter your birth details below to see your Four Pillars.</p>
+                <details class="intro_more"><summary>New to BaZi? What it is</summary><p>BaZi is a traditional Chinese system built around the exact moment you were born. It reads four layers of your birth (year, month, day, hour) as Four Pillars, then looks at how the Five Elements within them interact and how 10-year Luck Cycles unfold. Your birth city sets true solar time, so every chart is personal to you.</p></details>
                 <p class="intro_disclaimer">
                     BaZi is a traditional cultural practice offered for reflection, personal insight, and entertainment.
                     It does not predict events with certainty and is not a substitute for medical, legal, financial, or psychological advice.
@@ -641,34 +617,34 @@
                             <section class="snap_sec"><div class="snap_label"><b>01</b><div><h4>Discover Your Inner Nature</h4><span>Your Day Master: the heart of your chart</span></div></div><div id="snapNature"></div></section>
                             <section class="snap_sec"><div class="snap_label"><b>02</b><div><h4>Beyond Your Day Master</h4><span>What your birth time adds to the picture</span></div></div><div id="snapBeyond"></div></section>
                             <section class="snap_sec"><div class="snap_label"><b>03</b><div><h4>Your Career &amp; Wealth Potential</h4><span>Directions worth exploring, not conclusions</span></div></div><div id="snapCareer"></div></section>
-                                                        <div class="snap_cta_row"><p>Your chart has more to say. Find out what these findings mean for you.</p><a class="snap_cta" href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)">Unlock My Full Report ➔</a><small>Delivered to your email and shown right here after checkout</small></div>
-<section class="snap_sec"><div class="snap_label"><b>04</b><div><h4>Health &amp; Wellness Overview</h4><span>A traditional wellness perspective</span></div></div><div id="snapHealth"></div></section>
+<section class="snap_sec"><div class="snap_label"><b>04</b><div><h4>Balance &amp; Daily Rhythm Reflection</h4><span>General lifestyle reflections</span></div></div><div id="snapHealth"></div></section>
                                                         <section class="snap_sec"><div class="snap_label"><b>05</b><div><h4>What Is Coming Next</h4><span>Your timing, calculated from your chart</span></div></div><div id="snapTiming"></div></section>
                             <section class="snap_sec">
-                                <div class="snap_label"><b>06</b><div><h4>Your Complete Destiny Blueprint</h4><span>What the full report unlocks</span></div></div>
+                                <div class="snap_label"><b>06</b><div><h4>What Your Free Preview Does Not Reveal</h4><span>Questions your complete report answers</span></div></div>
                                 <div class="snap_unlock">
                                     <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">命</div><h5>Chart Deep Analysis</h5><p>Day Master strength, chart structure, Ten Gods, and favorable and challenging elements.</p></div>
                                     <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">财</div><h5>Wealth &amp; Career Analysis</h5><p>Your wealth pattern, career directions, and the working styles that suit your chart.</p></div>
                                     <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">运</div><h5>10-Year Luck &amp; Annual Outlook</h5><p>Life-stage themes, notable years, and timing to reflect on.</p></div>
-                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">康</div><h5>Health &amp; Wellness Guidance</h5><p>Element-based wellness perspective with seasonal routines and everyday habit ideas.</p></div>
+                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">康</div><h5>Balance &amp; Daily Rhythm Guidance</h5><p>Everyday rest, routine, and balance reflections shaped by your chart.</p></div>
                                     <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">缘</div><h5>Relationship Themes</h5><p>How your chart relates to partnership, family, and the people around you.</p></div>
                                     <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">策</div><h5>Personal Action Guide</h5><p>Practical reflection points built around your chart's particular features.</p></div>
                                 </div>
                             </section>
-                            <div class="snap_cta_row"><p>Ready to see the full picture of your chart?</p><a class="snap_cta" href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)">Unlock My Full Report ➔</a><small>Delivered to your email and shown right here after checkout</small></div>
                             <p class="snap_disclaimer">BaZi is a traditional cultural practice offered for reflection, personal insight, and entertainment. It does not predict events with certainty, and nothing here is medical, legal, financial, or psychological advice.</p>
                         </div>
                         <div id="shopifyCta">
-                            <h3>Unlock Your Complete BaZi Blueprint</h3>
-                            <p>Based on your Ba Zi chart above, get a comprehensive, personalized English report delivered to <span id="emailDisplay">your email</span>.</p>
-                            <a href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)">Get My Deep Dive Report ➔</a>
+                            <h3>Unlock Your Complete Destiny Blueprint</h3>
+                            <p>A comprehensive personalized report based on your chart above. Shown on this page after checkout, with a copy emailed to <span id="emailDisplay">your email</span>.</p>
+                            <div id="priceLine" class="price_line"></div>
+                            <a href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)">Unlock My Complete Destiny Blueprint ➔</a>
+                            <small class="cta_note">Secure checkout by Gumroad. The final price is shown before you pay.</small>
                         </div>
 
                         <div id="aiReportContainer" style="display: none; margin-top: 30px;">
                             <div id="loadingBox" class="section_card" style="text-align: center; padding: 25px;">
                                 <div class="loader_spinner"></div>
                                 <div style="color: #d6b25e; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">Synthesizing Astrological Knowledge Base...</div>
-                                <div class="calculation_status" id="statusConsole">> Connecting to DeepSeek & generating strategic life blueprint...</div>
+                                <div class="calculation_status" id="statusConsole">> Generating your personalized destiny blueprint...</div>
                             </div>
 
                             <div id="finalReportBox" class="report_box_mobile" style="display: none;">
@@ -686,10 +662,19 @@
                 </section>
             </main>
         </div>
+        <section class="trust_card" aria-label="Privacy and FAQ">
+            <h3>Privacy &amp; Common Questions</h3>
+            <details><summary>How is my information used?</summary><p>Your birth details and email are used to calculate your chart, generate your report, and deliver it to you. Report generation uses third-party processing services. To request deletion of your data, reply to your Gumroad receipt email.</p></details>
+            <details><summary>Is this a prediction?</summary><p>No. BaZi is a traditional cultural framework offered for reflection, personal insight, and entertainment. It does not predict events with certainty and is not medical, legal, financial, or psychological advice.</p></details>
+            <details><summary>How do I receive my report?</summary><p>After checkout you return to this page, where your report is generated and displayed. A copy is also emailed to the address you entered.</p></details>
+            <details><summary>Why do you need my birth city and time?</summary><p>Your birth city sets true solar time, which makes the Four Pillars calculation more accurate.</p></details>
+        </section>
         <div class="sticky_pay" id="stickyPay">
-            <a href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)">Get My Deep Dive Report ➔</a>
+            <a href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)">Unlock My Complete Destiny Blueprint ➔</a>
         </div>
         <script>
+            const REPORT_PRICE_TEXT = ""; // e.g. "$29 one-time payment" (leave empty to hide)
+            document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('priceLine'); if (el) { if (REPORT_PRICE_TEXT) el.textContent = REPORT_PRICE_TEXT; else el.style.display = 'none'; } });
             const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/k1xw92cyng0as3r2rq9jcqn8i3gwczdl";
 
             const ELEMENT_MAP = {
@@ -1339,11 +1324,11 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 influence:['Influence','an element that shapes or tempers your Day Master, traditionally tied to structure, responsibility, and outside expectations.']
             };
             const HEALTH = {
-                Wood:['the liver and gallbladder, eyes, and tendons',['Gentle stretching or yoga','Regular time outdoors in daylight','Steady sleep and wake times']],
-                Fire:['the heart and circulation, and the small intestine',['A calming wind-down routine in the evening','Moderate, enjoyable cardio','Time for connection and laughter']],
-                Earth:['the spleen and stomach, and digestion',['Regular meal times','Mindful, unhurried eating','Journaling to set worries down']],
-                Metal:['the lungs and large intestine, nose, and skin',['Breathing or breath-focused practices','Fresh air and tidy, uncluttered spaces','A consistent skincare routine']],
-                Water:['the kidneys and bladder, bones, and ears',['Staying well hydrated','Prioritizing restful sleep','Keeping warm in cold weather']]
+                Wood:['growth, movement, and routine',['Regular movement or stretching','Daylight time outdoors','Consistent sleep and wake times']],
+                Fire:['energy, enthusiasm, and winding down',['A calming evening wind-down routine','Moderate, enjoyable exercise','Time for connection and rest']],
+                Earth:['steadiness, nourishment, and regularity',['Regular meal times','Mindful, unhurried eating','Journaling to set worries down']],
+                Metal:['order, clarity, and renewal',['Breathing or relaxation practices','Fresh air and tidy spaces','Regular breaks from screens']],
+                Water:['rest, reflection, and replenishment',['Prioritizing restful sleep','Staying hydrated','Quiet time to recharge']]
             };
             const HARM = ['子丑','寅亥','卯戌','辰酉','巳申','午未'], CLASH = ['子午','丑未','寅申','卯酉','辰戌','巳亥'];
             const TRIAD = [['申','子','辰','Water'],['亥','卯','未','Wood'],['寅','午','戌','Fire'],['巳','酉','丑','Metal']];
@@ -1415,19 +1400,20 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                         <div class="snap_card"><h5>Your Wealth Element</h5><div class="big">${we}</div><span class="snap_pill">${levelOf(score[we])}</span><p>${vis[we]} visible stem${vis[we] === 1 ? '' : 's'} in your chart${score[we] === 0 ? '; it may arrive through Luck Pillars.' : ', plus any hidden stems in your branches.'}</p></div>
                         <div class="snap_card"><h5>Your Current Luck Pillar</h5>${luckTxt}</div>
                     </div>
-                    ${lock(['Your Wealth pattern and best earning style','Career directions that suit your chart','Your most supportive and most demanding career years'])}<p class="snap_note">This preview points to areas for study and draws no conclusions about income or financial outcomes.</p>`;
+                    <div class="snap_more"><b>One important question remains:</b> does your complete chart support this wealth pattern, or does it call for stronger support from your Luck Pillars? Your full report examines it.</div>${lock(['Your Wealth pattern and best earning style','Career directions that suit your chart','Your most supportive and most demanding career years'])}<p class="snap_note">This preview points to areas for study and draws no conclusions about income or financial outcomes.</p>`;
 
                 // 04 Health
-                const hc = (e, title) => `<div class="snap_card"><h5>${title}</h5><div class="big">${e}</div><p>Traditionally linked with ${HEALTH[e][0]}. You may enjoy giving this theme some extra attention through:</p><ul>${HEALTH[e][1].map(x => `<li>${x}</li>`).join('')}</ul></div>`;
+                const hc = (e, title) => `<div class="snap_card"><h5>${title}</h5><div class="big">${e}</div><p>Traditionally associated with ${HEALTH[e][0]}. Everyday ideas to reflect on:</p><ul>${HEALTH[e][1].map(x => `<li>${x}</li>`).join('')}</ul></div>`;
                 document.getElementById('snapHealth').innerHTML = `
-                    <div class="snap_grid">${hc(top, 'Most Prominent in Your Chart')}${hc(low, score[low] === 0 ? 'Not Present in Your Chart' : 'Gentlest in Your Chart')}</div>
-                    <div class="snap_more"><b>A cultural framework, not a medical one:</b> In traditional Chinese wellness thinking, each element is symbolically linked to certain body systems and daily rhythms. These are lifestyle ideas for reflection only and do not diagnose, treat, or replace advice from a licensed healthcare professional. </div>${lock(['Your personalized seasonal wellness routine','Life stages that call for extra self-care'])}`;
+                    <div class="snap_grid">${hc(top, 'Your Most Prominent Element')}${hc(low, 'A Theme to Nurture')}</div>
+                    <div class="snap_more"><b>General lifestyle reflections only.</b> These ideas are not medical advice and do not diagnose, treat, or suggest any health condition. For any health concern, please consult a licensed healthcare professional.</div>${lock(['Your personalized daily rhythm and seasonal reflections'])}`;
 
                 // 05 Timing + highlights
                 const items = (r.luck && r.luck.items) || [];
                 const ci = L ? items.findIndex(i => i.ganzhi === L.ganzhi && i.startYear === L.startYear) : -1;
                 const nx = items[ci + 1];
-                const now = new Date(), Y = now.getFullYear() + (now.getMonth() >= 9 ? 1 : 0);
+                const now = new Date(); let Y = now.getFullYear();
+                try { const g = Solar.fromDate(now).getLunar().getYearInGanZhiExact(); Y = [Y, Y - 1].find(y => GAN[(y - 4) % 10] + ZHI[(y - 4) % 12] === g) || Y; } catch (e) {}
                 const yg = GAN[(Y - 4) % 10] + ZHI[(Y - 4) % 12], yb = yg.charAt(1), ye = ELEMENT_MAP[yg.charAt(0)];
                 const hits = [];
                 P.forEach((p, i) => {
@@ -1438,7 +1424,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 const yearTxt = hits.length ? `The ${Y} year branch ${yb} forms ${hits.join(' and ')}. Years like this are traditionally studied as moments of change or connection.` : `The ${Y} year branch ${yb} makes no direct harmony or clash with your four branches. The full report checks subtler effects.`;
                 document.getElementById('snapTiming').innerHTML = `<div class="snap_grid">
                     ${nx ? `<div class="snap_card"><h5>Your Next Luck Pillar</h5><div class="big">${nx.ganzhi} · ${ELEMENT_MAP[nx.ganzhi.charAt(0)]}</div><p>Begins in <b>${nx.startYear}</b> (age ${nx.startAge})${L ? `, when your current ${L.ganzhi} pillar ends` : ''}. Luck Pillar changes are traditionally read as shifts in life themes.</p>${lock(['What this transition means for you'])}</div>` : ''}
-                    <div class="snap_card"><h5>Your ${Y} Year Pillar</h5><div class="big">${yg} · ${ye}</div><p>${yearTxt}</p>${lock([`Your ${Y} annual outlook`])}</div></div>`;
+                    <div class="snap_card"><h5>Your Current Year Pillar · ${Y}</h5><div class="big">${yg} · ${ye}</div><p>${yearTxt}</p><p style="font-size:.82rem;margin-top:6px">The BaZi year changes at Li Chun, around February 4.</p>${lock([`Your ${Y} annual outlook`])}</div></div>`;
 
                 document.getElementById('snapNature').innerHTML += `<div class="snap_hl">
                     <div><small>Birth season</small><b>${B[3].charAt(0).toUpperCase() + B[3].slice(1)}</b></div>
@@ -1742,7 +1728,12 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
 
                     reportBox.scrollIntoView({ behavior: 'smooth' });
 
-                    if (userData) {
+                    const ukey = userData ? JSON.stringify(userData) : '';
+                    let cached = null; try { cached = JSON.parse(localStorage.getItem('bazi_report_cache') || 'null'); } catch (e) {}
+                    if (userData && cached && cached.key === ukey && cached.html) {
+                        loadingBox.style.display = 'none'; finalReportBox.style.display = 'block';
+                        document.getElementById('reportDirectContent').innerHTML = cached.html;
+                    } else if (userData) {
                         fetch(MAKE_WEBHOOK_URL, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -1760,19 +1751,20 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                                     .replace(/&lt;\/b&gt;/g, '</b>');
 
                                 document.getElementById('reportDirectContent').innerHTML = cleanedReport;
+                                try { localStorage.setItem('bazi_report_cache', JSON.stringify({ key: ukey, html: cleanedReport })); } catch (e) {}
                             } else {
-                                document.getElementById('reportDirectContent').innerText = "Your comprehensive strategy report has been successfully processed and dispatched to " + targetEmail + ". Please check your inbox shortly!";
+                                document.getElementById('reportDirectContent').innerText = "Thank you for your order. We could not display your report here. It will be emailed to " + targetEmail + ". If it has not arrived after a while, please check your spam folder or reply to your Gumroad receipt email for help.";
                             }
                         })
                         .catch(err => {
                             loadingBox.style.display = 'none';
                             finalReportBox.style.display = 'block';
-                            document.getElementById('reportDirectContent').innerText = "Your detailed strategy analysis report has been generated and successfully dispatched to your email address (" + targetEmail + "). Please check your inbox!";
+                            document.getElementById('reportDirectContent').innerText = "We could not generate your report on this page right now. Please do not pay again. Check your email (" + targetEmail + ") and spam folder, or reply to your Gumroad receipt email for help.";
                         });
                     } else {
                         loadingBox.style.display = 'none';
                         finalReportBox.style.display = 'block';
-                        document.getElementById('reportDirectContent').innerText = "Payment confirmed successfully! Your report has been dispatched to your email.";
+                        document.getElementById('reportDirectContent').innerText = "Thank you for your order. Please check your email for your report. If you need help, reply to your Gumroad receipt email.";
                     }
                 }
             });
