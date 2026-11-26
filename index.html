@@ -735,7 +735,7 @@
                                 <div class="receive_title">What you receive after checkout</div>
                                 <ul>
                                     <li>Your complete personalized BaZi report, generated from <b>your exact chart</b></li>
-                                    <li>Full analysis: core nature, money &amp; career fit, relationship patterns, daily rhythm, and 10-year cycle timing</li>
+                                    <li>Full analysis: core nature, money &amp; career fit, relationship patterns, health and well-being themes, and 10-year cycle timing</li>
                                     <li>Read it on this page after checkout and <b>download it as a PDF</b>; if you entered an email, a copy is sent there too</li>
                                     <li>Calculated with true solar time correction for your birth city</li>
                                 </ul>
@@ -1517,7 +1517,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 ['WEALTH', 'Money & Wealth Pattern', 'Unlock your earning style, money habits, and the years that favor wealth', 'Unlock My Wealth Analysis'],
                 ['CAREER', 'Career & Work Style', 'Find the work environments and paths that match your natural energy', 'Unlock My Career Analysis'],
                 ['RELATIONSHIPS', 'Love & Relationships', 'See how you show up in love, family, and close partnerships', 'Unlock My Relationship Analysis'],
-                ['BALANCE', 'Balance & Daily Rhythm', 'Unlock the daily rhythm and seasonal habits that fit your energy', 'Unlock My Balance Guide'],
+                ['BALANCE', 'Health & Well-Being', 'Explore your chart’s traditional wellness themes and practical habits that may support your well-being', 'Unlock My Health & Well-Being Analysis'],
                 ['OUTLOOK', '10-Year Outlook', 'Unlock your 10-year cycles and the notable years ahead', 'Unlock My 10-Year Outlook']
             ];
             function sentencesOf(t) { return String(t || '').replace(/<[^>]*>/g, '').replace(/[*#_`]+/g, '').replace(/\s+/g, ' ').trim().match(/[^.!?]+[.!?]+["')\u201D]?|[^.!?]+$/g) || []; }
@@ -1550,7 +1550,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                     WEALTH: `Your money energy is ${we}. Themes that often resonate with it include ${WT[we]}.`,
                     CAREER: `Your working style is that of ${S[1].replace(/^The /, 'the ')}. Traditionally, this nature ${S[4]}.`,
                     RELATIONSHIPS: (sup || ten) ? `Your chart shows ${sup ? sup + ' supportive pairing' + (sup > 1 ? 's' : '') : ''}${sup && ten ? ' and ' : ''}${ten ? ten + ' point' + (ten > 1 ? 's' : '') + ' of tension' : ''} between its parts. This is traditionally read as a theme in close relationships.` : 'Your chart shows no strong pairings or tensions between its parts. The full report looks at the subtler links in your relationships.',
-                    BALANCE: `Your strongest energy is ${top}, traditionally linked with ${HEALTH[top][0]}. A gentle theme to nurture is ${low}.`,
+                    BALANCE: `Your chart places the strongest emphasis on ${top}, traditionally associated with ${HEALTH[top][0]}. A useful area to give extra attention to is ${low}-related balance, with steady routines, restorative rest, and manageable daily habits.`,
                     OUTLOOK: L ? `Your current 10-year cycle is ${cname(L.ganzhi)} (${L.startYear}\u2013${L.endYear}).${nx ? ' The next one, ' + cname(nx.ganzhi) + ', begins in ' + nx.startYear + '.' : ''}` : `Your first 10-year cycle begins in ${r.luck ? r.luck.firstStartYear : 'a later year'}.`
                 };
             }
@@ -1597,7 +1597,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                     finally { clearTimeout(timer); }
                 }
                 paintSections(texts, false);
-                note.textContent = (usedAi ? 'Written by AI from your birth chart. ' : 'Based on your birth chart. ') + 'For reflection and entertainment only. Not a prediction, and not medical, legal, financial, or psychological advice. The Balance section offers general lifestyle reflections only.';
+                note.textContent = 'A traditional BaZi perspective for personal reflection and entertainment. This section discusses general wellness themes and lifestyle ideas only; it does not assess your actual health, diagnose or predict medical conditions, or replace advice from a licensed healthcare professional. The reading is not medical, legal, or financial advice.';
                 if (/[?&]debug=1/.test(location.search) && info) { const p = document.createElement('p'); p.textContent = 'DEBUG: ' + info; note.appendChild(p); }
             }
 
@@ -1665,10 +1665,10 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                     <div class="snap_card"><h5>How Your Chart Connects</h5>${found.length ? `<ul>${found.map(x => `<li>${x}</li>`).join('')}</ul>` : '<p>No major pairings or tensions appear between the parts of your chart. The full report also looks at subtler links.</p>'}</div></div>
                     ${lock(['What are your biggest inner strengths and blind spots?', 'How balanced is your chart, and which energies support or challenge you?', 'What patterns show up in your relationships and close partnerships?'])}`;
 
-                // 04 balance & rhythm
+                // 04 health & well-being
                 const hc = (e, title) => `<div class="snap_card"><h5>${title}</h5><div class="big">${e}</div><p>Traditionally associated with ${HEALTH[e][0]}. Everyday ideas to reflect on:</p><ul>${HEALTH[e][1].map(x => `<li>${x}</li>`).join('')}</ul></div>`;
                 $('snapHealth').innerHTML = `<div class="snap_grid">${hc(top, 'Your Strongest Energy')}${hc(low, 'A Theme to Nurture')}</div>
-                    <div class="snap_more health_note"><b>General lifestyle reflections only.</b> These ideas are not medical advice and do not diagnose, treat, or suggest any health condition. For any health concern, please consult a licensed healthcare professional.</div>${lock(['What daily rhythm and seasonal habits fit your energy?'])}`;
+                    <div class="snap_more health_note"><b>General lifestyle reflections only.</b> These ideas are not medical advice and do not diagnose, treat, or suggest any health condition. For any health concern, please consult a licensed healthcare professional.</div>${lock(['Explore the traditional wellness themes in your chart and practical habits to support your well-being'])}`;
 
                 // 05 timing
                 const hits = [];
