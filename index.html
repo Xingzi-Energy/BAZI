@@ -1513,6 +1513,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
             // ============================================================
             const PREVIEW_WEBHOOK_URL = "https://hook.us2.make.com/pftupcndgxyzfd91m8dct974hqp3xvmb";
             const TEASER_MAX_CHARS = 460;
+            console.info('BaZi build: ai-teaser v2 | preview webhook set:', !!PREVIEW_WEBHOOK_URL);
 
             function trimTeaser(text) {
                 const clean = String(text || '').replace(/<[^>]*>/g, '').replace(/[*#_`]+/g, '').replace(/\r/g, '').trim();
@@ -1545,15 +1546,26 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 try { const c = sessionStorage.getItem(key); if (c) { renderTeaser(c); return; } } catch (e) {}
                 sec.style.display = 'block';
                 box.innerHTML = '<div class="ai_loading">Writing your personal reading&hellip;<i style="width:95%"></i><i style="width:82%"></i><i style="width:90%"></i></div>';
+                let info = '';
                 const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 35000);
                 try {
                     const res = await fetch(PREVIEW_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(f), signal: ctl.signal });
-                    const d = parseReportResponse(await res.text());
+                    const raw = await res.text(); info = 'Make replied HTTP ' + res.status + ': ' + raw.slice(0, 200);
+                    console.warn('[preview] webhook response', res.status, raw.slice(0, 300));
+                    const d = parseReportResponse(raw);
                     const text = trimTeaser(d && (d.teaser || d.report));
-                    if (!text) throw new Error('empty');
+                    if (!text) throw new Error('no "teaser" text found in the response');
                     try { sessionStorage.setItem(key, text); } catch (e) {}
                     renderTeaser(text);
-                } catch (e) { sec.style.display = 'none'; }   // fail quietly: the rest of the preview still works
+                } catch (e) {
+                    console.warn('[preview] failed', e, info);
+                    if (/[?&]debug=1/.test(location.search)) {      // diagnosis mode: show the reason instead of hiding
+                        box.innerHTML = '';
+                        const p = document.createElement('p'); p.className = 'ai_loading';
+                        p.textContent = 'Preview unavailable. ' + (info || 'No response from Make (blocked, offline, or timed out). ') + ' | ' + String(e);
+                        box.appendChild(p);
+                    } else sec.style.display = 'none';   // fail quietly: the rest of the preview still works
+                }
                 finally { clearTimeout(timer); }
             }
 
