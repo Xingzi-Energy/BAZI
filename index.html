@@ -480,6 +480,19 @@
             .snap_cta { display:inline-block; padding:13px 30px; border-radius:8px; font-weight:bold; text-decoration:none; color:#fbeccb; background:linear-gradient(45deg,var(--cinnabar_deep),var(--cinnabar)); border:1px solid var(--color_primary); box-shadow:0 4px 16px rgba(181,48,42,.35); }
             .snap_cta_row small { display:block; margin-top:10px; color:var(--text_secondary); font-size:.78rem; }
             @media (max-width:600px) { .snap_cta { display:block; } }
+            .sp_section { margin-top:28px; }
+            .sp_title { font-family:var(--font_serif); font-weight:500; font-size:1.25rem; color:var(--color_primary_light); border-left:4px solid var(--cinnabar_lt); padding-left:12px; margin:0 0 12px; }
+            .sp_lead { font-weight:700; color:var(--text_primary); font-size:1.1rem; line-height:1.6; margin:0 0 8px; }
+            .sp_text { color:var(--text_secondary); font-size:1.03rem; line-height:1.85; margin:0 0 10px; }
+            .sp_lock { position:relative; margin-top:14px; min-height:176px; border-radius:12px; overflow:hidden; }
+            .sp_blur { filter:blur(5px); padding:6px 2px; user-select:none; pointer-events:none; }
+            .sp_blur i { display:block; height:12px; border-radius:99px; background:rgba(214,178,94,.34); margin:15px 0; }
+            .sp_lockbox { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:min(94%,470px); padding:16px 14px; border-radius:12px; background:rgba(20,11,9,.93); border:1px solid rgba(214,178,94,.55); text-align:center; box-shadow:0 6px 24px rgba(0,0,0,.5); }
+            .sp_lockmsg { color:var(--color_primary_light); font-size:1rem; line-height:1.55; margin-bottom:12px; font-weight:600; }
+            .sp_lockmsg svg { width:16px; height:16px; vertical-align:-2px; margin-right:6px; fill:none; stroke:var(--color_primary); stroke-width:2; }
+            .sp_lockbox .snap_cta { display:inline-block; padding:12px 22px; font-size:.98rem; }
+            .sp_note { margin-top:26px; text-align:center; color:var(--text_secondary); font-size:.82rem; line-height:1.6; }
+            @media (max-width:600px) { .sp_lockbox .snap_cta { display:block; } .sp_lock { min-height:190px; } }
             .ai_sec { border:1px solid rgba(214,178,94,.55); border-radius:14px; padding:20px 18px; background:radial-gradient(560px 220px at 50% 0%,rgba(181,48,42,.2),transparent 70%),rgba(0,0,0,.28); }
             .ai_text p { color:var(--text_primary); font-size:1.05rem; line-height:1.85; margin:0 0 12px; }
             .ai_loading { color:var(--text_secondary); font-size:.98rem; }
@@ -701,26 +714,10 @@
                         </div>
                         
                         <div id="freePreview" class="free_preview" aria-live="polite">
-                            <div class="snap_head"><div class="preview_kicker">Free Preview</div><h3>Your Personal BaZi Snapshot</h3>
-                            <p class="preview_copy">Every observation below is read from your own birth chart, so no two previews are the same. It gives you a first taste of what your complete report explores in depth.</p></div>
-                            <section class="snap_sec ai_sec" id="aiTeaserSec" style="display:none"><div class="snap_label"><b>&#10022;</b><div><h4>Your Personal Reading</h4><span>A first look, written for your chart</span></div></div><div id="aiTeaser"></div></section>
-                            <section class="snap_sec"><div class="snap_label"><b>01</b><div><h4>Discover Your Inner Nature</h4><span>The core of who you are</span></div></div><div id="snapNature"></div></section>
-                            <section class="snap_sec money"><div class="snap_label"><b>02</b><div><h4>Your Money &amp; Career Potential</h4><span>Your wealth energy and timing</span></div></div><div id="snapMoney"></div></section>
-                            <section class="snap_sec"><div class="snap_label"><b>03</b><div><h4>How Your Birth Chart Is Built</h4><span>What your birth time adds to the picture</span></div></div><div id="snapBeyond"></div></section>
-                            <section class="snap_sec"><div class="snap_label"><b>04</b><div><h4>Balance &amp; Daily Rhythm Reflection</h4><span>General lifestyle reflections</span></div></div><div id="snapHealth"></div></section>
-                            <section class="snap_sec"><div class="snap_label"><b>05</b><div><h4>What Is Coming Next</h4><span>Your timing, calculated from your chart</span></div></div><div id="snapTiming"></div></section>
-                            <section class="snap_sec">
-                                <div class="snap_label"><b>06</b><div><h4>What Your Free Preview Does Not Reveal</h4><span>Questions your complete report answers</span></div></div>
-                                <div class="snap_unlock">
-                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">命</div><h5>Who You Really Are</h5><p>Your core strengths, blind spots, and how balanced your chart truly is — the full inner-nature analysis.</p></div>
-                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">财</div><h5>Your Money &amp; Career Fit</h5><p>Which earning styles, roles, and work environments energize you — and which drain you.</p></div>
-                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">运</div><h5>What the Next Seasons Hold</h5><p>Your upcoming 10-year cycle and the notable years that bring change and opportunity.</p></div>
-                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">康</div><h5>Your Daily Rhythm</h5><p>Rest, routine, and seasonal habits shaped by your chart for steadier energy day to day.</p></div>
-                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">缘</div><h5>Your Relationship Patterns</h5><p>How you show up in partnership, family, and the people closest to you.</p></div>
-                                    <div class="unlock_item"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div class="ch">策</div><h5>Your Action Guide</h5><p>Practical reflection points built around your chart that you can apply right away.</p></div>
-                                </div>
-                            </section>
-                            <p class="snap_disclaimer">BaZi is a traditional cultural practice offered for reflection, personal insight, and entertainment. It does not predict events with certainty, and nothing here is medical, legal, financial, or psychological advice.</p>
+                            <div class="snap_head"><div class="preview_kicker">Free Preview</div><h3>Your Personal BaZi Reading</h3>
+                            <p class="preview_copy">The first lines of your reading, written from your own birth chart. Unlock the full report to read everything.</p></div>
+                            <div id="spSections"></div>
+                            <div id="spNote" class="sp_note"></div>
                         </div>
                         <div id="shopifyCta">
                             <h3>Get Your Full Personal BaZi Report</h3>
@@ -1513,60 +1510,95 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
             // ============================================================
             const PREVIEW_WEBHOOK_URL = "https://hook.us2.make.com/pftupcndgxyzfd91m8dct974hqp3xvmb";
             const TEASER_MAX_CHARS = 460;
-            console.info('BaZi build: ai-teaser v2 | preview webhook set:', !!PREVIEW_WEBHOOK_URL);
+            console.info('BaZi build: simple-sections v3 | preview webhook set:', !!PREVIEW_WEBHOOK_URL);
 
-            function trimTeaser(text) {
-                const clean = String(text || '').replace(/<[^>]*>/g, '').replace(/[*#_`]+/g, '').replace(/\r/g, '').trim();
-                const sentences = clean.match(/[^.!?\n]+[.!?]+["')\u201D]?/g) || [clean];
-                let out = '';
-                for (const st of sentences) { if (out && (out + st).length > TEASER_MAX_CHARS) break; out += st.trim() + ' '; }
-                return out.trim();
+            const SP = [
+                ['PERSONALITY', 'Personality & Inner Nature', 'Unlock your strengths, blind spots, and how balanced your chart is', 'Unlock My Full Personality Analysis'],
+                ['WEALTH', 'Money & Wealth Pattern', 'Unlock your earning style, money habits, and the years that favor wealth', 'Unlock My Wealth Analysis'],
+                ['CAREER', 'Career & Work Style', 'Find the work environments and paths that match your natural energy', 'Unlock My Career Analysis'],
+                ['RELATIONSHIPS', 'Love & Relationships', 'See how you show up in love, family, and close partnerships', 'Unlock My Relationship Analysis'],
+                ['BALANCE', 'Balance & Daily Rhythm', 'Unlock the daily rhythm and seasonal habits that fit your energy', 'Unlock My Balance Guide'],
+                ['OUTLOOK', '10-Year Outlook', 'Unlock your 10-year cycles and the notable years ahead', 'Unlock My 10-Year Outlook']
+            ];
+            function sentencesOf(t) { return String(t || '').replace(/<[^>]*>/g, '').replace(/[*#_`]+/g, '').replace(/\s+/g, ' ').trim().match(/[^.!?]+[.!?]+["')\u201D]?|[^.!?]+$/g) || []; }
+            function splitLead(t) {
+                const ss = sentencesOf(t).map(x => x.trim()).filter(Boolean); let body = '';
+                for (const x of ss.slice(1)) { if (body && (body + ' ' + x).length > 300) break; body += (body ? ' ' : '') + x; }
+                return { lead: ss[0] || '', body };
             }
-            function renderTeaser(text) {
-                const box = document.getElementById('aiTeaser'), sec = document.getElementById('aiTeaserSec');
-                const price = (typeof REPORT_PRICE_SHORT !== 'undefined' && REPORT_PRICE_SHORT) ? ' &mdash; ' + REPORT_PRICE_SHORT : '';
-                const href = (document.getElementById('mainCtaBtn') || {}).href || '#';
-                box.innerHTML = '<div class="ai_text"></div><div class="ai_fade" aria-hidden="true"><i style="width:96%"></i><i style="width:88%"></i><i style="width:93%"></i><i style="width:60%"></i></div>'
-                    + '<div class="ai_lock"><p>The rest of your reading covers your money pattern, career fit, relationships and 10-year cycles. It is unlocked in your full report.</p>'
-                    + '<a class="snap_cta" href="' + href + '" onclick="handleGoToPayment(event)">Unlock the rest of my reading' + price + ' &#10132;</a></div>'
-                    + '<div class="ai_note">Written by AI from your birth chart, for reflection and entertainment only. Not a prediction or professional advice.</div>';
-                const holder = box.querySelector('.ai_text');
-                text.split(/\n+/).filter(Boolean).forEach(par => { const p = document.createElement('p'); p.textContent = par; holder.appendChild(p); });
-                sec.style.display = 'block';
+            function parseSections(text) {
+                const parts = String(text || '').split(/(PERSONALITY|WEALTH|CAREER|RELATIONSHIPS|BALANCE|OUTLOOK)\s*[:\uFF1A]\s*/i), out = {};
+                for (let k = 1; k + 1 < parts.length; k += 2) out[parts[k].toUpperCase()] = parts[k + 1].trim();
+                return out;
             }
-            async function loadAiTeaser(r) {
-                if (!PREVIEW_WEBHOOK_URL || new URLSearchParams(location.search).get('paid') === 'true') return;
-                const sec = document.getElementById('aiTeaserSec'), box = document.getElementById('aiTeaser');
-                let f = {}; try { f = buildFormData(''); } catch (e) {}
-                delete f.email; delete f.selectedCity;
-                f.mode = 'preview';
-                f.chart = { pillars: r.pillars.map(p => p.pillarStr), coreNature: r.pillars[2].pillarStr.charAt(0),
-                            currentCycle: r.luck && r.luck.current ? r.luck.current.ganzhi : null };
-                const key = 'bazi_teaser_' + JSON.stringify(f.chart) + (f.birthData ? f.birthData.gender : '');
-                try { const c = sessionStorage.getItem(key); if (c) { renderTeaser(c); return; } } catch (e) {}
-                sec.style.display = 'block';
-                box.innerHTML = '<div class="ai_loading">Writing your personal reading&hellip;<i style="width:95%"></i><i style="width:82%"></i><i style="width:90%"></i></div>';
-                let info = '';
-                const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 35000);
-                try {
-                    const res = await fetch(PREVIEW_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(f), signal: ctl.signal });
-                    const raw = await res.text(); info = 'Make replied HTTP ' + res.status + ': ' + raw.slice(0, 200);
-                    console.warn('[preview] webhook response', res.status, raw.slice(0, 300));
-                    const d = parseReportResponse(raw);
-                    const text = trimTeaser(d && (d.teaser || d.report));
-                    if (!text) throw new Error('no "teaser" text found in the response');
-                    try { sessionStorage.setItem(key, text); } catch (e) {}
-                    renderTeaser(text);
-                } catch (e) {
-                    console.warn('[preview] failed', e, info);
-                    if (/[?&]debug=1/.test(location.search)) {      // diagnosis mode: show the reason instead of hiding
-                        box.innerHTML = '';
-                        const p = document.createElement('p'); p.className = 'ai_loading';
-                        p.textContent = 'Preview unavailable. ' + (info || 'No response from Make (blocked, offline, or timed out). ') + ' | ' + String(e);
-                        box.appendChild(p);
-                    } else sec.style.display = 'none';   // fail quietly: the rest of the preview still works
+            function pickText(d) { if (!d) return ''; for (const k of Object.keys(d)) if (/^(teaser|report|text|content)$/i.test(k) && typeof d[k] === 'string') return d[k]; return ''; }
+
+            function localSections(r) {
+                const P = r.pillars, dayStem = P[2].pillarStr.charAt(0), dm = ELEMENT_MAP[dayStem], S = STEM[dayStem];
+                const score = {Wood:0,Fire:0,Earth:0,Metal:0,Water:0};
+                P.forEach(p => { score[ELEMENT_MAP[p.pillarStr.charAt(0)]] += 1; BR[p.pillarStr.charAt(1)][4].forEach((h, i) => { score[ELEMENT_MAP[h]] += [1, .5, .3][i]; }); });
+                const ranked = EL5.slice().sort((a, b) => score[b] - score[a]), top = ranked[0], low = ranked[4], we = CTRL[dm];
+                let sup = 0, ten = 0;
+                for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) {
+                    const a = P[i].pillarStr.charAt(1), b = P[j].pillarStr.charAt(1), m = (x, y) => (x[0] === a && x[1] === b) || (x[0] === b && x[1] === a);
+                    if (HARM.some(x => m(x))) sup++; if (CLASH.some(x => m(x))) ten++;
                 }
-                finally { clearTimeout(timer); }
+                const items = (r.luck && r.luck.items) || [], L = r.luck && r.luck.current;
+                const ci = L ? items.findIndex(i => i.ganzhi === L.ganzhi && i.startYear === L.startYear) : -1, nx = items[ci + 1];
+                return {
+                    PERSONALITY: `Your core nature is ${S[1].replace(/^The /, 'the ')}. ${S[2]} It shapes how you approach goals, work, and pressure.`,
+                    WEALTH: `Your money energy is ${we}. Themes that often resonate with it include ${WT[we]}.`,
+                    CAREER: `Your working style is that of ${S[1].replace(/^The /, 'the ')}. Traditionally, this nature ${S[4]}.`,
+                    RELATIONSHIPS: (sup || ten) ? `Your chart shows ${sup ? sup + ' supportive pairing' + (sup > 1 ? 's' : '') : ''}${sup && ten ? ' and ' : ''}${ten ? ten + ' point' + (ten > 1 ? 's' : '') + ' of tension' : ''} between its parts. This is traditionally read as a theme in close relationships.` : 'Your chart shows no strong pairings or tensions between its parts. The full report looks at the subtler links in your relationships.',
+                    BALANCE: `Your strongest energy is ${top}, traditionally linked with ${HEALTH[top][0]}. A gentle theme to nurture is ${low}.`,
+                    OUTLOOK: L ? `Your current 10-year cycle is ${cname(L.ganzhi)} (${L.startYear}\u2013${L.endYear}).${nx ? ' The next one, ' + cname(nx.ganzhi) + ', begins in ' + nx.startYear + '.' : ''}` : `Your first 10-year cycle begins in ${r.luck ? r.luck.firstStartYear : 'a later year'}.`
+                };
+            }
+            function paintSections(texts, loading) {
+                const box = document.getElementById('spSections'), href = (document.getElementById('mainCtaBtn') || {}).href || '#';
+                box.innerHTML = '';
+                SP.forEach(([k, title, msg, btn]) => {
+                    const sec = document.createElement('div'); sec.className = 'sp_section';
+                    const h = document.createElement('h4'); h.className = 'sp_title'; h.textContent = title; sec.appendChild(h);
+                    if (loading) sec.insertAdjacentHTML('beforeend', '<div class="ai_loading"><i style="width:94%"></i><i style="width:82%"></i></div>');
+                    else {
+                        const { lead, body } = splitLead(texts[k]);
+                        const pl = document.createElement('p'); pl.className = 'sp_lead'; pl.textContent = lead; sec.appendChild(pl);
+                        if (body) { const pb = document.createElement('p'); pb.className = 'sp_text'; pb.textContent = body; sec.appendChild(pb); }
+                    }
+                    sec.insertAdjacentHTML('beforeend', '<div class="sp_lock"><div class="sp_blur" aria-hidden="true"><i style="width:98%"></i><i style="width:90%"></i><i style="width:95%"></i><i style="width:70%"></i></div><div class="sp_lockbox"><div class="sp_lockmsg">' + LOCK_SVG + '<span></span></div><a class="snap_cta" href="' + href + '" onclick="handleGoToPayment(event)"></a></div></div>');
+                    sec.querySelector('.sp_lockmsg span').textContent = msg;
+                    sec.querySelector('.snap_cta').textContent = btn + ' \u2192';
+                    box.appendChild(sec);
+                });
+            }
+            async function renderSimplePreview(r) {
+                document.getElementById('freePreview').style.display = 'block';
+                const local = localSections(r), paid = new URLSearchParams(location.search).get('paid') === 'true';
+                const note = document.getElementById('spNote'); let info = '', usedAi = false, texts = local;
+                let f = {}; try { f = buildFormData(''); } catch (e) {}
+                delete f.email; delete f.selectedCity; f.mode = 'preview';
+                f.chart = { pillars: r.pillars.map(p => p.pillarStr), coreNature: r.pillars[2].pillarStr.charAt(0), currentCycle: r.luck && r.luck.current ? r.luck.current.ganzhi : null };
+                const key = 'bazi_sections_' + JSON.stringify(f.chart) + (f.birthData ? f.birthData.gender : '');
+                let cached = null; try { cached = JSON.parse(sessionStorage.getItem(key) || 'null'); } catch (e) {}
+                if (cached) { texts = Object.assign({}, local, cached); usedAi = true; }
+                else if (PREVIEW_WEBHOOK_URL && !paid) {
+                    paintSections(local, true);
+                    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 38000);
+                    try {
+                        const res = await fetch(PREVIEW_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(f), signal: ctl.signal });
+                        const raw = await res.text(); info = 'Make replied HTTP ' + res.status + ': ' + raw.slice(0, 200);
+                        console.warn('[preview] webhook response', res.status, raw.slice(0, 300));
+                        const parsed = parseSections(pickText(parseReportResponse(raw)));
+                        if (Object.keys(parsed).length < 3) throw new Error('could not find the report sections in the response');
+                        texts = Object.assign({}, local, parsed); usedAi = true;
+                        try { sessionStorage.setItem(key, JSON.stringify(parsed)); } catch (e) {}
+                    } catch (e) { console.warn('[preview] failed', e, info); info = (info || 'No response from Make') + ' | ' + String(e); }
+                    finally { clearTimeout(timer); }
+                }
+                paintSections(texts, false);
+                note.textContent = (usedAi ? 'Written by AI from your birth chart. ' : 'Based on your birth chart. ') + 'For reflection and entertainment only. Not a prediction, and not medical, legal, financial, or psychological advice. The Balance section offers general lifestyle reflections only.';
+                if (/[?&]debug=1/.test(location.search) && info) { const p = document.createElement('p'); p.textContent = 'DEBUG: ' + info; note.appendChild(p); }
             }
 
             function renderFreePreview(r) {
@@ -1765,8 +1797,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 info.textContent = lines.join('\n');
                 info.style.display = 'block';
 
-                renderFreePreview(r);
-                loadAiTeaser(r);
+                renderSimplePreview(r);
 
                 localStorage.setItem('pending_bazi_user', JSON.stringify(buildFormData(userEmail === "your email" ? '' : userEmail)));
                 updateStickyPay();
