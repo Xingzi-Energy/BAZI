@@ -278,18 +278,16 @@
             .report_content_text ul.technical-analysis-detail { padding-left: 20px; }
             .report_content_text .technical-analysis-detail b,
             .report_content_text .technical-analysis-detail strong { color: #756b5d !important; }
-            /* After a successful checkout, show the report rather than the locked sales preview. */
-            body.paid-report-view header,
-            body.paid-report-view .intro_card,
-            body.paid-report-view .trust_card,
-            body.paid-report-view #stickyPay { display: none !important; }
-            body.paid-report-view main { display: block !important; }
-            body.paid-report-view #resultCard > :not(#aiReportContainer) { display: none !important; }
-            body.paid-report-view #aiReportContainer { margin-top: 0 !important; }
-            body.paid-report-view #finalReportBox { margin-top: 0; }
-            body.paid-report-complete main > section:first-child { display: none !important; }
-            body.paid-report-complete #resultCard { padding: 0 !important; margin: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
+            /* Paid return: retain site, chart and FAQ; hide only preview and purchase controls. */
+            body.paid-report-view #freePreview,
+            body.paid-report-view #shopifyCta,
+            body.paid-report-view #stickyPay,
+            body.paid-report-view .intro_jump,
+            body.paid-report-view .intro_cta { display: none !important; }
+            body.paid-report-view #aiReportContainer { margin-top: 30px !important; }
             body.paid-report-complete #aiReportContainer { display: block !important; }
+            body.paid-report-complete main > section:first-child button { display: none !important; }
+            body.paid-report-complete main > section:first-child { position: static; }
             #finalReportBox {
                 max-width: 1120px;
                 margin-left: auto;
@@ -683,7 +681,7 @@
                 <p class="intro_disclaimer">
                     BaZi is a traditional cultural practice offered for reflection, personal insight, and entertainment.
                     It does not predict events with certainty and is not a substitute for medical, legal, financial, or psychological advice.
-                    Your full report is delivered by email after checkout.
+                    Your full report is delivered to the email you provide before checkout.
                 </p>
             </section>
             <main>
@@ -728,8 +726,8 @@
                                 <div id="cityHint" class="city_hint">We use your birth city's longitude and local daylight-saving rules to calculate true solar time.</div>
                             </div>
                             <div class="input_group full_width">
-                                <label for="email">Email Address <span class="opt_hint">(Optional — only needed to receive your paid report)</span></label>
-                                <input type="email" id="email" placeholder="You can add this at checkout" autocomplete="off" />
+                                <label for="email">Email Address <span class="opt_hint">(Optional for free preview — required before purchase)</span></label>
+                                <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
                             </div>
                         </fieldset>
                         <div>
@@ -762,7 +760,7 @@
                         </div>
                         <div id="shopifyCta">
                             <h3>Get Your Full Personal BaZi Report</h3>
-                            <p>A complete, personalized reading built from the chart you just generated — shown on this page after checkout, downloadable as a PDF (a copy is emailed if you entered an email).</p>
+                            <p>A complete, personalized reading built from the chart you just generated — shown on this page after checkout, downloadable as a PDF (a copy is sent to your report delivery email).</p>
                             <div id="priceLine" class="price_line"></div>
                             <div class="cta_guarantee">&#10003; 60-Day Money-Back Guarantee &mdash; if the report doesn't resonate, reply to your Gumroad receipt email for a full refund, no questions asked.</div>
                             <a href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)" id="mainCtaBtn">Get My Full BaZi Report &nbsp;&#10132;</a>
@@ -777,7 +775,7 @@
                                 <ul>
                                     <li>Your complete personalized BaZi report, generated from <b>your exact chart</b></li>
                                     <li>Full analysis: core nature, money &amp; career fit, relationship patterns, health and well-being themes, and 10-year cycle timing</li>
-                                    <li>Read it on this page after checkout and <b>download it as a PDF</b>; if you entered an email, a copy is sent there too</li>
+                                    <li>Read it on this page after checkout and <b>download it as a PDF</b>; a copy is sent to your report delivery email</li>
                                     <li>Calculated with true solar time correction for your birth city</li>
                                 </ul>
                             </div>
@@ -798,7 +796,7 @@
                                         <img src="https://i.postimg.cc/k507k59s/xin1.png" alt="Xingzi Master" class="report_brand_logo">
                                         <span>Personal BaZi &amp; Strategic Life Blueprint</span>
                                     </h3>
-                                    <p style="font-size: 0.95rem; color: #5c4a42;">✓ This report has also been sent to <span id="targetEmailText" style="font-weight: bold;"></span></p>
+                                    <p style="font-size: 0.95rem; color: #5c4a42;">Report delivery email: <span id="targetEmailText" style="font-weight: bold;"></span></p>
                                     <div class="report_actions">
                                         <button type="button" id="pdfBtn" class="pdf_btn" onclick="downloadReportPdf()">&#8681; Download PDF Copy</button>
                                         <button type="button" class="share_btn report_share" onclick="shareWithFriend(event)">&#8686; Share with a friend</button>
@@ -820,7 +818,7 @@
             <details><summary>Is this a subscription?</summary><p>No. It is a one-time payment through Gumroad. There are no recurring charges, no renewal, and no auto-billing.</p></details>
             <details><summary>What if I'm not satisfied?</summary><p>We offer a 60-day, no-questions-asked money-back guarantee. If the report does not resonate, reply to your Gumroad receipt email for a full refund.</p></details>
             <details><summary>How is my information used?</summary><p>Your birth details and email are used to calculate your chart, generate your report, and deliver it to you. Report generation uses third-party processing services. To request deletion of your data, reply to your Gumroad receipt email.</p></details>
-            <details><summary>How do I receive my report?</summary><p>After checkout you return to this page, where your report is generated and displayed. A copy is also emailed to the address you used at Gumroad.</p></details>
+            <details><summary>How do I receive my report?</summary><p>After checkout you return to this page, where your report is generated and displayed. A copy is sent to the delivery email you provide on this page before checkout.</p></details>
             <details><summary>Why do you need my birth city and time?</summary><p>Your birth city sets true solar time, which makes the Four Pillars calculation more accurate. Your birth hour determines your hour Pillar.</p></details>
         </section>
         <div class="sticky_pay" id="stickyPay">
@@ -1744,7 +1742,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 const day = parseInt(dayField.value);
                 const hour = parseInt(hourField.value);
                 const minute = parseInt(document.getElementById('minute').value || 0);
-                const userEmail = emailField.value.trim() || "the email you used at checkout";
+                const userEmail = emailField.value.trim();
                 const gender = document.getElementById('gender').value;
 
                 setMsg('');
@@ -1793,7 +1791,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
 
                 document.getElementById('dateDisplay').innerHTML = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} at ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`;
                 const emailDisplay = document.getElementById('emailDisplay');
-                if (emailDisplay) emailDisplay.innerText = userEmail;
+                if (emailDisplay) emailDisplay.innerText = userEmail || "Your report delivery email";
 
                 // true-solar-time breakdown
                 const c = selectedCity;
@@ -1840,9 +1838,9 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 info.textContent = lines.join('\n');
                 info.style.display = 'block';
 
-                renderSimplePreview(r);
+                if (new URLSearchParams(location.search).get('paid') !== 'true') renderSimplePreview(r);
 
-                localStorage.setItem('pending_bazi_user', JSON.stringify(buildFormData(userEmail === "your email" ? '' : userEmail)));
+                localStorage.setItem('pending_bazi_user', JSON.stringify(buildFormData(userEmail)));
                 updateStickyPay();
             }
 
@@ -2185,9 +2183,41 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 if (new URLSearchParams(location.search).get('paid') !== 'true') document.getElementById('shopifyCta').style.display = 'block';
             }
 
+            function validDeliveryEmail(value) {
+                return /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(String(value || '').trim());
+            }
+            function requestDeliveryEmail(initial, onConfirm) {
+                const dialog = document.getElementById('deliveryEmailDialog');
+                const input = document.getElementById('deliveryEmailInput');
+                const form = document.getElementById('deliveryEmailForm');
+                input.value = initial || '';
+                input.setCustomValidity('');
+                input.oninput = () => input.setCustomValidity('');
+                form.onsubmit = (e) => {
+                    e.preventDefault();
+                    const email = input.value.trim();
+                    if (!validDeliveryEmail(email)) { input.setCustomValidity('Please enter a valid email address.'); input.reportValidity(); return; }
+                    document.getElementById('email').value = email;
+                    dialog.close();
+                    onConfirm(email);
+                };
+                if (!dialog.open) dialog.showModal();
+                input.focus();
+            }
             function handleGoToPayment(event) {
-                localStorage.setItem('pending_bazi_user', JSON.stringify(buildFormData()));
-                try { localStorage.setItem('bazi_order_id', 'o' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8)); } catch (e) {}
+                event.preventDefault();
+                const href = event.currentTarget.href;
+                if (!lastCalc) { setMsg('Please calculate your chart before checkout.'); document.getElementById('year').focus(); return; }
+                const proceed = (email) => {
+                    try {
+                        localStorage.setItem('pending_bazi_user', JSON.stringify(buildFormData(email)));
+                        localStorage.setItem('bazi_order_id', 'o' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8));
+                    } catch (e) { alert('Your browser could not save your birth details. Please enable local storage before checkout.'); return; }
+                    window.location.assign(href);
+                };
+                const email = document.getElementById('email').value.trim();
+                if (validDeliveryEmail(email)) proceed(email);
+                else requestDeliveryEmail(email, proceed);
             }
 
             // Build a personal PDF filename from the saved birth data (date + city).
@@ -2346,10 +2376,14 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 const a = document.querySelector('#finalReportBox .report_actions'); if (a) a.style.display = on ? '' : 'none';
                 const t = document.getElementById('targetEmailText'); if (t && t.parentNode) t.parentNode.style.display = on ? '' : 'none';
             }
+            function lockPaidBirthForm() {
+                document.querySelectorAll('main > section:first-child form input, main > section:first-child form select, main > section:first-child form button').forEach(el => { el.disabled = true; });
+            }
             function showReportHtml(html, email) {
                 setReportChrome(true);
                 const u = reportUi(); u.loading.style.display = 'none'; u.final.style.display = 'block'; u.content.innerHTML = html;
                 document.body.classList.add('paid-report-view', 'paid-report-complete');
+                lockPaidBirthForm();
                 // Replace internal-sounding labels with client-friendly headings and style technical notes quietly.
                 Array.from(u.content.querySelectorAll('h3')).forEach(h => {
                     const label = (h.textContent || '').trim();
@@ -2366,7 +2400,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                     }
                 });
                 const p = document.getElementById('targetEmailText') && document.getElementById('targetEmailText').parentNode;
-                if (p) p.innerHTML = email ? '&#10003; A copy has also been emailed to <b>' + email.replace(/</g, '&lt;') + '</b>' : '&#10003; Your report is ready. You can also save it with the PDF button.';
+                if (p) p.innerHTML = validDeliveryEmail(email) ? 'Your report is ready. Delivery email: <b>' + email.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</b>. Please check your inbox or spam folder for your copy.' : '&#10003; Your report is ready. You can also save it with the PDF button.';
             }
             function showReportNotice(msg, retryFn) {
                 setReportChrome(false);
@@ -2422,7 +2456,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
             async function startReport(userData) {
                 const u = reportUi(), box = document.getElementById('aiReportContainer');
                 document.body.classList.add('paid-report-view');
-                if (userData && userData.birthData && userData.birthData.year) document.body.classList.add('paid-report-complete');
+                if (userData && userData.birthData && userData.birthData.year) { document.body.classList.add('paid-report-complete'); lockPaidBirthForm(); }
                 box.style.display = 'block'; u.loading.style.display = 'block'; u.final.style.display = 'none';
                 focusPaidReportArea();
                 let id = null; try { id = localStorage.getItem('bazi_order_id'); } catch (e) {}
@@ -2469,7 +2503,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 // Paid in a different browser/app than the one used for the chart: let the customer rebuild it.
                 showReportNotice('Thank you for your order! We could not find your saved chart in this browser (this can happen when checkout opens in another app). Please enter your birth details above, tap <b>Calculate Chart</b>, then press the button below to show your report.<br><br><button type="button" class="share_btn report_share" id="recoverBtn">Show My Report</button>', null);
                 const rb = document.getElementById('recoverBtn');
-                if (rb) rb.onclick = () => { if (!lastCalc) { rb.textContent = 'Please calculate your chart first'; return; } startReport(buildFormData()); };
+                if (rb) rb.onclick = () => { if (!lastCalc) { rb.textContent = 'Please calculate your chart first'; return; } const email = document.getElementById('email').value.trim(); if (validDeliveryEmail(email)) startReport(buildFormData(email)); else requestDeliveryEmail(email, value => startReport(buildFormData(value))); };
             }
 
             window.addEventListener('DOMContentLoaded', () => {
@@ -2517,5 +2551,17 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 }
             });
         </script>
+        <dialog id="deliveryEmailDialog" style="box-sizing:border-box;width:min(92vw,460px);max-width:460px;background:#241611;color:#f3e5c8;border:1px solid #b99a59;border-radius:14px;padding:26px;box-shadow:0 18px 70px #0008;">
+            <form id="deliveryEmailForm" style="margin:0;display:block;">
+                <h2 style="color:#e8cc91;font-size:24px;margin:0 0 14px;">Where Should We Send Your Report?</h2>
+                <p style="line-height:1.6;margin:0 0 18px;">Enter your email address to receive your complete personal BaZi report after checkout.</p>
+                <label for="deliveryEmailInput" style="display:block;margin-bottom:8px;">Delivery email</label>
+                <input id="deliveryEmailInput" type="email" required autocomplete="email" placeholder="you@example.com" style="box-sizing:border-box;width:100%;padding:13px;background:#fff9ec;color:#241611;border:1px solid #b99a59;border-radius:7px;font-size:16px;" />
+                <button type="submit" style="display:block;width:100%;margin:16px 0 10px;padding:13px;background:#8d2925;color:#fff1d1;border:1px solid #b99a59;border-radius:7px;">Continue to Secure Checkout &rarr;</button>
+                <button type="button" onclick="document.getElementById('deliveryEmailDialog').close()" style="display:block;width:100%;background:transparent;color:#e8cc91;border:0;padding:8px;">Cancel</button>
+                <p style="font-size:12px;text-align:center;color:#c9b89c;margin:8px 0 0;">Your email is used to deliver your report.</p>
+            </form>
+        </dialog>
+        <style>#deliveryEmailDialog::backdrop{background:rgba(0,0,0,.72)}</style>
     </body>
 </html>
