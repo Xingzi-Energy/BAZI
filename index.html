@@ -452,6 +452,83 @@
             .pdf_btn:disabled { opacity: .6; cursor: wait; }
             .report_actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 12px; }
             .share_btn { display: inline-block; margin-top: 14px; padding: 10px 22px; border-radius: 8px; border: 1px solid rgba(214,178,94,.5); background: transparent; color: var(--color_primary_light); font-size: .92rem; font-weight: 600; cursor: pointer; }
+            /* Prominent returning-customer report access */
+            .report_recovery_card {
+                width: 100%;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 22px;
+                margin: 18px 0 26px;
+                padding: 20px 24px;
+                border: 1px solid rgba(214,178,94,.72);
+                border-radius: 14px;
+                background: linear-gradient(135deg, rgba(214,178,94,.16), rgba(40,24,17,.96) 62%);
+                box-shadow: 0 8px 24px rgba(0,0,0,.22), inset 0 0 0 1px rgba(214,178,94,.08);
+            }
+            .report_recovery_copy { min-width: 0; }
+            .report_recovery_title {
+                margin: 0 0 5px;
+                color: var(--color_primary_light);
+                font-family: var(--font_serif);
+                font-size: clamp(1.08rem, 2vw, 1.35rem);
+                line-height: 1.35;
+                font-weight: 600;
+            }
+            .report_recovery_text {
+                margin: 0;
+                color: var(--text_secondary);
+                font-size: .92rem;
+                line-height: 1.55;
+            }
+            .report_recovery_button {
+                flex: 0 0 auto;
+                min-height: 54px;
+                min-width: 250px;
+                padding: 14px 24px;
+                border: 1px solid #f0d69b;
+                border-radius: 9px;
+                background: linear-gradient(135deg, #f0d69b, #d2ad65);
+                color: #2c1b10;
+                font-size: 1rem;
+                font-weight: 800;
+                letter-spacing: .1px;
+                line-height: 1.25;
+                cursor: pointer;
+                box-shadow: 0 4px 14px rgba(0,0,0,.24);
+                transition: transform .16s ease, filter .16s ease, box-shadow .16s ease;
+            }
+            .report_recovery_button:hover {
+                filter: brightness(1.06);
+                transform: translateY(-1px);
+                box-shadow: 0 7px 18px rgba(0,0,0,.3);
+            }
+            .report_recovery_button:focus-visible {
+                outline: 3px solid #fff1d1;
+                outline-offset: 3px;
+            }
+            @media (max-width: 600px) {
+                .report_recovery_card {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 13px;
+                    margin: 16px 0 22px;
+                    padding: 18px 15px;
+                }
+                .report_recovery_title { font-size: 1.12rem; text-align: center; }
+                .report_recovery_text { font-size: .88rem; text-align: center; }
+                .report_recovery_button {
+                    display: block;
+                    width: 100%;
+                    min-width: 0;
+                    min-height: 56px;
+                    margin: 0;
+                    padding: 16px 12px;
+                    font-size: 1rem;
+                }
+            }
             .health_note { border-left-color: #e0a63a !important; background: rgba(224,166,58,.12) !important; color: var(--text_primary) !important; font-size: .95rem !important; }
             .share_panel { margin: 14px auto 0; max-width: 440px; padding: 14px; border: 1px solid rgba(201,162,75,.6); border-radius: 10px; background: rgba(201,162,75,.12); text-align: center; font-size: .95rem; color: inherit; }
             .sp_input { width: 100%; margin: 8px 0 10px; padding: 11px 10px; border-radius: 8px; border: 1px solid rgba(201,162,75,.6); background: #fff; color: #2d231e; font-size: 16px; }
@@ -2553,9 +2630,46 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 const isPaid = urlParams.get('paid');
 
                 if (isPaid !== 'true' && localStorage.getItem('bazi_access_token') && localStorage.getItem('bazi_order_id') && localStorage.getItem('bazi_started_' + localStorage.getItem('bazi_order_id'))) {
-                    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'share_btn'; btn.textContent = 'View My Latest Report';
-                    document.getElementById('shopifyCta').before(btn);
-                    btn.onclick = () => { const id = localStorage.getItem('bazi_order_id'); const email = validDeliveryEmail(userData && userData.email) ? userData.email : ''; document.body.classList.add('paid-report-view'); focusPaidReportArea(); reportUi().loading.style.display = 'block'; reportUi().final.style.display = 'none'; pollReport(id,email); };
+                    const recoveryCard = document.createElement('section');
+                    recoveryCard.className = 'report_recovery_card';
+                    recoveryCard.setAttribute('aria-label', 'Access your previously purchased report');
+
+                    const copy = document.createElement('div');
+                    copy.className = 'report_recovery_copy';
+
+                    const title = document.createElement('h2');
+                    title.className = 'report_recovery_title';
+                    title.textContent = 'Already Purchased Your Report?';
+
+                    const description = document.createElement('p');
+                    description.className = 'report_recovery_text';
+                    description.textContent = 'Open your saved personal BaZi report again. You will not be charged a second time.';
+
+                    copy.appendChild(title);
+                    copy.appendChild(description);
+
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'report_recovery_button';
+                    btn.textContent = '▤  View My Personal Report  →';
+                    btn.setAttribute('aria-label', 'View my previously purchased personal BaZi report');
+
+                    recoveryCard.appendChild(copy);
+                    recoveryCard.appendChild(btn);
+
+                    const shopifyCta = document.getElementById('shopifyCta');
+                    if (shopifyCta) shopifyCta.before(recoveryCard);
+                    else document.querySelector('main')?.prepend(recoveryCard);
+
+                    btn.onclick = () => {
+                        const id = localStorage.getItem('bazi_order_id');
+                        const email = validDeliveryEmail(userData && userData.email) ? userData.email : '';
+                        document.body.classList.add('paid-report-view');
+                        focusPaidReportArea();
+                        reportUi().loading.style.display = 'block';
+                        reportUi().final.style.display = 'none';
+                        pollReport(id, email);
+                    };
                 }
                 if (isPaid === 'true') {
                     initPaidReturn(userData);
