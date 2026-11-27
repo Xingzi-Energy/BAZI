@@ -681,7 +681,7 @@
                 <p class="intro_disclaimer">
                     BaZi is a traditional cultural practice offered for reflection, personal insight, and entertainment.
                     It does not predict events with certainty and is not a substitute for medical, legal, financial, or psychological advice.
-                    Your full report is delivered to the email you provide before checkout.
+                    Your full report is displayed here after checkout. Email delivery is optional.
                 </p>
             </section>
             <main>
@@ -760,7 +760,7 @@
                         </div>
                         <div id="shopifyCta">
                             <h3>Get Your Full Personal BaZi Report</h3>
-                            <p>A complete, personalized reading built from the chart you just generated — shown on this page after checkout, downloadable as a PDF (a copy is sent to your report delivery email).</p>
+                            <p>A complete, personalized reading built from the chart you just generated — shown on this page after checkout, downloadable as a PDF (a copy is sent if you provide a delivery email).</p>
                             <div id="priceLine" class="price_line"></div>
                             <div class="cta_guarantee">&#10003; 60-Day Money-Back Guarantee &mdash; if the report doesn't resonate, reply to your Gumroad receipt email for a full refund, no questions asked.</div>
                             <a href="https://xingzimaster.gumroad.com/l/mnqqi" onclick="handleGoToPayment(event)" id="mainCtaBtn">Get My Full BaZi Report &nbsp;&#10132;</a>
@@ -775,7 +775,7 @@
                                 <ul>
                                     <li>Your complete personalized BaZi report, generated from <b>your exact chart</b></li>
                                     <li>Full analysis: core nature, money &amp; career fit, relationship patterns, health and well-being themes, and 10-year cycle timing</li>
-                                    <li>Read it on this page after checkout and <b>download it as a PDF</b>; a copy is sent to your report delivery email</li>
+                                    <li>Read it on this page after checkout and <b>download it as a PDF</b>; a copy is sent if you provide a delivery email</li>
                                     <li>Calculated with true solar time correction for your birth city</li>
                                 </ul>
                             </div>
@@ -818,7 +818,7 @@
             <details><summary>Is this a subscription?</summary><p>No. It is a one-time payment through Gumroad. There are no recurring charges, no renewal, and no auto-billing.</p></details>
             <details><summary>What if I'm not satisfied?</summary><p>We offer a 60-day, no-questions-asked money-back guarantee. If the report does not resonate, reply to your Gumroad receipt email for a full refund.</p></details>
             <details><summary>How is my information used?</summary><p>Your birth details and email are used to calculate your chart, generate your report, and deliver it to you. Report generation uses third-party processing services. To request deletion of your data, reply to your Gumroad receipt email.</p></details>
-            <details><summary>How do I receive my report?</summary><p>After checkout you return to this page, where your report is generated and displayed. A copy is sent to the delivery email you provide on this page before checkout.</p></details>
+            <details><summary>How do I receive my report?</summary><p>After checkout you return to this page, where your report is generated and displayed. If you provide a delivery email, a copy is sent there.</p></details>
             <details><summary>Why do you need my birth city and time?</summary><p>Your birth city sets true solar time, which makes the Four Pillars calculation more accurate. Your birth hour determines your hour Pillar.</p></details>
         </section>
         <div class="sticky_pay" id="stickyPay">
@@ -852,11 +852,7 @@
                 fillBtn(document.getElementById('mainCtaBtn'), 'Get My Full BaZi Report &#10132;');
                 fillBtn(document.getElementById('stickyCtaBtn'), 'Get My Full BaZi Report &#10132;');
             });
-            // OPTIONAL but strongly recommended: a 2nd Make webhook that returns {"status":"ready","report":"..."} or {"status":"processing"}
-            // for ?orderId=... . With it the report appears on this page however long the AI takes. Leave "" to use single-request mode.
-            // >>> REQUIRED: paste the Make "status" webhook URL (Scenario B) here. Leaving it empty means the page can only wait ~45s,
-            // >>> which is far shorter than the AI needs, so the report would never appear on this page.
-            const REPORT_STATUS_URL = "https://hook.us2.make.com/PASTE_SCENARIO_B_WEBHOOK_HERE";
+            // Generation and status queries share the paid webhook.
             const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/k1xw92cyng0as3r2rq9jcqn8i3gwczdl";
 
             const ELEMENT_MAP = {
@@ -2204,6 +2200,9 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 if (!dialog.open) dialog.showModal();
                 input.focus();
             }
+            function secureToken() {
+                return Array.from(crypto.getRandomValues(new Uint8Array(32)), b => b.toString(16).padStart(2, '0')).join('');
+            }
             function handleGoToPayment(event) {
                 event.preventDefault();
                 const href = event.currentTarget.href;
@@ -2211,12 +2210,14 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 const proceed = (email) => {
                     try {
                         localStorage.setItem('pending_bazi_user', JSON.stringify(buildFormData(email)));
-                        localStorage.setItem('bazi_order_id', 'o' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8));
+                        localStorage.setItem('bazi_order_id', 'o' + secureToken());
+                        localStorage.setItem('bazi_access_token', secureToken());
                     } catch (e) { alert('Your browser could not save your birth details. Please enable local storage before checkout.'); return; }
                     window.location.assign(href);
                 };
                 const email = document.getElementById('email').value.trim();
                 if (validDeliveryEmail(email)) proceed(email);
+                else if (!email) proceed('');
                 else requestDeliveryEmail(email, proceed);
             }
 
@@ -2423,17 +2424,21 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
             window.__lastWebhook = null;
 
             async function pollReport(id, email, tries) {
+                const token = localStorage.getItem('bazi_access_token');
+                if (!token) { showReportNotice('This older order has no recovery credential. Please contact support with your receipt.', null); return; }
                 const delay = ms => new Promise(r => setTimeout(r, ms));
-                for (let n = 0; n < (tries || 80); n++) {          // ~8 minutes at 6s
+                for (let n = 0; n < (tries || 12); n++) {
+                    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 25000);
                     try {
-                        const res = await fetch(REPORT_STATUS_URL + (REPORT_STATUS_URL.includes('?') ? '&' : '?') + 'orderId=' + encodeURIComponent(id), { cache: 'no-store' });
-                        const txt = await res.text(); const d = parseReportResponse(txt);
-                        if (d && d.report) { const html = cleanReportHtml(d.report); try { localStorage.setItem('bazi_report_cache', JSON.stringify({ id, html })); } catch (e) {} showReportHtml(html, email); return; }
+                        const res = await fetch(MAKE_WEBHOOK_URL, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({action:'get_report', orderId:id, accessToken:token}), cache:'no-store', signal:ctl.signal });
+                        if (res.status === 403) { showReportNotice('Report access could not be verified. Please contact support with your receipt.', null); return; }
+                        const d = parseReportResponse(await res.text());
+                        if (res.ok && d && d.report) { const html = cleanReportHtml(d.report); try { localStorage.setItem('bazi_report_cache', JSON.stringify({id,html})); } catch(e) {} showReportHtml(html,email); return; }
                         if (d && d.status === 'failed') break;
-                    } catch (e) {}
-                    await delay(6000);
+                    } catch(e) {} finally { clearTimeout(timer); }
+                    await delay(Math.min(30000, 10000 + n * 3000));
                 }
-                showReportNotice('Your report is taking longer than usual. Please do not pay again. Keep this page, then tap "Check again" in a minute.' + (email ? ' A copy will also be emailed to ' + email.replace(/</g, '&lt;') + '.' : ''), () => pollReport(id, email, 40));
+                showReportNotice('Your report is not available yet. Please do not pay again. Tap Check again to retry, or contact support with your receipt.', () => pollReport(id,email,6));
             }
 
             function focusPaidReportArea() {
@@ -2453,6 +2458,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 });
             }
 
+            // Integration test only: Make must verify Gumroad payment server-side before generation.
             async function startReport(userData) {
                 const u = reportUi(), box = document.getElementById('aiReportContainer');
                 document.body.classList.add('paid-report-view');
@@ -2460,10 +2466,11 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 box.style.display = 'block'; u.loading.style.display = 'block'; u.final.style.display = 'none';
                 focusPaidReportArea();
                 let id = null; try { id = localStorage.getItem('bazi_order_id'); } catch (e) {}
-                if (!id) { id = 'o' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); try { localStorage.setItem('bazi_order_id', id); } catch (e) {} }
-                const email = (userData && userData.email) || '';
+                const token = localStorage.getItem('bazi_access_token');
+                const email = validDeliveryEmail(userData && userData.email) ? userData.email : '';
                 let cached = null; try { cached = JSON.parse(localStorage.getItem('bazi_report_cache') || 'null'); } catch (e) {}
                 if (cached && cached.id === id && cached.html) { showReportHtml(cached.html, email); return; }
+                if (!id || !token) { showReportNotice('No recovery credential was found for this order. Please contact support with your receipt. Do not pay again.', null); return; }
                 const startedKey = 'bazi_started_' + id;
                 let started = false; try { started = !!localStorage.getItem(startedKey); } catch (e) {}
                 if (!started) {
@@ -2471,20 +2478,20 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                     const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 45000);
                     try {
                         const res = await fetch(MAKE_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(Object.assign({}, userData, { orderId: id })), signal: ctl.signal });
-                        const txt = await res.text(); window.__lastWebhook = { status: res.status, body: txt.slice(0, 400) };
-                        console.warn('[report] webhook response', res.status, txt.slice(0, 300));
-                        // Make rejected the request (4xx/5xx): allow a retry on refresh instead of locking the order forever.
-                        if (!res.ok) { try { localStorage.removeItem(startedKey); } catch (e) {} }
+                            body: JSON.stringify(Object.assign({}, userData, { email, orderId: id, accessToken: token, action: "generate_report" })), signal: ctl.signal });
+                        const txt = await res.text(); window.__lastWebhook = { status: res.status, body: '' };
+                        console.warn('[report] webhook response', res.status);
+                        // Do not automatically resubmit an uncertain generation request.
+                        if (res.status === 403) { showReportNotice('Payment or access could not be verified. Please contact support.', null); return; }
                         const d = parseReportResponse(txt);
-                        if (d && d.report) { const html = cleanReportHtml(d.report); try { localStorage.setItem('bazi_report_cache', JSON.stringify({ id, html })); } catch (e) {} showReportHtml(html, email); return; }
+                        if (res.ok && d && d.report) { const html = cleanReportHtml(d.report); try { localStorage.setItem('bazi_report_cache', JSON.stringify({ id, html })); } catch (e) {} showReportHtml(html, email); return; }
                     } catch (e) { window.__lastWebhook = { status: 'no readable response', body: String(e) }; console.warn('[report] webhook error', e);
-                        // A timeout/abort means the job may still be running: keep the flag. A real network failure never reached Make: allow retry.
-                        if (!(e && e.name === 'AbortError')) { try { localStorage.removeItem(startedKey); } catch (e2) {} } }
+                        // A timeout or network error may occur after Make accepted the job.
+                        // Keep the marker: the request may have reached Make.
+                    }
                     finally { clearTimeout(timer); }
                 }
-                if (REPORT_STATUS_URL && !/PASTE_SCENARIO_B/.test(REPORT_STATUS_URL)) { pollReport(id, email); return; }
-                showReportNotice('Thank you for your order. Your report is being prepared' + (email ? ' and will be emailed to ' + email.replace(/</g, '&lt;') : '') + '. Please do not pay again. If nothing arrives after a while, check your spam folder or reply to your Gumroad receipt email for help.', null);
+                return pollReport(id, email);
             }
 
             function initPaidReturn(userData) {
@@ -2545,6 +2552,11 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 const urlParams = new URLSearchParams(window.location.search);
                 const isPaid = urlParams.get('paid');
 
+                if (isPaid !== 'true' && localStorage.getItem('bazi_access_token') && localStorage.getItem('bazi_order_id') && localStorage.getItem('bazi_started_' + localStorage.getItem('bazi_order_id'))) {
+                    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'share_btn'; btn.textContent = 'View My Latest Report';
+                    document.getElementById('shopifyCta').before(btn);
+                    btn.onclick = () => { const id = localStorage.getItem('bazi_order_id'); const email = validDeliveryEmail(userData && userData.email) ? userData.email : ''; document.body.classList.add('paid-report-view'); focusPaidReportArea(); reportUi().loading.style.display = 'block'; reportUi().final.style.display = 'none'; pollReport(id,email); };
+                }
                 if (isPaid === 'true') {
                     initPaidReturn(userData);
                     setTimeout(focusPaidReportArea, 1000);
