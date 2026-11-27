@@ -188,7 +188,6 @@
                 margin-top: 10px;
             }
             
-            #aiReportContainer { scroll-margin-top: 18px; }
             .report_box_mobile {
                 margin-top: 30px;
                 background-color: #f4ebd0;
@@ -751,8 +750,8 @@
                         <div id="aiReportContainer" style="display: none; margin-top: 30px;">
                             <div id="loadingBox" class="section_card" style="text-align: center; padding: 25px;">
                                 <div class="loader_spinner"></div>
-                                <div style="color: #d6b25e; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">Your payment was successful — your report is being prepared.</div>
-                                <div class="calculation_status" id="statusConsole">We are analyzing your Four Pillars birth chart and preparing your complete personalized report. This can take a few minutes. Please keep this page open. You do not need to pay again.</div>
+                                <div style="color: #d6b25e; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">Preparing your personalized report&hellip;</div>
+                                <div class="calculation_status" id="statusConsole">> This can take a few minutes. Please keep this page open and do not pay again.</div>
                             </div>
 
                             <div id="finalReportBox" class="report_box_mobile" style="display: none;">
@@ -2102,27 +2101,9 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 showReportNotice('Your report is taking longer than usual. Please do not pay again. Keep this page, then tap "Check again" in a minute.' + (email ? ' A copy will also be emailed to ' + email.replace(/</g, '&lt;') + '.' : ''), () => pollReport(id, email, 40));
             }
 
-            function focusPaidReportArea() {
-                const box = document.getElementById('aiReportContainer');
-                if (!box) return;
-                box.style.display = 'block';
-                const moveToReport = () => {
-                    const rect = box.getBoundingClientRect();
-                    const top = Math.max(0, rect.top + (window.pageYOffset || document.documentElement.scrollTop) - 18);
-                    window.scrollTo({ top, behavior: 'auto' });
-                };
-                // Re-apply after layout and browser history restoration have settled.
-                requestAnimationFrame(() => {
-                    moveToReport();
-                    setTimeout(moveToReport, 180);
-                    setTimeout(moveToReport, 650);
-                });
-            }
-
             async function startReport(userData) {
                 const u = reportUi(), box = document.getElementById('aiReportContainer');
                 box.style.display = 'block'; u.loading.style.display = 'block'; u.final.style.display = 'none';
-                focusPaidReportArea();
                 let id = null; try { id = localStorage.getItem('bazi_order_id'); } catch (e) {}
                 if (!id) { id = 'o' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); try { localStorage.setItem('bazi_order_id', id); } catch (e) {} }
                 const email = (userData && userData.email) || '';
@@ -2150,9 +2131,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
             function initPaidReturn(userData) {
                 const shopifyCta = document.getElementById('shopifyCta'), box = document.getElementById('aiReportContainer');
                 if (shopifyCta) shopifyCta.style.display = 'none';
-                try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
-                box.style.display = 'block';
-                focusPaidReportArea();
+                box.style.display = 'block'; box.scrollIntoView({ behavior: 'smooth' });
                 if (userData && userData.birthData && userData.birthData.year) { startReport(userData); return; }
                 // Paid in a different browser/app than the one used for the chart: let the customer rebuild it.
                 showReportNotice('Thank you for your order! We could not find your saved chart in this browser (this can happen when checkout opens in another app). Please enter your birth details above, tap <b>Calculate Chart</b>, then press the button below to show your report.<br><br><button type="button" class="share_btn report_share" id="recoverBtn">Show My Report</button>', null);
@@ -2199,10 +2178,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 const urlParams = new URLSearchParams(window.location.search);
                 const isPaid = urlParams.get('paid');
 
-                if (isPaid === 'true') {
-                    initPaidReturn(userData);
-                    setTimeout(focusPaidReportArea, 1000);
-                }
+                if (isPaid === 'true') initPaidReturn(userData);
             });
         </script>
     </body>
