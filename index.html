@@ -188,6 +188,7 @@
                 margin-top: 10px;
             }
             
+            #aiReportContainer { scroll-margin-top: 18px; }
             .report_box_mobile {
                 margin-top: 30px;
                 background-color: #f4ebd0;
@@ -252,6 +253,43 @@
             .report_content_text p { margin: 0 0 14px 0; }
             .report_content_text ul { margin: 0 0 14px 0; padding-left: 22px; }
             .report_content_text li { margin-bottom: 8px; }
+            /* Traditional technical notes remain available but visually secondary. */
+            .report_content_text h3.technical-analysis-heading {
+                display: inline-block;
+                max-width: 100%;
+                margin: 16px 0 8px;
+                padding: 5px 10px;
+                border: 1px solid #d9cfb8;
+                border-radius: 5px;
+                border-bottom: 1px solid #d9cfb8;
+                background: #eee6d5;
+                color: #887f70;
+                font-family: Arial, sans-serif;
+                font-size: 12px !important;
+                font-weight: 600;
+                line-height: 1.45;
+            }
+            .report_content_text .technical-analysis-detail {
+                color: #81796e !important;
+                font-family: Arial, sans-serif;
+                font-size: 13px !important;
+                line-height: 1.65 !important;
+            }
+            .report_content_text ul.technical-analysis-detail { padding-left: 20px; }
+            .report_content_text .technical-analysis-detail b,
+            .report_content_text .technical-analysis-detail strong { color: #756b5d !important; }
+            /* After a successful checkout, show the report rather than the locked sales preview. */
+            body.paid-report-view header,
+            body.paid-report-view .intro_card,
+            body.paid-report-view .trust_card,
+            body.paid-report-view #stickyPay { display: none !important; }
+            body.paid-report-view main { display: block !important; }
+            body.paid-report-view #resultCard > :not(#aiReportContainer) { display: none !important; }
+            body.paid-report-view #aiReportContainer { margin-top: 0 !important; }
+            body.paid-report-view #finalReportBox { margin-top: 0; }
+            body.paid-report-complete main > section:first-child { display: none !important; }
+            body.paid-report-complete #resultCard { padding: 0 !important; margin: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
+            body.paid-report-complete #aiReportContainer { display: block !important; }
             #finalReportBox {
                 max-width: 1120px;
                 margin-left: auto;
@@ -718,7 +756,7 @@
                         
                         <div id="freePreview" class="free_preview" aria-live="polite">
                             <div class="snap_head"><div class="preview_kicker">Free Preview</div><h3>Your Personal BaZi Reading</h3>
-                            <p class="preview_copy">The first lines of your reading, written from your own birth chart. Unlock the full report to read everything.</p></div>
+                            <p class="preview_copy">A personal introduction based on your birth chart. Your complete report becomes available here after checkout.</p></div>
                             <div id="spSections"></div>
                             <div id="spNote" class="sp_note"></div>
                         </div>
@@ -750,8 +788,8 @@
                         <div id="aiReportContainer" style="display: none; margin-top: 30px;">
                             <div id="loadingBox" class="section_card" style="text-align: center; padding: 25px;">
                                 <div class="loader_spinner"></div>
-                                <div style="color: #d6b25e; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">Preparing your personalized report&hellip;</div>
-                                <div class="calculation_status" id="statusConsole">> This can take a few minutes. Please keep this page open and do not pay again.</div>
+                                <div style="color: #d6b25e; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">Your payment was successful — your report is being prepared.</div>
+                                <div class="calculation_status" id="statusConsole">We are analyzing your Four Pillars birth chart and preparing your complete personalized report. This can take a few minutes. Please keep this page open. You do not need to pay again.</div>
                             </div>
 
                             <div id="finalReportBox" class="report_box_mobile" style="display: none;">
@@ -818,7 +856,9 @@
             });
             // OPTIONAL but strongly recommended: a 2nd Make webhook that returns {"status":"ready","report":"..."} or {"status":"processing"}
             // for ?orderId=... . With it the report appears on this page however long the AI takes. Leave "" to use single-request mode.
-            const REPORT_STATUS_URL = "";
+            // >>> REQUIRED: paste the Make "status" webhook URL (Scenario B) here. Leaving it empty means the page can only wait ~45s,
+            // >>> which is far shorter than the AI needs, so the report would never appear on this page.
+            const REPORT_STATUS_URL = "https://hook.us2.make.com/PASTE_SCENARIO_B_WEBHOOK_HERE";
             const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/k1xw92cyng0as3r2rq9jcqn8i3gwczdl";
 
             const ELEMENT_MAP = {
@@ -1806,6 +1846,247 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 updateStickyPay();
             }
 
+            // Rule-based BaZi technical profile.
+            // This produces reproducible, auditable assessments; it does not claim that one
+            // automated school can settle every classical pattern or useful-god debate.
+            function buildTechnicalProfile(r) {
+                if (!r || !Array.isArray(r.pillars) || r.pillars.length !== 4) return null;
+
+                const GAN_ORDER = '甲乙丙丁戊己庚辛壬癸';
+                const stemPolarity = stem => (GAN_ORDER.indexOf(stem) % 2 === 0 ? 'Yang' : 'Yin');
+                const stemElement = stem => ELEMENT_MAP[stem] || null;
+                const dmStem = r.pillars[2].pillarStr.charAt(0);
+                const dmElement = stemElement(dmStem);
+                const dmPolarity = stemPolarity(dmStem);
+
+                const godNames = {
+                    companion: ['比肩', '劫财'],
+                    resource: ['偏印', '正印'],
+                    output: ['食神', '伤官'],
+                    wealth: ['偏财', '正财'],
+                    influence: ['七杀', '正官']
+                };
+                function tenGod(stem) {
+                    const el = stemElement(stem);
+                    if (!el || !dmElement) return { chinese: '', english: 'Unknown', relation: 'unknown' };
+                    const same = stemPolarity(stem) === dmPolarity;
+                    let relation;
+                    if (el === dmElement) relation = 'companion';
+                    else if (GEN[el] === dmElement) relation = 'resource';
+                    else if (GEN[dmElement] === el) relation = 'output';
+                    else if (CTRL[dmElement] === el) relation = 'wealth';
+                    else relation = 'influence';
+                    const idx = same ? 0 : 1;
+                    const english = {
+                        companion: ['比肩 / Companion', '劫财 / Rob Wealth'],
+                        resource: ['偏印 / Indirect Resource', '正印 / Direct Resource'],
+                        output: ['食神 / Eating God', '伤官 / Hurting Officer'],
+                        wealth: ['偏财 / Indirect Wealth', '正财 / Direct Wealth'],
+                        influence: ['七杀 / Seven Killings', '正官 / Direct Officer']
+                    };
+                    return { chinese: godNames[relation][idx], english: english[relation][idx], relation };
+                }
+
+                // Seasonal element states by month branch. Transitional Earth months are
+                // deliberately treated as Earth-command months rather than generic seasons.
+                const seasonStates = {
+                    '寅': { season:'spring', dominant:'Wood', states:{Wood:1.00,Fire:0.65,Water:0.45,Metal:0.20,Earth:0.10} },
+                    '卯': { season:'spring', dominant:'Wood', states:{Wood:1.00,Fire:0.65,Water:0.45,Metal:0.20,Earth:0.10} },
+                    '辰': { season:'late spring / Earth transition', dominant:'Earth', states:{Earth:0.85,Wood:0.65,Fire:0.45,Water:0.25,Metal:0.20} },
+                    '巳': { season:'summer', dominant:'Fire', states:{Fire:1.00,Earth:0.65,Wood:0.45,Water:0.20,Metal:0.10} },
+                    '午': { season:'summer', dominant:'Fire', states:{Fire:1.00,Earth:0.65,Wood:0.45,Water:0.20,Metal:0.10} },
+                    '未': { season:'late summer / Earth transition', dominant:'Earth', states:{Earth:0.85,Fire:0.65,Wood:0.25,Metal:0.20,Water:0.10} },
+                    '申': { season:'autumn', dominant:'Metal', states:{Metal:1.00,Water:0.65,Earth:0.45,Fire:0.20,Wood:0.10} },
+                    '酉': { season:'autumn', dominant:'Metal', states:{Metal:1.00,Water:0.65,Earth:0.45,Fire:0.20,Wood:0.10} },
+                    '戌': { season:'late autumn / Earth transition', dominant:'Earth', states:{Earth:0.85,Metal:0.65,Water:0.25,Wood:0.20,Fire:0.10} },
+                    '亥': { season:'winter', dominant:'Water', states:{Water:1.00,Wood:0.65,Metal:0.45,Earth:0.20,Fire:0.10} },
+                    '子': { season:'winter', dominant:'Water', states:{Water:1.00,Wood:0.65,Metal:0.45,Earth:0.20,Fire:0.10} },
+                    '丑': { season:'late winter / Earth transition', dominant:'Earth', states:{Earth:0.85,Water:0.65,Metal:0.45,Wood:0.20,Fire:0.10} }
+                };
+
+                const pillars = r.pillars.map((p, index) => {
+                    const stem = p.pillarStr.charAt(0), branch = p.pillarStr.charAt(1);
+                    const br = BR[branch], god = tenGod(stem);
+                    const hidden = br ? br[4] : [];
+                    return {
+                        position: p.title,
+                        ganzhi: p.pillarStr,
+                        heavenlyStem: { character: stem, element: stemElement(stem), polarity: stemPolarity(stem), tenGod: god.english, tenGodChinese: god.chinese, tenGodRelation: god.relation },
+                        earthlyBranch: { character: branch, element: br ? br[0] : null, season: br ? br[3] : null },
+                        hiddenStems: hidden.map((h, i) => {
+                            const hg = tenGod(h);
+                            return { stem:h, element:stemElement(h), polarity:stemPolarity(h), tenGod:hg.english, tenGodChinese:hg.chinese, tenGodRelation:hg.relation, role:i===0?'main qi':(i===1?'middle qi':'residual qi') };
+                        })
+                    };
+                });
+
+                const monthBranch = r.pillars[1].pillarStr.charAt(1);
+                const monthInfo = BR[monthBranch];
+                const season = seasonStates[monthBranch] || {season:monthInfo ? monthInfo[3] : 'unknown', dominant:monthInfo ? monthInfo[0] : null, states:{}};
+                const monthMainHidden = monthInfo && monthInfo[4] ? monthInfo[4][0] : null;
+                const monthGod = monthMainHidden ? tenGod(monthMainHidden) : {english:'Unknown',chinese:'',relation:'unknown'};
+
+                // Element inventory: visible stems = 1.0; branch hidden qi = main/middle/residual
+                // weights 0.60/0.30/0.10 (or normalized for branches with fewer hidden stems).
+                const elementRaw = {Wood:0,Fire:0,Earth:0,Metal:0,Water:0};
+                const elementSeasonAdjusted = {Wood:0,Fire:0,Earth:0,Metal:0,Water:0};
+                const tenGodDistribution = {};
+                const addGod = (name, weight) => { tenGodDistribution[name] = (tenGodDistribution[name] || 0) + weight; };
+                const hiddenWeight = n => n === 1 ? [1] : n === 2 ? [0.7,0.3] : [0.6,0.3,0.1];
+
+                pillars.forEach((p, idx) => {
+                    const stemEl = p.heavenlyStem.element;
+                    if (stemEl) {
+                        elementRaw[stemEl] += 1;
+                        elementSeasonAdjusted[stemEl] += 1 * (season.states[stemEl] || 0.5);
+                    }
+                    addGod(p.heavenlyStem.tenGod, 1);
+                    const weights = hiddenWeight(p.hiddenStems.length);
+                    p.hiddenStems.forEach((h, i) => {
+                        const w = weights[i] || 0;
+                        if (h.element) {
+                            elementRaw[h.element] += w;
+                            elementSeasonAdjusted[h.element] += w * (season.states[h.element] || 0.5);
+                        }
+                        addGod(h.tenGod, w);
+                    });
+                });
+
+                // Day Master support: seasonal command + same-element roots + resource roots +
+                // visible support, with reduced credit for residual hidden qi.
+                const support = {seasonal:0,roots:0,visibleCompanion:0,visibleResource:0,hiddenCompanion:0,hiddenResource:0};
+                const drain = {output:0,wealth:0,influence:0};
+                const dmRootLocations = [];
+                const hiddenRootDetails = [];
+                pillars.forEach((p, idx) => {
+                    const stemGod = p.heavenlyStem.tenGodRelation;
+                    if (stemGod === 'companion') support.visibleCompanion += 1;
+                    if (stemGod === 'resource') support.visibleResource += 1;
+                    if (stemGod === 'output') drain.output += 1;
+                    if (stemGod === 'wealth') drain.wealth += 1;
+                    if (stemGod === 'influence') drain.influence += 1;
+
+                    const weights = hiddenWeight(p.hiddenStems.length);
+                    p.hiddenStems.forEach((h, i) => {
+                        const w = weights[i] || 0;
+                        if (h.tenGodRelation === 'companion') support.hiddenCompanion += w;
+                        if (h.tenGodRelation === 'resource') support.hiddenResource += w;
+                        if (h.tenGodRelation === 'output') drain.output += w;
+                        if (h.tenGodRelation === 'wealth') drain.wealth += w;
+                        if (h.tenGodRelation === 'influence') drain.influence += w;
+                        if (h.stem === dmStem) {
+                            dmRootLocations.push(p.position);
+                            hiddenRootDetails.push({position:p.position, stem:h.stem, qiWeight:w, role:h.role});
+                            support.roots += w * (idx === 1 ? 1.15 : 1.0);
+                        }
+                    });
+                });
+                const dmSeasonFactor = season.states[dmElement] || 0.5;
+                const resourceElement = Object.keys(GEN).find(k => GEN[k] === dmElement);
+                const resourceSeasonFactor = season.states[resourceElement] || 0.5;
+                support.seasonal = dmSeasonFactor * 2 + resourceSeasonFactor;
+                const supportiveScore = support.seasonal + support.roots + support.visibleCompanion + support.visibleResource + support.hiddenCompanion + support.hiddenResource;
+                const challengingScore = drain.output + drain.wealth + drain.influence;
+                const totalScore = supportiveScore + challengingScore || 1;
+                const ratio = supportiveScore / totalScore;
+                const strengthBand = ratio >= 0.62 ? 'support-dominant (rule-based estimate)' : ratio <= 0.40 ? 'drain-and-control dominant (rule-based estimate)' : 'mixed support and drain (rule-based estimate)';
+
+                // Month-command structure candidate: main hidden qi is the first pattern clue,
+                // not a certified 格局. A full formal pattern ruling requires additional exclusions.
+                const patternCandidate = {
+                    monthMainQi: monthMainHidden,
+                    monthMainQiTenGod: monthGod.english,
+                    category: monthGod.tenGodRelation,
+                    status: 'month-command pattern candidate; not a certified formal pattern',
+                    validationNeeded: [
+                        'Check whether the month main qi is exposed in the Heavenly Stems.',
+                        'Check whether the Day Master has adequate roots and support.',
+                        'Check combinations, transformations, clashes, and competing structures.',
+                        'Check special structures and whether ordinary pattern rules are displaced.'
+                    ]
+                };
+
+                // Climate/seasonal adjustment candidates are kept separate from strength-based
+                // balancing candidates. This prevents a single weak/strong heuristic from being
+                // mislabeled as the final useful element.
+                const strengthCandidates = ratio <= 0.40
+                    ? [dmElement, resourceElement]
+                    : ratio >= 0.62
+                        ? [GEN[dmElement], CTRL[dmElement]]
+                        : [resourceElement, GEN[dmElement], CTRL[dmElement]];
+                const climateCandidates = [];
+                if (['亥','子','丑'].includes(monthBranch)) climateCandidates.push({element:'Fire',reason:'traditional warming consideration for a cold-season chart'});
+                if (['巳','午','未'].includes(monthBranch)) climateCandidates.push({element:'Water',reason:'traditional cooling consideration for a hot-season chart'});
+                if (['申','酉','戌'].includes(monthBranch)) climateCandidates.push({element:'Water',reason:'traditional moisture consideration for a dry autumnal environment'});
+                if (['寅','卯','辰'].includes(monthBranch)) climateCandidates.push({element:'Metal',reason:'possible regulation consideration for strong spring Wood; requires whole-chart validation'});
+                const candidateSet = [...new Set([...climateCandidates.map(x=>x.element), ...strengthCandidates])];
+
+                // Detect major branch relations. Presence is reported; transformation is never assumed.
+                const branchChars = r.pillars.map(p => p.pillarStr.charAt(1));
+                const relationDefs = [
+                    {type:'clash',pairs:['子午','丑未','寅申','卯酉','辰戌','巳亥']},
+                    {type:'harm',pairs:['子未','丑午','寅巳','卯辰','申亥','酉戌']},
+                    {type:'six-combination',pairs:['子丑','寅亥','卯戌','辰酉','巳申','午未']}
+                ];
+                const branchRelations = [];
+                for (let i=0;i<branchChars.length;i++) for (let j=i+1;j<branchChars.length;j++) {
+                    const pair = branchChars[i]+branchChars[j], rev = branchChars[j]+branchChars[i];
+                    relationDefs.forEach(def => {
+                        if (def.pairs.some(x=>x===pair || x===rev)) branchRelations.push({positions:[r.pillars[i].title,r.pillars[j].title],branches:pair,type:def.type,transformation:'not assumed; validate season, roots, and interference'});
+                    });
+                }
+                const stemCombinePairs = ['甲己','乙庚','丙辛','丁壬','戊癸'];
+                const stemChars = r.pillars.map(p=>p.pillarStr.charAt(0));
+                const stemCombinations = [];
+                for(let i=0;i<stemChars.length;i++) for(let j=i+1;j<stemChars.length;j++){
+                    const pair=stemChars[i]+stemChars[j], rev=stemChars[j]+stemChars[i];
+                    if(stemCombinePairs.some(x=>x===pair || x===rev)) stemCombinations.push({positions:[r.pillars[i].title,r.pillars[j].title],stems:pair,transformation:'combination presence only; transformation is not assumed'});
+                }
+                const triads = [['申','子','辰','Water'],['亥','卯','未','Wood'],['寅','午','戌','Fire'],['巳','酉','丑','Metal']];
+                const branchTriads = triads.filter(t=>t.slice(0,3).every(ch=>branchChars.includes(ch))).map(t=>({branches:t.slice(0,3),element:t[3],status:'complete three-harmony frame; transformation still requires validation'}));
+                const directionalMeetings = [['寅','卯','辰','Wood'],['巳','午','未','Fire'],['申','酉','戌','Metal'],['亥','子','丑','Water']];
+                const branchMeetings = directionalMeetings.filter(t=>t.slice(0,3).every(ch=>branchChars.includes(ch))).map(t=>({branches:t.slice(0,3),element:t[3]}));
+
+                const topElements = Object.keys(elementRaw).sort((a,b)=>elementRaw[b]-elementRaw[a]);
+                const seasonalTopElements = Object.keys(elementSeasonAdjusted).sort((a,b)=>elementSeasonAdjusted[b]-elementSeasonAdjusted[a]);
+
+                return {
+                    calculationSource:'Deterministic website calculation from the pre-calculated true-solar-time Four Pillars and the embedded stem/branch/hidden-stem reference tables.',
+                    methodVersion:'bazi-rule-profile-2.0',
+                    dayMaster:{stem:dmStem,element:dmElement,polarity:dmPolarity},
+                    pillars,
+                    monthCommand:{branch:monthBranch,season:season.season,dominantSeasonElement:season.dominant,mainHiddenStem:monthMainHidden,mainHiddenStemTenGod:monthGod.english,mainHiddenStemTenGodChinese:monthGod.chinese},
+                    elementDistribution:{raw:elementRaw,seasonAdjusted:elementSeasonAdjusted,rankedRaw:topElements,rankedSeasonAdjusted:seasonalTopElements,method:'Visible stems count as 1.0; hidden stems are weighted by qi position; seasonal adjustment is shown separately.'},
+                    tenGodDistribution,
+                    dayMasterStrengthAssessment:{
+                        result:strengthBand,
+                        supportiveScore:Number(supportiveScore.toFixed(2)),
+                        challengingScore:Number(challengingScore.toFixed(2)),
+                        supportiveRatio:Number(ratio.toFixed(3)),
+                        supportComponents:Object.fromEntries(Object.entries(support).map(([k,v])=>[k,Number(v.toFixed(2))])),
+                        drainComponents:Object.fromEntries(Object.entries(drain).map(([k,v])=>[k,Number(v.toFixed(2))])),
+                        rootsInBranches:[...new Set(dmRootLocations)],
+                        rootDetails:hiddenRootDetails,
+                        method:'Rule-based screening incorporating month-season element state, resource season state, visible Ten God relations, hidden-qi weights, and Day Master roots. Use as structured evidence, not as a universal final strength verdict.'
+                    },
+                    monthCommandPatternCandidate:patternCandidate,
+                    usefulElementAssessment:{
+                        status:'provisional candidates; not a final universally agreed useful-god ruling',
+                        strengthBasedCandidates:[...new Set(strengthCandidates)],
+                        seasonalClimateCandidates:climateCandidates,
+                        combinedCandidates:candidateSet,
+                        decisionMethod:'Assess seasonal climate first, then evaluate Day Master strength, month-command structure, roots, combinations, transformations, and whether a candidate creates a new imbalance. Do not automatically select the first listed element.',
+                        confidence:'moderate for elemental relationships; lower for final pattern and useful-god selection without a full classical adjudication layer.'
+                    },
+                    interactions:{branchRelations,stemCombinations,completeBranchTriads:branchTriads,completeDirectionalMeetings:branchMeetings},
+                    limitations:[
+                        'This profile is reproducible technical evidence generated from the four supplied pillars.',
+                        'It does not automatically certify special格局, transformation格局, or a final Yong Shen / Xi Shen.',
+                        'Different classical schools may weigh pattern, seasonal climate, and strength differently; the final interpretation must explain its chosen method.'
+                    ]
+                };
+            }
+
             function buildFormData(emailOverride) {
                 const emailField = document.getElementById('email');
                 const email = emailOverride !== undefined ? emailOverride : (emailField ? emailField.value.trim() : '');
@@ -1818,6 +2099,7 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 };
                 birthData.gender = document.getElementById('gender').value;
                 const data = { email, birthData };
+                data.reportVoice = 'Write directly to the purchaser in the second person using you and your. Avoid third-person references such as the client, the native, he, she, or they when referring to the purchaser.';
 
                 if (selectedCity) {
                     let r = lastCalc;
@@ -1853,6 +2135,9 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                             year: r.pillars[0].pillarStr, month: r.pillars[1].pillarStr,
                             day: r.pillars[2].pillarStr, hour: r.pillars[3].pillarStr
                         };
+                        const technicalProfile = buildTechnicalProfile(r);
+                        birthData.technicalProfile = technicalProfile;
+                        data.technicalProfile = technicalProfile;
                     }
                 }
                 return data;
@@ -2064,6 +2349,22 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
             function showReportHtml(html, email) {
                 setReportChrome(true);
                 const u = reportUi(); u.loading.style.display = 'none'; u.final.style.display = 'block'; u.content.innerHTML = html;
+                document.body.classList.add('paid-report-view', 'paid-report-complete');
+                // Replace internal-sounding labels with client-friendly headings and style technical notes quietly.
+                Array.from(u.content.querySelectorAll('h3')).forEach(h => {
+                    const label = (h.textContent || '').trim();
+                    if (/^(Technical Chart Specification|Traditional BaZi Analysis)/i.test(label)) {
+                        if (/^Technical Chart Specification$/i.test(label)) h.textContent = 'Traditional BaZi Analysis (Chinese Metaphysics — optional; you may skip)';
+                        h.classList.add('technical-analysis-heading');
+                        let node = h.nextElementSibling;
+                        while (node && !/^(H2|H3)$/.test(node.tagName)) {
+                            node.classList.add('technical-analysis-detail');
+                            node = node.nextElementSibling;
+                        }
+                    } else if (/^Life Insight$/i.test(label)) {
+                        h.textContent = 'What This Means for You';
+                    }
+                });
                 const p = document.getElementById('targetEmailText') && document.getElementById('targetEmailText').parentNode;
                 if (p) p.innerHTML = email ? '&#10003; A copy has also been emailed to <b>' + email.replace(/</g, '&lt;') + '</b>' : '&#10003; Your report is ready. You can also save it with the PDF button.';
             }
@@ -2101,9 +2402,29 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 showReportNotice('Your report is taking longer than usual. Please do not pay again. Keep this page, then tap "Check again" in a minute.' + (email ? ' A copy will also be emailed to ' + email.replace(/</g, '&lt;') + '.' : ''), () => pollReport(id, email, 40));
             }
 
+            function focusPaidReportArea() {
+                const box = document.getElementById('aiReportContainer');
+                if (!box) return;
+                box.style.display = 'block';
+                const moveToReport = () => {
+                    const rect = box.getBoundingClientRect();
+                    const top = Math.max(0, rect.top + (window.pageYOffset || document.documentElement.scrollTop) - 18);
+                    window.scrollTo({ top, behavior: 'auto' });
+                };
+                // Re-apply after layout and browser history restoration have settled.
+                requestAnimationFrame(() => {
+                    moveToReport();
+                    setTimeout(moveToReport, 180);
+                    setTimeout(moveToReport, 650);
+                });
+            }
+
             async function startReport(userData) {
                 const u = reportUi(), box = document.getElementById('aiReportContainer');
+                document.body.classList.add('paid-report-view');
+                if (userData && userData.birthData && userData.birthData.year) document.body.classList.add('paid-report-complete');
                 box.style.display = 'block'; u.loading.style.display = 'block'; u.final.style.display = 'none';
+                focusPaidReportArea();
                 let id = null; try { id = localStorage.getItem('bazi_order_id'); } catch (e) {}
                 if (!id) { id = 'o' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); try { localStorage.setItem('bazi_order_id', id); } catch (e) {} }
                 const email = (userData && userData.email) || '';
@@ -2119,20 +2440,32 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                             body: JSON.stringify(Object.assign({}, userData, { orderId: id })), signal: ctl.signal });
                         const txt = await res.text(); window.__lastWebhook = { status: res.status, body: txt.slice(0, 400) };
                         console.warn('[report] webhook response', res.status, txt.slice(0, 300));
+                        // Make rejected the request (4xx/5xx): allow a retry on refresh instead of locking the order forever.
+                        if (!res.ok) { try { localStorage.removeItem(startedKey); } catch (e) {} }
                         const d = parseReportResponse(txt);
                         if (d && d.report) { const html = cleanReportHtml(d.report); try { localStorage.setItem('bazi_report_cache', JSON.stringify({ id, html })); } catch (e) {} showReportHtml(html, email); return; }
-                    } catch (e) { window.__lastWebhook = { status: 'no readable response', body: String(e) }; console.warn('[report] webhook error', e); /* slow or unreadable response: the job may still be running */ }
+                    } catch (e) { window.__lastWebhook = { status: 'no readable response', body: String(e) }; console.warn('[report] webhook error', e);
+                        // A timeout/abort means the job may still be running: keep the flag. A real network failure never reached Make: allow retry.
+                        if (!(e && e.name === 'AbortError')) { try { localStorage.removeItem(startedKey); } catch (e2) {} } }
                     finally { clearTimeout(timer); }
                 }
-                if (REPORT_STATUS_URL) { pollReport(id, email); return; }
+                if (REPORT_STATUS_URL && !/PASTE_SCENARIO_B/.test(REPORT_STATUS_URL)) { pollReport(id, email); return; }
                 showReportNotice('Thank you for your order. Your report is being prepared' + (email ? ' and will be emailed to ' + email.replace(/</g, '&lt;') : '') + '. Please do not pay again. If nothing arrives after a while, check your spam folder or reply to your Gumroad receipt email for help.', null);
             }
 
             function initPaidReturn(userData) {
                 const shopifyCta = document.getElementById('shopifyCta'), box = document.getElementById('aiReportContainer');
+                document.body.classList.add('paid-report-view');
                 if (shopifyCta) shopifyCta.style.display = 'none';
-                box.style.display = 'block'; box.scrollIntoView({ behavior: 'smooth' });
-                if (userData && userData.birthData && userData.birthData.year) { startReport(userData); return; }
+                try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+                box.style.display = 'block';
+                focusPaidReportArea();
+                if (userData && userData.birthData && userData.birthData.year) {
+                    document.body.classList.add('paid-report-complete');
+                    startReport(userData);
+                    return;
+                }
+                // If chart data is unavailable, keep the birth form visible for recovery but remove locked preview/sales panels.
                 // Paid in a different browser/app than the one used for the chart: let the customer rebuild it.
                 showReportNotice('Thank you for your order! We could not find your saved chart in this browser (this can happen when checkout opens in another app). Please enter your birth details above, tap <b>Calculate Chart</b>, then press the button below to show your report.<br><br><button type="button" class="share_btn report_share" id="recoverBtn">Show My Report</button>', null);
                 const rb = document.getElementById('recoverBtn');
@@ -2178,7 +2511,10 @@ CN|Guilin|25.27|110.29|Asia/Shanghai
                 const urlParams = new URLSearchParams(window.location.search);
                 const isPaid = urlParams.get('paid');
 
-                if (isPaid === 'true') initPaidReturn(userData);
+                if (isPaid === 'true') {
+                    initPaidReturn(userData);
+                    setTimeout(focusPaidReportArea, 1000);
+                }
             });
         </script>
     </body>
